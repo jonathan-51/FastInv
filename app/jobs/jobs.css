@@ -1,0 +1,33 @@
+.notes-container {
+    width: 600px;              /* w-150 (150 * 4px) */
+    border-radius: 8px;        /* rounded-lg */
+    margin-bottom: 8px;        /* mb-2 */
+    padding-left: 4px;         /* px-1 */
+    padding-right: 4px;        /* px-1 */
+    padding-top: 4px;          /* py-1 */
+    padding-bottom: 4px;       /* py-1 */
+    border: 1px solid #000000; /* border (gray-300) */
+    word-wrap: break-word;      /* Breaks long words */
+    overflow-wrap: break-word;  /* Modern version */
+}
+
+.ticket-headings {
+    border-top: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    width:auto;
+    height: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    padding-left: 2rem;
+    align-items: center;
+    font-weight: bold;
+}
+
+.ticket {
+    padding-left: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    border-bottom: 1px solid #000000;
+    height: 50px;
+    align-items: center;
+}

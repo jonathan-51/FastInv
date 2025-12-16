@@ -1,0 +1,38 @@
+.Navbar {
+}
+
+.nav-container {
+    border-bottom: 1px solid #000000;
+    height: 50px;
+    background-color: blueviolet;
+    display: grid;
+    grid-template-columns: 175px 1fr;
+}
+
+.nav-contents {
+    background-color: brown;
+    display: flex;
+    align-items: center;
+    
+
+}
+
+.nav-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:bisque;
+    border-right: 1px solid #000000;
+
+}
+
+.nav-menu {
+    background-color: blue;
+    position: absolute;
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    left: 50%;
+    transform: translate(-50%); /* Shifts the container back 50% of container size to ensure it is centered */
+}
+

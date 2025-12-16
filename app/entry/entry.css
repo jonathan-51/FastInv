@@ -1,0 +1,10 @@
+.customer-name {
+    display: flex;
+    justify-content: space-between;
+}
+
+.contact-details {
+    display: flex;
+    justify-content: space-between;
+}
+

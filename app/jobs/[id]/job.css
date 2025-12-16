@@ -1,0 +1,74 @@
+.job-page {
+    display: grid;
+    grid-template-columns: 1fr 500px;
+}
+
+.job-address {
+    padding-top: 3rem;     /* pt-4 */
+    padding-bottom: 1rem;  /* pb-4 */
+    padding-left: 4rem;
+    font-size: 1.5rem;     /* text-2xl */
+    line-height: 2rem;     /* text-2xl (Tailwind default) */    
+}
+
+
+.job-contact {
+    margin-top: 20px;
+    background-color: bisque;
+    display: flex;
+    gap: 20px;
+
+}
+
+.job-content {
+    display: flex;
+    flex-direction: column;
+    padding-left: 4rem;
+    gap:40px;
+    padding-right: 80px;
+}
+
+.job-description {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.job-description-headings {
+    display: flex;
+}
+.job-description-buttons {
+    display:flex;
+    gap:15px;
+    padding-left: 35px;
+}
+
+.job-access {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.job-access-headings {
+    display: flex;
+}
+.job-access-buttons {
+    display:flex;
+    gap:15px;
+    padding-left: 35px;
+}
+
+.job-notes {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.job-notes-headings {
+    display: flex;
+}
+.job-notes-buttons {
+    display:flex;
+    gap:15px;
+    padding-left: 35px;
+}
