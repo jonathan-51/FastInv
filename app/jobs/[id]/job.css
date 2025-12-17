@@ -84,16 +84,19 @@
     cursor: pointer;
 }
 
-.job-image {
-    width: 300px;
-    height:300px;
-    position: relative;
+.job-images {
+    margin-top:10px;
+    background-color: aqua;
+    width: 400px;
+    height:auto;
+    gap: 15px;
+    display: flex;
 }
 
 .job-image-remove {
     position: absolute;
-    margin-top: 13%;
-    margin-left: 87%;
+    margin-top: 11%;
+    margin-left: 89%;
     transform: translateY(-100%);
     width: 30px;
     height:30px;
@@ -104,12 +107,17 @@
 
 .job-image-replace {
     position: absolute;
-    margin-top: 13%;
-    margin-left: 74%;
+    margin-top: 11%;
+    margin-left: 77%;
     transform: translateY(-100%);
     width: 30px;
     height:30px;
     background-color: #D1D1D1;
     z-index: 99;
     cursor: pointer;
+}
+
+.job-image-main {
+    position: relative;
+    width: 400px;
 }

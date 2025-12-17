@@ -1,5 +1,5 @@
 'use client'
-import { useEffect,useState } from "react"
+import { use, useEffect,useState } from "react"
 import Link from 'next/link';
 import { useParams } from "next/navigation";
 import './job.css'
@@ -67,26 +67,46 @@ export default function JobDetailPage() {
     }
 
     // Handling Images
-    const [image, setImage] = useState(null)
 
+    // Initialising useState array variable that will store all uploaded images.
+    const [images, setImages] = useState([])
+
+
+    // Function that handles Image Upload
+    // 1. Gets the selected file from the input
+    // 2. Creates a temporary blob URL
+    // 3. Adds the new image to the images array
+    // 4. Sets it as the current main image
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             const imageURL = URL.createObjectURL(file)
-            setImage(imageURL)
+            setImages([...images,imageURL])
+            setCurrentImage(imageURL)
         }
     }
 
+
+    //**NOTE: NEED to removed the replaced image at the image gallery at the bottom */
+    // Function that handles Image replacement
+    // Redirects user to element responsible for file input to open image picker dialog
     const currentImageReplace = () => {
         document.getElementById('fileInput').click()
     }
 
-    const currentImageRemove = (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        setImage(null);
+    //**NOTE: After image is removed, change main image to the image on the left, right now it is displaying no main image. */
+    // Function that handles Image Removal
+    // 1. Sets main image variable to null
+    // 2. Scans through the array of images and filters out the image being removed (the current main image being displayed)
+    // 3. Changes fake file path of image ensure the same image can be uploaded
+    const currentImageRemove = () => {
+        setCurrentImage(null);
+        setImages(images.filter(img => img !== currentImage))
         document.getElementById('fileInput').value = ''
     }
+
+    // Initializing the useState variable to store main image
+    const [currentImage,setCurrentImage] = useState(null)
 
     // Same as Description and Access Notes, but for Notes
     const [notes_text,setNotesText] = useState('');
@@ -193,42 +213,56 @@ export default function JobDetailPage() {
                             </div>
                         )}
 
+                    {/*Displays images section */}
                     <div className="job-photos">
                         <p>Photos</p>
-                        <div className="job-photos-main">
-                            {image ? (
-                                <div className="job-image">
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
-                                        style={{display:'none'}}
-                                        id ="fileInput"
-                                    />
-                                    <button className="job-image-replace" onClick={currentImageReplace}></button>
-                                    <button className="job-image-remove" onClick={currentImageRemove}></button>
-                                    <img src={image} alt="Uploaded" style={{maxHeight:'100%',maxWidth:'100%'}}/>
-                                </div>
-                            )
-                            :
-                            (
-                            <div className="job-image">
-                                <input
+                            {/* input element that allows user to choose image to upload */}
+                            <input
                                 type="file"
                                 accept="image/*"
                                 onChange={handleImageChange}
                                 style={{display:'none'}}
                                 id ="fileInput"
-                                />
+                            />
+
+                            <label htmlFor="fileInput">Upload</label>
+
+                            <div className="job-image-content">
+
+                                {/* Ternary Function that will display the main image if there is a current image
+                                If there isn't a current image, it will display a message telling user to upload an image */}
+                                {currentImage ? (
+                                <div className="job-image-main">
+                                    
+                                    <button className="job-image-replace" onClick={currentImageReplace}></button>
+                                    <button className="job-image-remove" onClick={currentImageRemove}></button>
+                                    <img src={currentImage} alt="Uploaded" style={{maxHeight:'100%',maxWidth:'100%'}}/>
+                                </div>
+                            )
+                            :
+                            (
+                            <div className="job-image-main">
                                 <label htmlFor="fileInput" className="job-image-upload">
                                     <p style={{color:'#999'}}>Click to upload image</p>
                                 </label>
                             </div>
                             )}
+
+                            {/* Displays all the images uploaded below the main image */}
+                            <div className="job-images">
+                                
+                                {images.map((img,index) => (
+                                    <div key={index}>
+                                        <img 
+                                        src={img} 
+                                        alt={`Image ${index}`} 
+                                        onClick={() => setCurrentImage(img)}
+                                        style={{maxHeight:'100px',maxWidth:'100px',cursor:'pointer'}} />
+                                    </div>
+                                ))}
+                            </div>
+
                         </div>
-                            
-
-
                     </div>
                     
                     <div className="job-materials">
