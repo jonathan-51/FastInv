@@ -66,6 +66,28 @@ export default function JobDetailPage() {
         setAccessIsEditing(false)
     }
 
+    // Handling Images
+    const [image, setImage] = useState(null)
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const imageURL = URL.createObjectURL(file)
+            setImage(imageURL)
+        }
+    }
+
+    const currentImageReplace = () => {
+        document.getElementById('fileInput').click()
+    }
+
+    const currentImageRemove = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setImage(null);
+        document.getElementById('fileInput').value = ''
+    }
+
     // Same as Description and Access Notes, but for Notes
     const [notes_text,setNotesText] = useState('');
     const [notesisEditing,setNotesIsEditing] = useState(false);
@@ -83,9 +105,6 @@ export default function JobDetailPage() {
         setNotesIsEditing(false)
     }
 
-
-    console.log(params)
-    console.log(job)
 
     // since useEffect runs after rendering, initial job value is null, so if statement is required.
     if (job) {
@@ -175,8 +194,43 @@ export default function JobDetailPage() {
                         )}
 
                     <div className="job-photos">
-                        Photos
+                        <p>Photos</p>
+                        <div className="job-photos-main">
+                            {image ? (
+                                <div className="job-image">
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageChange}
+                                        style={{display:'none'}}
+                                        id ="fileInput"
+                                    />
+                                    <button className="job-image-replace" onClick={currentImageReplace}></button>
+                                    <button className="job-image-remove" onClick={currentImageRemove}></button>
+                                    <img src={image} alt="Uploaded" style={{maxHeight:'100%',maxWidth:'100%'}}/>
+                                </div>
+                            )
+                            :
+                            (
+                            <div className="job-image">
+                                <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                style={{display:'none'}}
+                                id ="fileInput"
+                                />
+                                <label htmlFor="fileInput" className="job-image-upload">
+                                    <p style={{color:'#999'}}>Click to upload image</p>
+                                </label>
+                            </div>
+                            )}
+                        </div>
+                            
+
+
                     </div>
+                    
                     <div className="job-materials">
                         Materials
                     </div>
