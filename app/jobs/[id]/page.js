@@ -1,5 +1,5 @@
 'use client'
-import { use, useEffect,useState } from "react"
+import { useRef, useEffect,useState } from "react"
 import Link from 'next/link';
 import { useParams } from "next/navigation";
 import './job.css'
@@ -71,42 +71,163 @@ export default function JobDetailPage() {
     // Initialising useState array variable that will store all uploaded images.
     const [images, setImages] = useState([])
 
+    // Initializing the useState variable to store main image
+    const [currentImage,setCurrentImage] = useState(null)
+
 
     // Function that handles Image Upload
-    // 1. Gets the selected file from the input
-    // 2. Creates a temporary blob URL
-    // 3. Adds the new image to the images array
-    // 4. Sets it as the current main image
     const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const imageURL = URL.createObjectURL(file)
-            setImages([...images,imageURL])
-            setCurrentImage(imageURL)
+        // Gets the selected file or files from the input
+        const files = Array.from(e.target.files);
+        // Creates a temporary blob URL
+        const imageURLS = files.map(file => URL.createObjectURL(file))
+        // Adds the new image or images to the images array
+        setImages([...images, ...imageURLS])
+        // Sets the first image selected by user as the current main image
+        setCurrentImage(imageURLS[0])
+        // Resets path to image so the same image can be uploaded.
+        e.target.value = ''
+
         }
-    }
-
-
-    //**NOTE: NEED to removed the replaced image at the image gallery at the bottom */
-    // Function that handles Image replacement
-    // Redirects user to element responsible for file input to open image picker dialog
+    
+    
+    // Runs when there is a change in main image and rendering
+    // If user replaced main image, removed the replaced imaged from the images array
+    useEffect(() => {
+        if (imageToReplace !== currentImage) {setImages(images.filter(img => img !== imageToReplace))}
+        },[currentImage])
+    
+    // Initialising useState variable to temporarily store the image about to be replaced
+    const [imageToReplace,setImageToReplace] = useState(null)
+    
+    // Function that redirects user to element responsible for replacing image
     const currentImageReplace = () => {
-        document.getElementById('fileInput').click()
+        // Stores replaced image temporarily
+        setImageToReplace(currentImage)        
+        document.getElementById('fileReplace').click();
+        
     }
 
-    //**NOTE: After image is removed, change main image to the image on the left, right now it is displaying no main image. */
+    // Function that handles Image Replacement
+    const handleImageReplace = (e) => {
+        // Grab file inputted from user and create temporary blob
+        const file = e.target.files[0];
+            const imageURL = URL.createObjectURL(file);
+            // Getting index of image about to be replaced from images array
+            const imageIndex = images.findIndex(img => img === imageToReplace); 
+            // Scans through images array and replaces image with new image
+            setImages(images.map((img,i) => (i === imageIndex ? imageURL:img)));
+            // Clears useState variable responsible for temporarily storing about to be replaced image
+            setImageToReplace(null);
+            // Sets new image as main image
+            setCurrentImage(imageURL)
+            // Clears fake path for newly inputted image
+            e.target.value = ''
+    }
+
     // Function that handles Image Removal
     // 1. Sets main image variable to null
     // 2. Scans through the array of images and filters out the image being removed (the current main image being displayed)
     // 3. Changes fake file path of image ensure the same image can be uploaded
     const currentImageRemove = () => {
+        //Sets main image variable to null
         setCurrentImage(null);
+        //Scans through the array of images and filters out the image being removed (the current main image being displayed)
         setImages(images.filter(img => img !== currentImage))
+        //Changes fake file path of image ensure the same image can be uploaded
         document.getElementById('fileInput').value = ''
+
+        // Runs if the image being removed is the first image in the list
+        if (images.indexOf(currentImage) === 0) {
+            // Changes main image to image right of removed image after being removed
+            setCurrentImage(images[images.indexOf(currentImage)+1])
+        // Runs if the image being removed is not the first image in the list
+        } else {
+            // Changes main image to image left of removed image after being removed
+            setCurrentImage(images[images.indexOf(currentImage)-1])
+
+        }
     }
 
-    // Initializing the useState variable to store main image
-    const [currentImage,setCurrentImage] = useState(null)
+    // useState variable responsible for declaring if dragging is allowed
+    const [isDragging, setIsDragging] = useState(false)
+    // Stores the initial position of mouse movement
+    const [startX, setStartX] = useState(0)
+    // Initialises the variable responsible for getting scroll scroll position of container
+    const [scrollLeft,setScrollLeft] = useState(0)
+    // Pointer for scroll to reference to DOM
+    const scrollRef = useRef(null)
+    // useState variable responsible for declaring if mouse is hovering over container
+    const [isHovering, setIsHovering] = useState(false)
+
+    // Handles condition of when mouse is held down in container.
+    const handleMouseDown = (e) => {
+        // Allows Dragging
+        setIsDragging(true);
+        // Gets very first initial position of mouse from left edge of container
+        setStartX(e.pageX - scrollRef.current.offsetLeft)
+        // Gets very first initial position of scroll of container
+        setScrollLeft(scrollRef.current.scrollLeft)
+    }
+
+    // Handles condition of when mouse is moving
+    const handleMouseMove = (e) => {
+        // Returns if dragging is not allowed
+        if (!isDragging) return;
+
+        // Gets final position of mouse after movement from left edge of container
+        const endX = e.pageX - scrollRef.current.offsetLeft;
+        // Getting distance  of movement, with a ratio of 1:2.7 || Drag Left = +ve, Drag Right = -ve
+        const distance = (startX - endX) * 2.7
+        // Storing next iteration's initial position as previous end position
+        setStartX(endX)
+
+        // Updates scroll position of container (+ve distance = container moves right || -ve distance = container moves left)
+        scrollRef.current.scrollLeft = scrollLeft + distance
+        // Temporarily stores updated scroll position, 
+        setScrollLeft(scrollRef.current.scrollLeft)
+
+        
+    }
+
+    // Handles condition of when mouse button is released in container.
+    const handleMouseUp = () => {
+        setIsDragging(false);
+    }
+    
+
+    // Handles condition of when mouse leaves container
+    const handleMouseLeave = () => {
+        setIsDragging(false);
+        setIsHovering(false)
+    }
+
+
+    // Runs only when the hovering state changes (either user enters or leaves container)
+    useEffect(() => {
+        // Pointing to container that needs scrolling
+        const container = scrollRef.current;
+
+        if (!container) return;
+
+        // Function that handles using mouse whell to scroll list of images
+        const handleWheel = (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            // Updates scroll position for each scroll based on vertical direction of mouse scroll
+            scrollRef.current.scrollLeft += e.deltaY;
+    }   
+        // Listens for when scroll wheel is used in container and turns off scrolling for page.
+        if (isHovering) {container.addEventListener('wheel',handleWheel, {passive:false})};
+
+        // Re enables scrolling for page
+        return () => {
+            container.removeEventListener('wheel',handleWheel);
+        }
+
+    },[isHovering])
+
+    
 
     // Same as Description and Access Notes, but for Notes
     const [notes_text,setNotesText] = useState('');
@@ -215,52 +336,82 @@ export default function JobDetailPage() {
 
                     {/*Displays images section */}
                     <div className="job-photos">
-                        <p>Photos</p>
-                            {/* input element that allows user to choose image to upload */}
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                style={{display:'none'}}
-                                id ="fileInput"
-                            />
+                        <div className="job-photos-headings">
+                            <div>Photos</div>
+                            <div>
+                                {/* input element that allows user to choose image to upload */}
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={handleImageChange}
+                                    style={{display:'none'}}
+                                    id ="fileInput"
+                                />
 
-                            <label htmlFor="fileInput">Upload</label>
+                                {/* input element that allows user to choose image to replace */}
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageReplace}
+                                    style={{display:'none'}}
+                                    id ="fileReplace"
+                                />
+
+                                <label htmlFor="fileInput">Upload</label>
+                            </div>
+                        </div>
 
                             <div className="job-image-content">
 
                                 {/* Ternary Function that will display the main image if there is a current image
                                 If there isn't a current image, it will display a message telling user to upload an image */}
                                 {currentImage ? (
-                                <div className="job-image-main">
+                                <div className="job-image-content">
+
+                                    {/* Displays the main image */}
+                                    <div className="job-image-main1">
+                                        
+                                        <button className="job-image-replace" onClick={currentImageReplace}></button>
+                                        <button className="job-image-remove" onClick={currentImageRemove}></button>
+                                        <img src={currentImage} alt="Uploaded" style={{maxHeight:'100%',maxWidth:'100%',objectFit: 'contain',objectPosition: 'center'}}/>
+                                    </div>
                                     
-                                    <button className="job-image-replace" onClick={currentImageReplace}></button>
-                                    <button className="job-image-remove" onClick={currentImageRemove}></button>
-                                    <img src={currentImage} alt="Uploaded" style={{maxHeight:'100%',maxWidth:'100%'}}/>
+                                    {/* Displays all the images uploaded below the main image */}
+                                    <div 
+                                    
+                                    className="job-images"
+                                    ref ={scrollRef}
+                                    onMouseDown={handleMouseDown} 
+                                    onMouseMove={handleMouseMove}
+                                    onMouseUp={handleMouseUp}
+                                    onMouseLeave={handleMouseLeave}
+                                    onMouseEnter={() => setIsHovering(true)}
+                                    style={{cursor: isDragging ? "grabbing":'grab'}}>
+                                        
+                                        {images.map((img,index) => (
+                                            <div key={index}>
+                                                <img 
+                                                src={img} 
+                                                alt={`Image ${index}`} 
+                                                onClick={() => setCurrentImage(img)}
+                                                draggable="false"
+                                                style={{maxHeight:'100px',maxWidth:'100px',cursor: isDragging ? "grabbing":'pointer'}} />
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             )
                             :
-                            (
-                            <div className="job-image-main">
-                                <label htmlFor="fileInput" className="job-image-upload">
-                                    <p style={{color:'#999'}}>Click to upload image</p>
-                                </label>
-                            </div>
-                            )}
-
-                            {/* Displays all the images uploaded below the main image */}
-                            <div className="job-images">
+                            (   
                                 
-                                {images.map((img,index) => (
-                                    <div key={index}>
-                                        <img 
-                                        src={img} 
-                                        alt={`Image ${index}`} 
-                                        onClick={() => setCurrentImage(img)}
-                                        style={{maxHeight:'100px',maxWidth:'100px',cursor:'pointer'}} />
-                                    </div>
-                                ))}
-                            </div>
+                                <div className="job-image-main2"> 
+                                    {/* Displays text advising user to upload an image */}
+                                    <label htmlFor="fileInput" className="job-image-upload">
+                                        <p style={{color:'#999'}}>Click to upload image</p>
+                                    </label>
+                                </div>
+                            )}
 
                         </div>
                     </div>

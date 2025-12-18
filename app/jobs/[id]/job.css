@@ -77,8 +77,8 @@
     display:flex;
     justify-content: center;
     align-items: center;
-    width: 300px;
-    height:300px;
+    width: 400px;
+    height:520px;
     background-color: #F5F5F5;
     border-radius: 8px;
     cursor: pointer;
@@ -86,11 +86,19 @@
 
 .job-images {
     margin-top:10px;
-    background-color: aqua;
+    background-color: #F5F5F5;
     width: 400px;
-    height:auto;
+    height:110px;
     gap: 15px;
+    padding-bottom: 10px ;
     display: flex;
+    align-items: center;
+
+    overflow: auto;
+    overflow-y: hidden;
+    scroll-behavior: auto;
+
+    user-select: none;
 }
 
 .job-image-remove {
@@ -117,7 +125,23 @@
     cursor: pointer;
 }
 
-.job-image-main {
+.job-image-main1 {
+    background-color: black;
     position: relative;
     width: 400px;
+    height: 400px;
+    display: flex;
+}
+
+.job-image-main2 {
+    width: 400px;
+    height: 520px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.job-photos-headings {
+    display: flex;
+    gap: 10px;
 }
