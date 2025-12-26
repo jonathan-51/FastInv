@@ -229,6 +229,68 @@ export default function JobDetailPage() {
 
     
 
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResult, SetSearchResult] = useState('');
+    const [showDropDown,setShowDropDown] = useState(false);
+    const searchContainerRef = useRef(null);
+    const searchDropDownRef = useRef(null);
+    const [searchList, setSearchList] = useState([]);
+    const [itemsQuantity, setItemsQuantity] = useState({
+        id:'',
+        quantity:0,
+    })
+
+    const handleSearchChange = async (e) => {
+        setSearchQuery(e.target.value)
+        const value = e.target.value
+
+        try {
+            const response = await fetch('https://fakestoreapi.com/products')
+
+            const data = await response.json()
+
+            const filtered = data.filter(product => product.title.toLowerCase().includes(value.toLowerCase()))
+            
+
+            if (!value) {
+                SetSearchResult('')
+            } else {
+                console.log(value)
+                SetSearchResult(filtered.map(item => ({...item,quantity:0})))
+                console.log(filtered)
+            }
+            
+
+        } catch (error) {}
+
+    
+    }
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (searchContainerRef.current && !searchContainerRef.current.contains(e.target) && (!searchDropDownRef.current || !searchDropDownRef.current.contains(e.target))) {
+                setShowDropDown(false)
+            } else {
+                setShowDropDown(true)
+            }
+        }
+
+
+        document.addEventListener('mousedown',handleClickOutside);
+    },[])
+
+    const selectSearch = (e) => {
+        console.log(e.target.innerText)
+        const selectedItem = searchResult.find(item => item.title.trim() === e.target.innerText.trim())
+        console.log(selectedItem)
+        setSearchList([...searchList,selectedItem])
+    }
+
+    const removeItem = (id) => {
+        setSearchList(searchList.filter(item => item.id !== id))
+    }
+
+
     // Same as Description and Access Notes, but for Notes
     const [notes_text,setNotesText] = useState('');
     const [notesisEditing,setNotesIsEditing] = useState(false);
@@ -250,7 +312,7 @@ export default function JobDetailPage() {
     // since useEffect runs after rendering, initial job value is null, so if statement is required.
     if (job) {
         return (
-        <div className="job-page">
+        <div  className="job-page">
             
             <div className="job-main">
                 <div className="job-address">
@@ -417,7 +479,61 @@ export default function JobDetailPage() {
                     </div>
                     
                     <div className="job-materials">
-                        Materials
+                        <div>
+                            Materials
+                        </div>
+
+                        <div className="job-materials-search">
+                            <div className="job-materials-search-main">
+                                <input
+                                ref={searchContainerRef}
+                                className="job-materials-search-bar"
+                                type="text"
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+
+                                placeholder="Search for products..."
+                                />
+
+                                {showDropDown && searchResult.length > 0 && (
+                                <div className="job-materials-dropdown" onFocus={() => setShowDropDown(true)} ref={searchDropDownRef}>
+                                    {searchResult.map((item) => (
+                                        <div
+                                        className="job-materials-dropdown-items"
+                                        key={item.id}
+                                        onClick = {selectSearch}>
+                                        
+                                            <strong>{item.title}</strong>
+                                            
+                                        </div>
+                                    ))}
+                                    <p style={{marginLeft:'10px',marginBottom:'15px'}}>Found {searchResult.length} results</p>
+                                </div>
+                                )}
+                            </div>
+                        </div>
+                        <div
+                        className="job-materials-list">
+
+                            {searchList.length > 0 ? (
+                                searchList.map((item) => (
+                                    <div
+                                    key={item.id}
+                                    className="job-materials-item">
+
+                                        <strong>{item.title}</strong>
+                                        <button
+                                        className="job-materials-item-remove"
+                                        onClick={() => removeItem(item.id)}>Remove</button>
+                                        </div>
+                                ))
+                            ):(
+                                <p>Please Add Item</p>
+                                
+                                )}
+
+                        </div>
+                        
                     </div>
 
                     {notesisEditing ? (

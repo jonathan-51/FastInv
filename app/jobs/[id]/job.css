@@ -145,3 +145,64 @@
     display: flex;
     gap: 10px;
 }
+
+.job-materials-search {
+    display: flex;
+    justify-content: center;
+}
+
+.job-materials-search-main {
+    position: relative;
+}
+
+.job-materials-search-bar {
+
+
+    height: 50px;
+    width: 800px;
+    border-width: 2px;
+    border-radius: 5px;
+    border-color: black;
+
+    padding-left: 4px;
+    font-size: x-large;
+
+}
+
+.job-materials-search-button {
+    margin-left: 5px;
+}
+
+.job-materials-dropdown {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 800px;
+    max-Height: 300px;
+    overflow-y: auto;
+    background-color: #D1D1D1;
+    border: 2px solid #ccc;
+    box-Shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-Index: 1000;
+}
+
+.job-materials-dropdown-items {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    z-index: 1001;
+    background-color: #bb7070;
+}
+
+.job-materials-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.job-materials-item-quantity {
+    gap: 7px;
+    display: flex;
+    justify-content: right;
+}
