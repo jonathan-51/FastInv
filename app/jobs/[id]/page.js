@@ -234,11 +234,12 @@ export default function JobDetailPage() {
     const [showDropDown,setShowDropDown] = useState(false);
     const searchContainerRef = useRef(null);
     const searchDropDownRef = useRef(null);
-    const [searchList, setSearchList] = useState([]);
-    const [itemsQuantity, setItemsQuantity] = useState({
+    const [searchList, SetSearchList] = useState([]);
+    const [quantity,setQuantity] = useState({
         id:'',
-        quantity:0,
+        quantity:0
     })
+
 
     const handleSearchChange = async (e) => {
         setSearchQuery(e.target.value)
@@ -255,9 +256,16 @@ export default function JobDetailPage() {
             if (!value) {
                 SetSearchResult('')
             } else {
-                console.log(value)
-                SetSearchResult(filtered.map(item => ({...item,quantity:0})))
-                console.log(filtered)
+                console.log(searchList)
+                if (searchList.length === 0) {
+                    console.log("hi")
+                    SetSearchResult(filtered.map(item => ({...item,quantity:0})))
+                } else {
+                    console.log("bye")
+                    SetSearchResult(filtered.map(itemDropDown => {
+                        const match = searchList.find(itemList => itemList.id === itemDropDown.id)
+                        return match ? {...itemDropDown, quantity: match.quantity}:itemDropDown}))
+                }
             }
             
 
@@ -280,14 +288,84 @@ export default function JobDetailPage() {
     },[])
 
     const selectSearch = (e) => {
-        console.log(e.target.innerText)
-        const selectedItem = searchResult.find(item => item.title.trim() === e.target.innerText.trim())
-        console.log(selectedItem)
-        setSearchList([...searchList,selectedItem])
+        if (searchList.find(item => item.title.trim() === e.target.innerText.trim())) {
+            return
+        } else {
+            const selectedItem = searchResult.find(item => item.title.trim() === e.target.innerText.trim())
+            SetSearchList([...searchList,selectedItem])
+        }
+        
     }
 
     const removeItem = (id) => {
-        setSearchList(searchList.filter(item => item.id !== id))
+
+        if (searchList.length > 0) {
+            SetSearchList(searchList.filter(item => item.id !== id))
+            SetSearchResult(searchResult.map(item => 
+                item.id === id
+                ? {...item,quantity:0}
+                :item))
+        } else {
+            return
+        }
+        
+    }
+
+    const quantityAddDropDown = (id,amount) => {
+
+        SetSearchResult(searchResult.map(item => 
+            item.id === id 
+            ? { ...item, quantity: Math.max(0, item.quantity + amount) } 
+            : item
+        ))
+
+        if (!(searchList.find(item => item.id === id))) {
+            const selectedItem = searchResult.find(item => item.id === id)
+            SetSearchList([...searchList,{...selectedItem,quantity:1}])
+        } else {
+            SetSearchList(searchList.map(item => 
+            item.id === id 
+            ? { ...item, quantity: Math.max(0, item.quantity + amount) } 
+            : item
+        ))
+        }
+    }
+
+    const quantityMinusDropDown = (id,amount) => {
+
+        SetSearchResult(searchResult.map(item => 
+            item.id === id 
+            ? { ...item, quantity: Math.max(0, item.quantity + amount) } 
+            : item
+        ))
+
+
+        SetSearchList(searchList.map(item => 
+        item.id === id 
+        ? { ...item, quantity: Math.max(0, item.quantity + amount) } 
+        : item
+        ))
+        
+    }
+
+
+
+    const quantityUpdate = (id,amount) => {
+
+        SetSearchList(searchList.map(item => 
+            item.id === id 
+            ? { ...item, quantity: Math.max(0, item.quantity + amount) } 
+            : item
+        ))
+
+        if (searchResult.find(item => item.id)) {
+            SetSearchResult(searchResult.map(item => 
+                item.id === id ?
+                {...item,quantity: Math.max(0, item.quantity + amount)}
+                : item
+            ))
+        }
+        
     }
 
 
@@ -501,10 +579,14 @@ export default function JobDetailPage() {
                                         <div
                                         className="job-materials-dropdown-items"
                                         key={item.id}
-                                        onClick = {selectSearch}>
+                                        >
                                         
-                                            <strong>{item.title}</strong>
-                                            
+                                            <strong onClick = {selectSearch}>{item.title}</strong>
+                                            <div className="job-materials-item-quantity-dropdown">
+                                                <button onClick={() => quantityAddDropDown(item.id,1)}>Add</button>
+                                                <p>{item.quantity}</p>
+                                                <button onClick={() => quantityMinusDropDown(item.id,-1)}>Minus</button>
+                                            </div>
                                         </div>
                                     ))}
                                     <p style={{marginLeft:'10px',marginBottom:'15px'}}>Found {searchResult.length} results</p>
@@ -522,9 +604,16 @@ export default function JobDetailPage() {
                                     className="job-materials-item">
 
                                         <strong>{item.title}</strong>
-                                        <button
-                                        className="job-materials-item-remove"
-                                        onClick={() => removeItem(item.id)}>Remove</button>
+                                        <div>
+                                            <div className="job-materials-item-quantity">
+                                                <button onClick={() => quantityUpdate(item.id,1)}>Add</button>
+                                                <p>{item.quantity}</p>
+                                                <button onClick={() => quantityUpdate(item.id,-1)}>Minus</button>
+                                            </div>
+                                            <button
+                                            className="job-materials-item-remove"
+                                            onClick={() => removeItem(item.id)}>Remove</button>
+                                        </div>
                                         </div>
                                 ))
                             ):(

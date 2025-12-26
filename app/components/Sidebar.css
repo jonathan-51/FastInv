@@ -2,8 +2,9 @@
     background-color: bisque;
     height: 100vh;
     width: 175px;
+    top:50px;
     border-top: none;
-    position: relative;
+    position: fixed;
     border-right: 1px solid #000000;
 }
 

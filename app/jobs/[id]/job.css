@@ -201,8 +201,14 @@
     justify-content: space-between;
 }
 
-.job-materials-item-quantity {
+.job-materials-item-quantity-dropdown {
     gap: 7px;
     display: flex;
     justify-content: right;
+    background-color: blueviolet;
+}
+
+.job-materials-item-quantity {
+    display: flex;
+    gap: 5px;
 }
