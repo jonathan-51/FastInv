@@ -6,28 +6,27 @@
     padding-right: 4px;        /* px-1 */
     padding-top: 4px;          /* py-1 */
     padding-bottom: 4px;       /* py-1 */
-    border: 1px solid #000000; /* border (gray-300) */
+    border: 1px solid var(--border); /* border (gray-300) */
     word-wrap: break-word;      /* Breaks long words */
     overflow-wrap: break-word;  /* Modern version */
 }
 
 .ticket-headings {
-    border-top: 1px solid #000000;
-    border-bottom: 1px solid #000000;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
     width:auto;
     height: 50px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     padding-left: 2rem;
     align-items: center;
-    font-weight: bold;
 }
 
 .ticket {
     padding-left: 2rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    border-bottom: 1px solid #000000;
+    border-bottom: 1px solid var(--border);
     height: 50px;
     align-items: center;
 }

@@ -20,14 +20,14 @@ export default function customers() {
         <div className='contents'>
             <h1 className='pt-4 pb-4 pl-8 text-2xl'>Jobs</h1>
             <div>
-                <div className='ticket-headings'>
+                <h3 className='ticket-headings'>
                     
                     <div className='address'>Address</div>
                     <div className='name'>Name</div>
                     <div className='number'>Number</div>
                     <div className='email'>Email</div>
                     <div className='date'>Date</div>
-                </div>
+                </h3>
                 <div
                 // if the number of entries stored in jobs is zero, will display message
                 // else
@@ -41,11 +41,11 @@ export default function customers() {
                         jobs.map((job) => (
                             <Link key={job.id} href={`/jobs/${job.id}`}>
                             <div key={job.id} className='ticket'>
-                                <div>{job.address}</div>
-                                <div>{job.firstname} {job.lastname}</div>
-                                <div>{job.number}</div>
-                                <div>{job.email}</div>
-                                <div>{job.date}</div>
+                                <p>{job.address}</p>
+                                <p>{job.firstname} {job.lastname}</p>
+                                <p>{job.number}</p>
+                                <p>{job.email}</p>
+                                <p>{job.date}</p>
                             </div>
                             </Link>
                         ))

@@ -1,16 +1,16 @@
 .Sidebar {
-    background-color: bisque;
+    background: var(--surface-2);
     height: 100vh;
     width: 175px;
     top:50px;
     border-top: none;
     position: fixed;
-    border-right: 1px solid #000000;
+    border-right: 1px solid var(--border-strong);
 }
 
 .side-container {
     position: absolute;
-    background-color: aquamarine;
+    color: var(--text);
     left:50%;
     transform: translate(-50%);
     margin-top: 20px;
@@ -25,8 +25,8 @@
 }
 
 .new-customer {
-    background-color: #3b82f6;       /* bg-blue-500 */
-    color: #ffffff;                  /* text-white */
+    background-color: var(--primary);       /* bg-blue-500 */
+    color: var(--on-primary);                  /* text-white */
     padding-left: 1rem;              /* px-4 = 16px */
     padding-right: 1rem;             /* px-4 = 16px */
     padding-top: 0.5rem;             /* py-2 = 8px */
