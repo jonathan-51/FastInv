@@ -34,6 +34,8 @@ export default function customers() {
                 // iterate through all different jobs stored in jobs variable with iterable object job
                 // creating link to dynamic segment, differentiated only by job id
                 // key={job.id} labels each job ticket with its unqiue job id, allows for easy changes to specific job tickets if required.
+
+                className='jobs-table'
                 >
                     {jobs.length === 0 ? (
                         <p>No Jobs yet. Add one to get started</p>

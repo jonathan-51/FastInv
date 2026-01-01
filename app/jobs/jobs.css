@@ -12,6 +12,7 @@
 }
 
 .ticket-headings {
+    background-color: var(--surface-2);
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     width:auto;
@@ -29,4 +30,8 @@
     border-bottom: 1px solid var(--border);
     height: 50px;
     align-items: center;
+}
+
+.jobs-table {
+    background-color: var(--surface-1);
 }

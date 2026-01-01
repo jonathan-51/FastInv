@@ -3,6 +3,7 @@ import { useRef, useEffect,useState } from "react"
 import Link from 'next/link';
 import { useParams } from "next/navigation";
 import './job.css'
+import React from 'react'
 
 
 export default function JobDetailPage() {
@@ -23,6 +24,25 @@ export default function JobDetailPage() {
         const foundJob = savedJobs.find(c => c.id === jobID);
         setJob(foundJob);
     },[jobID]);
+
+
+    const [isHeadings,setIsHeadings] = useState({
+        isOverview: true,
+        isPhotos: false,
+        isMaterials: false,
+        isNotes: false,
+    })
+
+    const handleSectionClick = (section) => {
+        setIsHeadings({
+            isOverview: section === 'overview',
+            isPhotos: section === 'photos',
+            isMaterials: section === 'materials',
+            isNotes: section === 'notes',
+        })
+    }
+
+
 
     // Initializing useState variables to handle description
     const [descrip_text,setDescripText] = useState('');
@@ -152,9 +172,9 @@ export default function JobDetailPage() {
     // useState variable responsible for declaring if dragging is allowed
     const [isDragging, setIsDragging] = useState(false)
     // Stores the initial position of mouse movement
-    const [startX, setStartX] = useState(0)
+    const [startY, setStartY] = useState(0)
     // Initialises the variable responsible for getting scroll scroll position of container
-    const [scrollLeft,setScrollLeft] = useState(0)
+    const [scrollTop,setScrollTop] = useState(0)
     // Pointer for scroll to reference to DOM
     const scrollRef = useRef(null)
     // useState variable responsible for declaring if mouse is hovering over container
@@ -164,10 +184,10 @@ export default function JobDetailPage() {
     const handleMouseDown = (e) => {
         // Allows Dragging
         setIsDragging(true);
-        // Gets very first initial position of mouse from left edge of container
-        setStartX(e.pageX - scrollRef.current.offsetLeft)
+        // Gets very first initial position of mouse from top edge of container
+        setStartY(e.clientY - scrollRef.current.getBoundingClientRect().top)
         // Gets very first initial position of scroll of container
-        setScrollLeft(scrollRef.current.scrollLeft)
+        setScrollTop(scrollRef.current.scrollTop)
     }
 
     // Handles condition of when mouse is moving
@@ -176,16 +196,16 @@ export default function JobDetailPage() {
         if (!isDragging) return;
 
         // Gets final position of mouse after movement from left edge of container
-        const endX = e.pageX - scrollRef.current.offsetLeft;
+        const endY = e.clientY - scrollRef.current.getBoundingClientRect().top;
         // Getting distance  of movement, with a ratio of 1:2.7 || Drag Left = +ve, Drag Right = -ve
-        const distance = (startX - endX) * 2.7
+        const distance = (startY - endY) * 2
         // Storing next iteration's initial position as previous end position
-        setStartX(endX)
+        setStartY(endY)
 
         // Updates scroll position of container (+ve distance = container moves right || -ve distance = container moves left)
-        scrollRef.current.scrollLeft = scrollLeft + distance
+        scrollRef.current.scrollTop = scrollTop + distance
         // Temporarily stores updated scroll position, 
-        setScrollLeft(scrollRef.current.scrollLeft)
+        setScrollTop(scrollRef.current.scrollTop)
 
         
     }
@@ -203,68 +223,100 @@ export default function JobDetailPage() {
     }
 
 
-    // Runs only when the hovering state changes (either user enters or leaves container)
-    useEffect(() => {
-        // Pointing to container that needs scrolling
-        const container = scrollRef.current;
-
-        if (!container) return;
-
-        // Function that handles using mouse whell to scroll list of images
-        const handleWheel = (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            // Updates scroll position for each scroll based on vertical direction of mouse scroll
-            scrollRef.current.scrollLeft += e.deltaY;
-    }   
-        // Listens for when scroll wheel is used in container and turns off scrolling for page.
-        if (isHovering) {container.addEventListener('wheel',handleWheel, {passive:false})};
-
-        // Re enables scrolling for page
-        return () => {
-            container.removeEventListener('wheel',handleWheel);
-        }
-
-    },[isHovering])
-
-    
-
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResult, SetSearchResult] = useState('');
-    const [showDropDown,setShowDropDown] = useState(false);
-    const searchContainerRef = useRef(null);
-    const searchDropDownRef = useRef(null);
-    const [searchList, SetSearchList] = useState([]);
-    const [quantity,setQuantity] = useState({
-        id:'',
-        quantity:0
+    const [refactoredData,setRefactoredData] = useState({
+        productID:'',
+        name:'',
+        supplier:'',
+        sku:'',
+        unit:'',
+        brand:'',
+        category:'',
+        description:'',
+        currency:'',
+        price:null,
+        location:'',
+        status:'',
+        notes:'',
     })
 
+    const [selectedRefactoredData,setSelectedRefactoredData] = useState({
+        productID:'',
+        name:'',
+        quantity:null,
+        sku:'',
+        unit:'',
+        price:null,
+        currency:'',
+        supplier:'',
 
+    })
+    // Initializing variable that stores user input for search bar
+    const [searchQuery, setSearchQuery] = useState('');
+    // Initializing variable that stores all the results from the user input
+    const [searchResult, SetSearchResult] = useState([]);
+    // Initializing variable that keeps tract of dropdown state, only exists if true.
+    const [showDropDown,setShowDropDown] = useState(false);
+    // Initializing variable that references to container that handles searching (search bar)
+    const searchContainerRef = useRef(null);
+    // Intializing variable that references to dropdown container
+    const searchDropDownRef = useRef(null);
+    // Initializing variable that stores all items the user has selected
+    const [searchList, SetSearchList] = useState([]);
+            
+
+    const handleRefactor = (apiData) => {
+        return apiData.map(item => ({
+            productID:item.id ?? '',
+            name:item.title ?? '',
+            supplier:item.supplier ?? '',
+            sku:item.sku ?? '',
+            unit:item.unit ?? '',
+            brand:item.brand ?? '',
+            category:item.category ?? '',
+            description:item.description ?? '',
+            currency:item.currency ?? '',
+            price:item.pric ?? 0,
+        }))
+    }
+
+    // Function that handles the change in input in search bar
     const handleSearchChange = async (e) => {
+        // Updates and stores user input in variable
         setSearchQuery(e.target.value)
+        // Assigns the user input to another variable because UseState variables will only update after the function is called again (delayed by one function call)
         const value = e.target.value
-
+        console.log(value)
         try {
             const response = await fetch('https://fakestoreapi.com/products')
 
+            // Converting fetch API data into JSON
             const data = await response.json()
-
-            const filtered = data.filter(product => product.title.toLowerCase().includes(value.toLowerCase()))
-            
-
+            const refactored = handleRefactor(data)
+            // Turns user input as well as fetch API data into lower case
+            // Checks to see if any of the API data entries include keywords from the user input
+            // Creates a new variable that stores all the entries that do have keywords in the form of an array.
+            const filtered = refactored.filter(product => product.name.toLowerCase().includes(value.toLowerCase()))
+            // If user input is empty, search result variable to empty array
+            // Else...
+            //      If user has not selected any items, intialize all displayed search result items to have a quantity of 0
+            //      Else, for all the current quantity selections for the selected items, sync it with the items in the dropdown.
             if (!value) {
-                SetSearchResult('')
+                SetSearchResult([])
             } else {
                 console.log(searchList)
                 if (searchList.length === 0) {
-                    console.log("hi")
+                    // Intialize all displayed search result items to have a quantity of 0
                     SetSearchResult(filtered.map(item => ({...item,quantity:0})))
                 } else {
-                    console.log("bye")
+                    //if the user has previously selected items and changed the quantities, it will sync it with the corresponding item's quantity in the dropdown
+
+                    // Goes through each item sequentially in dropdown menu
                     SetSearchResult(filtered.map(itemDropDown => {
-                        const match = searchList.find(itemList => itemList.id === itemDropDown.id)
-                        return match ? {...itemDropDown, quantity: match.quantity}:itemDropDown}))
+                        // Checks if the item is both in the list as well as in the dropdown menu
+                        const match = searchList.find(itemList => itemList.productID === itemDropDown.productID)
+                        // if match is false -> sets item quantity in the drop down menu to 0
+                        // if match is true (item is in both list and dropdown menu) --> change the same item's quantity in dropdown menu to be the same as that in list.
+                        return match ? {...itemDropDown, quantity: match.quantity}:{...itemDropDown,quantity:0}}))
                 }
             }
             
@@ -274,96 +326,190 @@ export default function JobDetailPage() {
     
     }
 
+    // Handles displaying dropdown menu
     useEffect(() => {
+
+        // function that runs when mouse is clicked outside search bar and dropdown menu
         const handleClickOutside = (e) => {
+            //searchContainerRef.current --> getting referenced container (search bar)
+            //searchDropDownRef.current --> getting referenced container (dropdown menu)
+            //e.target --> mouse's position on screen after each render.
+
+            // If mouse click is not in either container, dropdown state change to false
             if (searchContainerRef.current && !searchContainerRef.current.contains(e.target) && (!searchDropDownRef.current || !searchDropDownRef.current.contains(e.target))) {
                 setShowDropDown(false)
             } else {
+            // If mouse click in either container, turn true
                 setShowDropDown(true)
             }
         }
 
-
+        // Listens for mouse click, if detected, run function
         document.addEventListener('mousedown',handleClickOutside);
     },[])
 
+
+    // Function that handles selecting a specific item in the search result by clicking its name.
     const selectSearch = (e) => {
-        if (searchList.find(item => item.title.trim() === e.target.innerText.trim())) {
+        
+        // First prevents any duplicate items by checking each item already added with item click via name of item.
+        if (searchList.find(item => item.name.trim() === e.target.innerText.trim())) {
             return
         } else {
-            const selectedItem = searchResult.find(item => item.title.trim() === e.target.innerText.trim())
+            // Checks if selected item exists in search result, and temporarily stores it in variable
+            const selectedItem = {...searchResult.find(item => item.name.trim() === e.target.innerText.trim()),quantity:1}
+            
+            // Updates search list variable with selected item.
             SetSearchList([...searchList,selectedItem])
+
+            //Updates search result variable with selected item.
+            SetSearchResult(searchResult.map(item => item.productID === selectedItem.productID ? {...item,quantity:1}:item))
         }
         
     }
 
-    const removeItem = (id) => {
+    useEffect(() => {
+        console.log(searchList)
+    },[searchList])
+    // Function that handles removing a specfici item in the list.
+    const removeItem = (productID) => {
 
+        // Checks to see if items exist in the list
         if (searchList.length > 0) {
-            SetSearchList(searchList.filter(item => item.id !== id))
+            // Updates list variable with all the items in the list except for the item being removed.
+            SetSearchList(searchList.filter(item => item.productID !== productID))
+            // Resets the removed items quantity in the dropdown menu to 0 by scanning through all search result items until one matches with item being removed.
             SetSearchResult(searchResult.map(item => 
-                item.id === id
+                item.productID === productID
                 ? {...item,quantity:0}
                 :item))
+            setSelectedRows(selectedRows.filter(item => item !== productID))
         } else {
             return
         }
         
     }
 
-    const quantityAddDropDown = (id,amount) => {
+    // Function that handles increasing quantity in dropdown
+    const quantityAddDropDown = (productID,amount) => {
 
+        // Scans through all search result items until it matches with item being altered,
         SetSearchResult(searchResult.map(item => 
-            item.id === id 
+            item.productID === productID 
+            // If item matches, increase its item quantity by 1. 0 in first argument is the minimum
+            // If item doesn't match, do nothing.
             ? { ...item, quantity: Math.max(0, item.quantity + amount) } 
             : item
         ))
 
-        if (!(searchList.find(item => item.id === id))) {
-            const selectedItem = searchResult.find(item => item.id === id)
+
+        // Checks to see if the item's quantity being changed in the dropdown menu already exists in the list or not.
+        if (!(searchList.find(item => item.productID === productID))) {
+            // If item doesn't exist in the list, add item into variable that stores alls list items as well as change the quantity of selected item to 1.
+            const selectedItem = searchResult.find(item => item.productID === productID)
             SetSearchList([...searchList,{...selectedItem,quantity:1}])
+            console.log('ssdsadsa')
         } else {
+            // If item already exists in the list, scan through list variable for the specfic item and increase its quantity by 1.
+            // For all items that don't match the selected item's ID, do nothing.
             SetSearchList(searchList.map(item => 
-            item.id === id 
+            item.productID === productID 
             ? { ...item, quantity: Math.max(0, item.quantity + amount) } 
             : item
-        ))
+            ))
+            console.log('hihi')
         }
     }
 
-    const quantityMinusDropDown = (id,amount) => {
+    const quantityMinusDropDown = (productID,amount) => {
 
         SetSearchResult(searchResult.map(item => 
-            item.id === id 
+            item.productID === productID 
             ? { ...item, quantity: Math.max(0, item.quantity + amount) } 
             : item
         ))
 
 
         SetSearchList(searchList.map(item => 
-        item.id === id 
+        item.productID === productID 
         ? { ...item, quantity: Math.max(0, item.quantity + amount) } 
         : item
         ))
         
     }
 
+    const quantityinput = (productID,value) => {
 
 
-    const quantityUpdate = (id,amount) => {
+        if (value !== '' && isNaN(Number(value))) {
+            return;  // reject non-numbers
+        }
+
+        const qtyinput = value === '' ? '' : parseInt(value);
+
+        SetSearchResult(searchResult.map(item => 
+            item.productID === productID 
+            ? { ...item, quantity: qtyinput } 
+            : item
+        ))
+
 
         SetSearchList(searchList.map(item => 
-            item.id === id 
+        item.productID === productID 
+        ? { ...item, quantity: qtyinput } 
+        : item
+        ))  
+        
+        
+
+        
+        
+    }
+
+    const quantityUpdate = (productID,amount) => {
+
+        SetSearchList(searchList.map(item => 
+            item.productID === productID 
             ? { ...item, quantity: Math.max(0, item.quantity + amount) } 
             : item
         ))
 
-        if (searchResult.find(item => item.id)) {
+        if (searchResult.find(item => item.productID)) {
             SetSearchResult(searchResult.map(item => 
-                item.id === id ?
-                {...item,quantity: Math.max(0, item.quantity + amount)}
+                item.productID === productID ?
+                {...item,quantity: Math.max(0, parseInt(item.quantity) + amount)}
                 : item
             ))
+        }
+        
+    }
+
+    // Initializing useState variable to store selected rows
+    const [selectedRows, setSelectedRows] = useState([]);
+
+    // Function that handles selecting rows
+    const toggleRow = (productID) => {
+
+        // Checks to see if selected row already exists in the array or not.
+        
+        if (selectedRows.includes(productID)) {
+            // If row already exists, remove from array
+            setSelectedRows(selectedRows.filter(item => item !== productID))
+        } else {
+            // If row doesn't exist, add to array
+            setSelectedRows([...selectedRows,productID]);
+        }
+    }
+
+    // Function that handles selection ALL ROWS AT ONCE
+    const toggleAllRows = () => {
+
+        if (selectedRows.length === searchList.length) {
+            setSelectedRows([])
+        } else {
+            const unselectedRows = searchList.filter(item => !selectedRows.includes(item.productID)).map(item => item.productID)
+
+            setSelectedRows([...selectedRows,...unselectedRows])
         }
         
     }
@@ -396,9 +542,233 @@ export default function JobDetailPage() {
                 <div className="job-address">
                     {job.address}
                 </div>
+                <div className="job-sections">
+                    <button onClick={() => handleSectionClick('overview')}>Overview</button>
+                    <button onClick={() => handleSectionClick('photos')}>Photos</button>
+                    <button onClick={() => handleSectionClick('materials')}>Materials</button>
+                    <button onClick={() => handleSectionClick('notes')}>Notes</button>
+
+                </div>
                 <div className="job-content">
 
-                        {descripisEditing ? (
+                    {/*Displays images section */}
+                    {isHeadings.isPhotos && (
+                        <div className="job-photos">
+                            <div className="job-photos-headings">
+                                {/* input element that allows user to choose image to upload */}
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={handleImageChange}
+                                    style={{display:'none'}}
+                                    id ="fileInput"
+                                />
+
+                                {/* input element that allows user to choose image to replace */}
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageReplace}
+                                    style={{display:'none'}}
+                                    id ="fileReplace"
+                                />
+            
+                                <label htmlFor="fileInput">Upload</label>
+                                <div className="job-image-buttons">
+                                <button className="job-image-replace" onClick={currentImageReplace}></button>
+                                <button className="job-image-remove" onClick={currentImageRemove}></button>
+                                </div>
+                            </div>
+
+                            <div className="job-image-content">
+
+                                {/* Ternary Function that will display the main image if there is a current image
+                                If there isn't a current image, it will display a message telling user to upload an image */}
+                                {currentImage ? (
+                                <div className="job-image-main1">
+                                    {/* Displays the main image */}
+                                    <img src={currentImage} alt="Uploaded" style={{maxHeight:'100%',maxWidth:'100%',objectFit: 'contain',objectPosition: 'center'}}/>
+                                </div>
+                            )
+                            :
+                            (   
+                                
+                                <div className="job-image-main2"> 
+                                    {/* Displays text advising user to upload an image */}
+                                    <label htmlFor="fileInput" className="job-image-upload">
+                                        <p style={{color:'#999'}}>Click to upload image</p>
+                                    </label>
+                                </div>
+                            )}
+
+                            {/* Displays all the images uploaded below the main image */}
+                            <div 
+                                
+                                className="job-images"
+                                ref ={scrollRef}
+                                onMouseDown={handleMouseDown} 
+                                onMouseMove={handleMouseMove}
+                                onMouseUp={handleMouseUp}
+                                onMouseLeave={handleMouseLeave}
+                                onMouseEnter={() => setIsHovering(true)}
+                                style={{cursor: isDragging ? "grabbing":'grab'}}>
+                                    
+                                {images.map((img,index) => (
+                                    <div key={index}>
+                                        <img 
+                                        src={img} 
+                                        alt={`Image ${index}`} 
+                                        onClick={() => setCurrentImage(img)}
+                                        draggable="false"
+                                        className="job-images-image"
+                                        style={{cursor: isDragging ? "grabbing":'pointer'}} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    )}
+                    
+                    {isHeadings.isMaterials && (
+                    <div className="job-materials">
+
+                        <div className="job-materials-search">
+                            <div className="job-materials-search-main">
+                                <input
+                                ref={searchContainerRef}
+                                className="job-materials-search-bar"
+                                type="text"
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+
+                                placeholder="Search for products..."
+                                />
+
+                                {showDropDown && searchResult.length > 0 && (
+                                <div className="job-materials-dropdown" onFocus={() => setShowDropDown(true)} ref={searchDropDownRef}>
+                                    {searchResult.map((item) => (
+                                        <div
+                                        className="job-materials-dropdown-items"
+                                        key={item.productID}
+                                        >
+                                        
+                                            <strong onClick = {selectSearch}>{item.name}</strong>
+                                            <div className="job-materials-item-quantity-dropdown">
+                                                <button onClick={() => quantityMinusDropDown(item.productID,-1)}>—</button>
+                                                <p>{item.quantity}</p>
+                                                <button onClick={() => quantityAddDropDown(item.productID,1)}>+</button>
+                                                
+                                            </div>
+                                        </div>
+                                    ))}
+                                    <p style={{marginLeft:'10px',marginBottom:'15px'}}>Found {searchResult.length} results</p>
+                                </div>
+                                )}
+                            </div>
+                        </div>
+                        <div
+                    
+                        className="job-materials-list">
+                            <div className="header">
+                                <div 
+                                className="header-select"
+                                onClick={() => {toggleAllRows()}}>
+                                    {selectedRows.length === searchList.length && searchList.length > 0 ? '✓' : ''}
+                                </div>
+                            </div>
+
+                            <div className="header"><strong className="header-name">Name</strong></div>
+                            <div className="header"><strong className="header-quantity">Quantity</strong></div>
+                            <div className="header"><strong className="header-location">Location</strong></div>
+                            <div className="header"><strong className="header-status">Status</strong></div>
+                            <div className="header"><strong className="header-notes">Notes</strong></div>
+                            <div className="header"><strong className="header-remove">Remove</strong></div>
+                            {searchList.length > 0 ? (
+                                searchList.map((item) => {
+                                    const isSelected = selectedRows.includes(item.productID);
+                                    const isSelectedStyle = {backgroundColor:isSelected ? 'var(--selected-surface)':'var(--surface-1)'}
+                                    return (
+                                    <React.Fragment
+                                    key={item.productID}>
+                                    
+                                        <div className="job-materials-item-select" style={{backgroundColor:isSelected ? 'var(--selected-surface)':'var(--surface-1)'}}>
+                                            <div 
+                                            onClick={() => toggleRow(item.productID)} 
+                                            className="job-materials-item-select-box"
+                                            style={isSelectedStyle}>
+                                                {isSelected ? '✓' : ''}
+                                            </div>
+                                        </div>
+                                        
+                                        <div 
+                                        style={isSelectedStyle}>
+                                            {item.name}
+                                        </div>
+                                        
+                                        <div 
+                                        className="job-materials-item-quantity" 
+                                        style={isSelectedStyle}>
+                                            <button 
+                                            style={{height:'100%',flex:'1',cursor:'pointer',userSelect:'none',fontSize:'20px'}} 
+                                            onClick={() => quantityMinusDropDown(item.productID,-1)}>
+                                                —
+                                            </button>
+                                            
+                                            <input 
+                                            style={{width:`${String(item.quantity).length + 1}ch`,display:'flex',textAlign:"center",justifyContent:"center"}} 
+                                            type="text" 
+                                            inputMode="numeric"
+                                            value={item.quantity} 
+                                            onChange={(e) => quantityinput(item.productID,e.target.value)}
+                                            onBlur={(e) => {if (e.target.value === '') {quantityinput(item.productID,0)}}}/>
+
+                                            <button 
+                                            style={{paddingRight:'15px',height:'100%',flex:'1',cursor:'pointer',userSelect:'none',fontSize:'20px'}} 
+                                            onClick={() => quantityAddDropDown(item.productID,1)}>
+                                                +
+                                            </button>
+                                        </div>
+
+                                        <div 
+                                        className="job-materials-item-location"
+                                        style={isSelectedStyle}>
+                                            Location
+                                        </div>
+
+                                        <div 
+                                        className="job-materials-item-status"
+                                        style={isSelectedStyle}>
+                                            Status
+                                        </div>
+
+                                        <div 
+                                        className="job-materials-item-notes"
+                                        style={isSelectedStyle}>
+                                            Notes
+                                        </div>
+
+                                        <button 
+                                        className="job-materials-item-remove" onClick={() => removeItem(item.productID)}
+                                        style={isSelectedStyle}>
+                                            Remove
+                                        </button>
+
+                                    </React.Fragment>
+                                    )
+                                })
+                            ):(
+                                <p>Please Add Item</p>
+                                
+                                )}
+
+                        </div>
+                        
+                    </div>)}
+
+                    {isHeadings.isNotes && (
+                    <div>
+                    {descripisEditing ? (
                             <div className="job-description">
                                 <div className="job-description-headings">
                                     <div>Description</div>
@@ -434,7 +804,7 @@ export default function JobDetailPage() {
                                     )}
                                 </div>
                             </div>
-                        )}
+                    )}
 
                     {accessisEditing ? (
                             <div className="job-access">
@@ -472,158 +842,7 @@ export default function JobDetailPage() {
                                     )}
                                 </div>
                             </div>
-                        )}
-
-                    {/*Displays images section */}
-                    <div className="job-photos">
-                        <div className="job-photos-headings">
-                            <div>Photos</div>
-                            <div>
-                                {/* input element that allows user to choose image to upload */}
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    multiple
-                                    onChange={handleImageChange}
-                                    style={{display:'none'}}
-                                    id ="fileInput"
-                                />
-
-                                {/* input element that allows user to choose image to replace */}
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageReplace}
-                                    style={{display:'none'}}
-                                    id ="fileReplace"
-                                />
-
-                                <label htmlFor="fileInput">Upload</label>
-                            </div>
-                        </div>
-
-                            <div className="job-image-content">
-
-                                {/* Ternary Function that will display the main image if there is a current image
-                                If there isn't a current image, it will display a message telling user to upload an image */}
-                                {currentImage ? (
-                                <div className="job-image-content">
-
-                                    {/* Displays the main image */}
-                                    <div className="job-image-main1">
-                                        
-                                        <button className="job-image-replace" onClick={currentImageReplace}></button>
-                                        <button className="job-image-remove" onClick={currentImageRemove}></button>
-                                        <img src={currentImage} alt="Uploaded" style={{maxHeight:'100%',maxWidth:'100%',objectFit: 'contain',objectPosition: 'center'}}/>
-                                    </div>
-                                    
-                                    {/* Displays all the images uploaded below the main image */}
-                                    <div 
-                                    
-                                    className="job-images"
-                                    ref ={scrollRef}
-                                    onMouseDown={handleMouseDown} 
-                                    onMouseMove={handleMouseMove}
-                                    onMouseUp={handleMouseUp}
-                                    onMouseLeave={handleMouseLeave}
-                                    onMouseEnter={() => setIsHovering(true)}
-                                    style={{cursor: isDragging ? "grabbing":'grab'}}>
-                                        
-                                        {images.map((img,index) => (
-                                            <div key={index}>
-                                                <img 
-                                                src={img} 
-                                                alt={`Image ${index}`} 
-                                                onClick={() => setCurrentImage(img)}
-                                                draggable="false"
-                                                style={{maxHeight:'100px',maxWidth:'100px',cursor: isDragging ? "grabbing":'pointer'}} />
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )
-                            :
-                            (   
-                                
-                                <div className="job-image-main2"> 
-                                    {/* Displays text advising user to upload an image */}
-                                    <label htmlFor="fileInput" className="job-image-upload">
-                                        <p style={{color:'#999'}}>Click to upload image</p>
-                                    </label>
-                                </div>
                             )}
-
-                        </div>
-                    </div>
-                    
-                    <div className="job-materials">
-                        <div>
-                            Materials
-                        </div>
-
-                        <div className="job-materials-search">
-                            <div className="job-materials-search-main">
-                                <input
-                                ref={searchContainerRef}
-                                className="job-materials-search-bar"
-                                type="text"
-                                value={searchQuery}
-                                onChange={handleSearchChange}
-
-                                placeholder="Search for products..."
-                                />
-
-                                {showDropDown && searchResult.length > 0 && (
-                                <div className="job-materials-dropdown" onFocus={() => setShowDropDown(true)} ref={searchDropDownRef}>
-                                    {searchResult.map((item) => (
-                                        <div
-                                        className="job-materials-dropdown-items"
-                                        key={item.id}
-                                        >
-                                        
-                                            <strong onClick = {selectSearch}>{item.title}</strong>
-                                            <div className="job-materials-item-quantity-dropdown">
-                                                <button onClick={() => quantityAddDropDown(item.id,1)}>Add</button>
-                                                <p>{item.quantity}</p>
-                                                <button onClick={() => quantityMinusDropDown(item.id,-1)}>Minus</button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                    <p style={{marginLeft:'10px',marginBottom:'15px'}}>Found {searchResult.length} results</p>
-                                </div>
-                                )}
-                            </div>
-                        </div>
-                        <div
-                        className="job-materials-list">
-
-                            {searchList.length > 0 ? (
-                                searchList.map((item) => (
-                                    <div
-                                    key={item.id}
-                                    className="job-materials-item">
-
-                                        <strong>{item.title}</strong>
-                                        <div>
-                                            <div className="job-materials-item-quantity">
-                                                <button onClick={() => quantityUpdate(item.id,1)}>Add</button>
-                                                <p>{item.quantity}</p>
-                                                <button onClick={() => quantityUpdate(item.id,-1)}>Minus</button>
-                                            </div>
-                                            <button
-                                            className="job-materials-item-remove"
-                                            onClick={() => removeItem(item.id)}>Remove</button>
-                                        </div>
-                                        </div>
-                                ))
-                            ):(
-                                <p>Please Add Item</p>
-                                
-                                )}
-
-                        </div>
-                        
-                    </div>
 
                     {notesisEditing ? (
                             <div className="job-notes">
@@ -661,7 +880,10 @@ export default function JobDetailPage() {
                                     )}
                                 </div>
                             </div>
+                        
                         )}
+                    </div>)}
+                    
                         
                 </div>
             </div>

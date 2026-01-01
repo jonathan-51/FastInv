@@ -12,6 +12,7 @@ export default function Sidebar() {
                 <div className='side-contents'>
                     <Link href='/'>Home</Link>
                     <Link href="/jobs">Jobs</Link>
+                    <Link href='/setting'>Setting</Link>
                 </div>
             </div>
 

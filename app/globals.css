@@ -10,12 +10,17 @@
   --text-muted:#475569;
   --icon:#334155;
 
+  --hover-surface:#F3EEE4;
+  --selected-surface:#EFE7DA;
+  --disabled-surface:#F1ECE2;
+  --disabled-border:#EAE3D6;
+
   --primary:#3B2A22;
   --primary-hover:#33241D;
   --primary-active:#2A1D18;
   --on-primary:#FFFFFF;
 
-  --border:#E6DFD2;
+  --border: #E6DFD2;
   --border-strong:#D7CEBE;
   --radius:10px;
 
@@ -49,4 +54,14 @@ p {
   font-weight: 400;
   font-size: 15px;
   line-height: 1.5;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
 }

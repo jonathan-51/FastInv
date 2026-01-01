@@ -8,6 +8,6 @@ import { useState } from 'react'
 
 
 // function that handles getting customer information
-export default function home() {
+export default function settings() {
   return 
 }
