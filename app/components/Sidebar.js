@@ -1,8 +1,12 @@
+'use client'
+
 import './Sidebar.css'
 import Link from 'next/link';
 
-export default function Sidebar() {
+import { useSettings } from '../context/SettingsContext';
 
+export default function Sidebar() {
+    const { setIsSettingsOpen } = useSettings();
     return (
         <aside className='Sidebar'>
             <div className='side-container'>
@@ -12,7 +16,12 @@ export default function Sidebar() {
                 <div className='side-contents'>
                     <Link href='/'>Home</Link>
                     <Link href="/jobs">Jobs</Link>
-                    <Link href='/setting'>Setting</Link>
+
+                    <button 
+                    style={{textAlign:'left', cursor:'pointer'}} 
+                    onClick={() => setIsSettingsOpen(true)}>
+                        Settings
+                    </button>
                 </div>
             </div>
 

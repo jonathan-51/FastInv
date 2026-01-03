@@ -1,7 +1,11 @@
 import "./globals.css";
 import Navbar from './components/Navbar.js';
-import Sidebar from './components/Sidebar.js'
+import Sidebar from './components/Sidebar.js';
+import Settings from './components/Settings.js';
+import { SettingsProvider } from "./context/SettingsContext";
 import { fontSans } from "./fonts.js";
+import { LocationProvider } from "./context/LocationContext";
+import { StatusProvider } from "./context/StatusContext";
 
 
 export const metadata = {
@@ -10,18 +14,24 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
   return (
     <html lang="en">
-      <body
-        className={fontSans.variable}
-      >
-        <Navbar />
-        <div className="flex">
-          <Sidebar/>
-          <main className="flex-1 ml-43.75 mt-12.5">
-          {children}
-          </main>
-        </div>
+      <body className={fontSans.variable}>
+        <SettingsProvider>
+          <LocationProvider>
+            <StatusProvider>
+            <Navbar />
+            <div className="flex">
+              <Sidebar/>
+              <main className="flex-1 ml-43.75 mt-12.5">
+              {children}
+              </main>
+            </div>
+            <Settings />
+            </StatusProvider>
+          </LocationProvider>
+        </SettingsProvider>
       </body>
     </html>
   );

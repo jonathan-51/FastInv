@@ -1,9 +1,11 @@
 'use client'
-import { useRef, useEffect,useState } from "react"
+import { useRef, useEffect,useState, use } from "react"
 import Link from 'next/link';
 import { useParams } from "next/navigation";
 import './job.css'
 import React from 'react'
+import { useLocation } from "@/app/context/LocationContext";
+import { useStatus } from "@/app/context/StatusContext";
 
 
 export default function JobDetailPage() {
@@ -93,7 +95,9 @@ export default function JobDetailPage() {
 
     // Initializing the useState variable to store main image
     const [currentImage,setCurrentImage] = useState(null)
-
+    
+    // Initializing the useState variable to store the user-selected images
+    const [isSelectedImages, setIsSelectedImages] = useState([]);
 
     // Function that handles Image Upload
     const handleImageChange = (e) => {
@@ -223,6 +227,68 @@ export default function JobDetailPage() {
     }
 
 
+    // Handles selecting/deselecting all images
+    const toggleSelectAllImages = () => {
+        if (images.length === isSelectedImages.length) {
+            setIsSelectedImages([]);
+        } else {
+            setIsSelectedImages([...isSelectedImages,...images.filter(img => !isSelectedImages.includes(img))])
+        }
+    }
+
+    // Handles selecting/deselecting a singular image
+    const toggleSelectImage = (image) => {
+        
+        //Checks if the image is already selected
+
+        //If already selected --> deselect it
+        if (isSelectedImages.includes(image)) {
+            // Destructuring the selected images array by unpacking the image being unselected, effectively removing it from array.
+            // Assign the rest to a separate variable and update the selected images array with the new temp variable.
+            setIsSelectedImages([...isSelectedImages.filter(img => img !== image)])
+        } else {
+            setIsSelectedImages([...isSelectedImages,image])
+        }
+    }
+
+
+
+
+    useEffect(() => {
+        console.log('----------------------------------------------------')
+        console.log(images.length)
+        console.log(isSelectedImages.length)
+        console.log(typeof images.length)
+        console.log(typeof isSelectedImages.length)
+        console.log(images.length === isSelectedImages.length)
+        console.log('----------------------------------------------------')
+
+    },[isSelectedImages])
+
+    const handleMultiImageRemove = () => {
+
+        if (isSelectedImages.length > 0) {
+            // Scans through the image array with all stored im ages removes any images if it matches with the selected image. Does it via index
+            setImages(images.filter(img => !isSelectedImages.includes(img)))
+            setIsSelectedImages([])
+
+            if (!isSelectedImages.includes(currentImage)) {
+
+            }
+            else if (images.length === isSelectedImages.length) {
+                setCurrentImage(null)
+            }
+            else {
+                setCurrentImage(images.find(img => !isSelectedImages.includes(img)))
+            }
+
+        } else {
+            return
+        }
+    }
+    
+
+
     const [refactoredData,setRefactoredData] = useState({
         productID:'',
         name:'',
@@ -262,7 +328,20 @@ export default function JobDetailPage() {
     const searchDropDownRef = useRef(null);
     // Initializing variable that stores all items the user has selected
     const [searchList, SetSearchList] = useState([]);
-            
+
+    const { locationFields,setlocationFields } = useLocation();
+    const [openLocationDropDownID, setOpenLocationDropDownID] =  useState(null);
+    const locationDropDownRef = useRef(null)
+    const locationButtonRef = useRef({})
+    const [currentLocations,setCurrentLocations] = useState({})
+
+    const { statusFields,setStatusFields } = useStatus();
+    const [openStatusDropDownID, setOpenStatusDropDownID] = useState(null);
+    const statusDropDownRef = useRef(null);
+    const statusButtonRef = useRef({});
+    const [currentStatuses,setCurrentStatuses] = useState({});
+
+
 
     const handleRefactor = (apiData) => {
         return apiData.map(item => ({
@@ -342,10 +421,13 @@ export default function JobDetailPage() {
             // If mouse click in either container, turn true
                 setShowDropDown(true)
             }
+            
+
         }
 
         // Listens for mouse click, if detected, run function
         document.addEventListener('mousedown',handleClickOutside);
+
     },[])
 
 
@@ -514,6 +596,61 @@ export default function JobDetailPage() {
         
     }
 
+    
+
+    // Handles displaying dropdown menu
+    useEffect(() => {
+        if (!openLocationDropDownID) return
+
+        // function that runs when mouse is clicked outside search bar and dropdown menu
+        const handleClickOutside = (e) => {
+            //searchContainerRef.current --> getting referenced container (search bar)
+            //searchDropDownRef.current --> getting referenced container (dropdown menu)
+            //e.target --> mouse's position on screen after each render.
+
+            const clickedOnAnyButton = Object.values(locationButtonRef.current).some((button) => button && button.contains(e.target))
+
+            if (clickedOnAnyButton) return;
+
+
+            if (openLocationDropDownID && locationDropDownRef.current && !locationDropDownRef.current.contains(e.target)) {
+                setOpenLocationDropDownID(null)
+            }
+
+            
+
+        }
+
+        // Listens for mouse click, if detected, run function
+        document.addEventListener('mousedown',handleClickOutside);
+        console.log(`end: ${openLocationDropDownID}`)
+
+    },[openLocationDropDownID])
+
+    const displayCurrentLocation = (id,location) => {
+        setCurrentLocations({...currentLocations,[id]:location})
+    }
+
+    useEffect(() => {
+        if (!openStatusDropDownID) return
+
+        const handleClickOutside = (e) => {
+
+            const clickedOnAnyButton = Object.values(statusButtonRef.current).some((button => button && button.contains(e.target)))
+
+            if (clickedOnAnyButton) return;
+
+            if (openStatusDropDownID && statusDropDownRef.current && !statusDropDownRef.current.contains(e.target)) {
+                setOpenStatusDropDownID(null)
+            }
+
+        }
+
+        document.addEventListener('mousedown',handleClickOutside)
+    },[openStatusDropDownID])
+
+
+
 
     // Same as Description and Access Notes, but for Notes
     const [notes_text,setNotesText] = useState('');
@@ -531,7 +668,6 @@ export default function JobDetailPage() {
     const handleNotesCancel = () => {
         setNotesIsEditing(false)
     }
-
 
     // since useEffect runs after rendering, initial job value is null, so if statement is required.
     if (job) {
@@ -554,33 +690,52 @@ export default function JobDetailPage() {
                     {/*Displays images section */}
                     {isHeadings.isPhotos && (
                         <div className="job-photos">
-                            <div className="job-photos-headings">
-                                {/* input element that allows user to choose image to upload */}
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    multiple
-                                    onChange={handleImageChange}
-                                    style={{display:'none'}}
-                                    id ="fileInput"
-                                />
+                            <div style={{display:'flex'}}>
+                                <div className="job-photos-headings">
+                                    {/* input element that allows user to choose image to upload */}
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        onChange={handleImageChange}
+                                        style={{display:'none'}}
+                                        id ="fileInput"
+                                    />
 
-                                {/* input element that allows user to choose image to replace */}
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageReplace}
-                                    style={{display:'none'}}
-                                    id ="fileReplace"
-                                />
-            
-                                <label htmlFor="fileInput">Upload</label>
-                                <div className="job-image-buttons">
-                                <button className="job-image-replace" onClick={currentImageReplace}></button>
-                                <button className="job-image-remove" onClick={currentImageRemove}></button>
+                                    {/* input element that allows user to choose image to replace */}
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageReplace}
+                                        style={{display:'none'}}
+                                        id ="fileReplace"
+                                    />
+                
+                                    <label htmlFor="fileInput">Upload</label>
+                                    <div className="job-image-buttons">
+                                        <button className="job-image-replace" onClick={currentImageReplace}></button>
+                                        <button className="job-image-remove" onClick={currentImageRemove}></button>
+                                    </div>
+                                    
+                                </div>
+                                <div className="job-multi-image-buttons">
+                                    <div 
+                                    className="job-image-multi-remove"
+                                    style={{cursor:images.length > 0 ? 'pointer':''}}
+                                    onClick={handleMultiImageRemove}>
+                                    Remove Selected
+                                    </div>
+                                    <div 
+                                    className="job-image-multi-select"
+                                    onClick={toggleSelectAllImages}
+                                    style={{
+                                        backgroundColor:isSelectedImages.length === images.length && isSelectedImages.length > 0 ? 'var(--selected-surface)':'var(--surface-1)',
+                                        cursor:images.length > 0 ? 'pointer':'',
+                                        userSelect:'none'}}>
+                                        {isSelectedImages.length === images.length && isSelectedImages.length > 0 ? '✓' : ''}
+                                    </div>
                                 </div>
                             </div>
-
                             <div className="job-image-content">
 
                                 {/* Ternary Function that will display the main image if there is a current image
@@ -612,10 +767,10 @@ export default function JobDetailPage() {
                                 onMouseUp={handleMouseUp}
                                 onMouseLeave={handleMouseLeave}
                                 onMouseEnter={() => setIsHovering(true)}
-                                style={{cursor: isDragging ? "grabbing":'grab'}}>
+                                style={{cursor: isDragging ? "grabbing":'pointer'}}>
                                     
                                 {images.map((img,index) => (
-                                    <div key={index}>
+                                    <div key={index} style={{position:'relative'}}>
                                         <img 
                                         src={img} 
                                         alt={`Image ${index}`} 
@@ -623,6 +778,14 @@ export default function JobDetailPage() {
                                         draggable="false"
                                         className="job-images-image"
                                         style={{cursor: isDragging ? "grabbing":'pointer'}} />
+
+                                        <div 
+                                        className="job-images-image-selectbox"
+                                        style={{backgroundColor:isSelectedImages.includes(img) ? 'var( --selected-surface)':'var(--surface-1)'}}
+                                        onClick={() => {toggleSelectImage(img)}}>
+                                            {isSelectedImages.includes(img) ? '✓' : ''}
+                                        </div>
+
                                     </div>
                                 ))}
                             </div>
@@ -733,13 +896,52 @@ export default function JobDetailPage() {
                                         <div 
                                         className="job-materials-item-location"
                                         style={isSelectedStyle}>
-                                            Location
+                                            <div 
+                                            className="job-materials-item-button"
+                                            onClick={() => setOpenLocationDropDownID(openLocationDropDownID == item.productID ? null:item.productID)}
+                                            ref={(element) => locationButtonRef.current[item.productID] = element}>
+
+                                                {currentLocations[item.productID] ? currentLocations[item.productID]:''}
+
+                                                {openLocationDropDownID == item.productID && (
+                                                    <div className="job-materials-item-dropdown" ref={locationDropDownRef}>
+                                                        {locationFields.map((location) => (
+                                                            <div
+                                                            key={location} 
+                                                            onClick={() => displayCurrentLocation(item.productID,location)}>
+                                                                {location}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                
+                                            </div>
                                         </div>
 
                                         <div 
                                         className="job-materials-item-status"
                                         style={isSelectedStyle}>
-                                            Status
+                                            <div
+                                            className="job-materials-item-button"
+                                            onClick={() => setOpenStatusDropDownID(openStatusDropDownID === item.productID ? null:item.productID)}
+                                            ref={(element) => statusButtonRef.current[item.productID] = element}>
+
+                                                {currentStatuses[item.productID] ? currentStatuses[item.productID]:''}
+
+                                                {openStatusDropDownID === item.productID && (
+                                                    <div className="job-materials-item-dropdown" ref={statusDropDownRef}>
+                                                        {statusFields.map((status) => (
+                                                            <div
+                                                            key={status}
+                                                            onClick={() => setCurrentStatuses({...currentStatuses,[item.productID]:status})}>
+                                                                {status}
+                                                            </div>
+                                                        ))}
+
+                                                    </div>
+                                                )}
+
+                                            </div>
                                         </div>
 
                                         <div 
