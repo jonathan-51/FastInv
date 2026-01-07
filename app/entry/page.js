@@ -25,7 +25,7 @@ export default function customerInfo() {
 
     const existingJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
 
-    const datePart = new Date().toLocaleDateString('en-NZ',{day:'2-digit',month:'short',});
+    const datePart = new Date().toLocaleDateString('en-NZ',{day:'2-digit',month:'short',year:'numeric'});
     const timePart = new Date().toLocaleTimeString('en-NZ',{hour:'2-digit',minute:'2-digit',hour12:false});
     console.log(datePart);
     console.log(timePart);

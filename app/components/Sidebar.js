@@ -10,9 +10,10 @@ export default function Sidebar() {
     return (
         <aside className='Sidebar'>
             <div className='side-container'>
-                <div 
-                className='new-customer'><Link href="/entry">Create</Link>
-                </div>
+                <Link href="/entry" 
+                className='new-customer'>
+                    Create
+                </Link>
                 <div className='side-contents'>
                     <Link href='/'>Home</Link>
                     <Link href="/jobs">Jobs</Link>

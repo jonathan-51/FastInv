@@ -42,8 +42,12 @@ export default function JobDetailPage() {
             isMaterials: section === 'materials',
             isNotes: section === 'notes',
         })
-    }
 
+        // Prevents dropdown from automatically showing when switching to materials tab.
+        if (!isHeadings.isMaterials) {
+            setShowDropDown(false)
+        }
+    }
 
 
     // Initializing useState variables to handle description
@@ -254,17 +258,6 @@ export default function JobDetailPage() {
 
 
 
-    useEffect(() => {
-        console.log('----------------------------------------------------')
-        console.log(images.length)
-        console.log(isSelectedImages.length)
-        console.log(typeof images.length)
-        console.log(typeof isSelectedImages.length)
-        console.log(images.length === isSelectedImages.length)
-        console.log('----------------------------------------------------')
-
-    },[isSelectedImages])
-
     const handleMultiImageRemove = () => {
 
         if (isSelectedImages.length > 0) {
@@ -341,6 +334,9 @@ export default function JobDetailPage() {
     const statusButtonRef = useRef({});
     const [currentStatuses,setCurrentStatuses] = useState({});
 
+    // Initializing variable that controls the display of notes overlay
+    const [itemNotes,setItemNotes] = useState([])
+
 
 
     const handleRefactor = (apiData) => {
@@ -364,7 +360,6 @@ export default function JobDetailPage() {
         setSearchQuery(e.target.value)
         // Assigns the user input to another variable because UseState variables will only update after the function is called again (delayed by one function call)
         const value = e.target.value
-        console.log(value)
         try {
             const response = await fetch('https://fakestoreapi.com/products')
 
@@ -382,7 +377,6 @@ export default function JobDetailPage() {
             if (!value) {
                 SetSearchResult([])
             } else {
-                console.log(searchList)
                 if (searchList.length === 0) {
                     // Intialize all displayed search result items to have a quantity of 0
                     SetSearchResult(filtered.map(item => ({...item,quantity:0})))
@@ -446,13 +440,17 @@ export default function JobDetailPage() {
 
             //Updates search result variable with selected item.
             SetSearchResult(searchResult.map(item => item.productID === selectedItem.productID ? {...item,quantity:1}:item))
+
+            setItemNotes(array => [...array,{productID:selectedItem.productID,isOpen:false,notes:''}])
         }
         
     }
 
     useEffect(() => {
         console.log(searchList)
-    },[searchList])
+        console.log(itemNotes)
+    },[itemNotes])
+
     // Function that handles removing a specfici item in the list.
     const removeItem = (productID) => {
 
@@ -490,7 +488,6 @@ export default function JobDetailPage() {
             // If item doesn't exist in the list, add item into variable that stores alls list items as well as change the quantity of selected item to 1.
             const selectedItem = searchResult.find(item => item.productID === productID)
             SetSearchList([...searchList,{...selectedItem,quantity:1}])
-            console.log('ssdsadsa')
         } else {
             // If item already exists in the list, scan through list variable for the specfic item and increase its quantity by 1.
             // For all items that don't match the selected item's ID, do nothing.
@@ -499,7 +496,6 @@ export default function JobDetailPage() {
             ? { ...item, quantity: Math.max(0, item.quantity + amount) } 
             : item
             ))
-            console.log('hihi')
         }
     }
 
@@ -548,24 +544,6 @@ export default function JobDetailPage() {
         
     }
 
-    const quantityUpdate = (productID,amount) => {
-
-        SetSearchList(searchList.map(item => 
-            item.productID === productID 
-            ? { ...item, quantity: Math.max(0, item.quantity + amount) } 
-            : item
-        ))
-
-        if (searchResult.find(item => item.productID)) {
-            SetSearchResult(searchResult.map(item => 
-                item.productID === productID ?
-                {...item,quantity: Math.max(0, parseInt(item.quantity) + amount)}
-                : item
-            ))
-        }
-        
-    }
-
     // Initializing useState variable to store selected rows
     const [selectedRows, setSelectedRows] = useState([]);
 
@@ -596,7 +574,30 @@ export default function JobDetailPage() {
         
     }
 
-    
+    // Function that handles removing all selected rows
+    const removeAllSelectedItems = () => {
+
+        // Checks if user has selected any rows
+        if (selectedRows.length > 0) {
+            // Temporarily store selected rows
+            const tempSelectedRows = selectedRows;
+            // Create a new array without the selected rows (removing the selected rows from the array)
+            SetSearchList([...searchList.filter(item => !selectedRows.includes(item.productID))])
+            // Reset selected Row array
+            setSelectedRows([])
+
+            // Resets the quantity of respective removed item in dropdown
+            // Checks to see if there are items in SearchResult array
+            if (searchResult) {
+                // Checks to see if the selected items exist in the search result array, and will reset quantity to 0 if exists.
+                SetSearchResult(searchResult.map(item => tempSelectedRows.includes(item.productID) ? ({ ...item, quantity:0}):item))
+
+            }
+            
+        }
+    }
+
+
 
     // Handles displaying dropdown menu
     useEffect(() => {
@@ -623,7 +624,6 @@ export default function JobDetailPage() {
 
         // Listens for mouse click, if detected, run function
         document.addEventListener('mousedown',handleClickOutside);
-        console.log(`end: ${openLocationDropDownID}`)
 
     },[openLocationDropDownID])
 
@@ -650,7 +650,23 @@ export default function JobDetailPage() {
     },[openStatusDropDownID])
 
 
+    
 
+    // Function that handles expanding the user selected notes
+    const handlesNotesExpansion = (id) => {
+        setItemNotes(itemNotes.map(item_notes => id === item_notes.productID ? {...item_notes,isOpen:true}:item_notes))
+
+    }
+
+    // variable that determines if the note can be opened
+    const isOpenNoteValid = itemNotes.some((item_notes) => item_notes.isOpen)
+
+
+    
+    // variable that stores the current selected notes
+    const selectedNotes = itemNotes.find((item_notes) => item_notes.isOpen)
+
+    const selectedNotesItem = selectedNotes ? searchList.find(item => item.productID === selectedNotes.productID) : null
 
     // Same as Description and Access Notes, but for Notes
     const [notes_text,setNotesText] = useState('');
@@ -668,6 +684,12 @@ export default function JobDetailPage() {
     const handleNotesCancel = () => {
         setNotesIsEditing(false)
     }
+
+
+    useEffect(() => {
+        console.log(searchList.length > 0)
+        console.log(itemNotes.some(item_notes => item_notes.isOpen))
+    },[itemNotes])
 
     // since useEffect runs after rendering, initial job value is null, so if statement is required.
     if (job) {
@@ -833,29 +855,41 @@ export default function JobDetailPage() {
                         <div
                     
                         className="job-materials-list">
-                            <div className="header">
+                            <div className="job-materials-list-table-headers">
                                 <div 
-                                className="header-select"
+                                className="job-materials-item-header-select"
                                 onClick={() => {toggleAllRows()}}>
+                                    <div className="job-materials-item-select-box">
                                     {selectedRows.length === searchList.length && searchList.length > 0 ? '✓' : ''}
+                                    </div>
                                 </div>
+
+                                <div className="header"><strong className="header-name">Name</strong></div>
+                                <div className="header"><strong className="header-quantity">Quantity</strong></div>
+                                <div className="header"><strong className="header-location">Location</strong></div>
+                                <div className="header"><strong className="header-status">Status</strong></div>
+                                <div className="header"><strong className="header-notes">Notes</strong></div>
+                                <div className="header">
+                                    <strong 
+                                    className="header-remove" style={{cursor:'pointer'}}
+                                    onClick={removeAllSelectedItems}>Remove</strong>
+                                </div>
+
                             </div>
 
-                            <div className="header"><strong className="header-name">Name</strong></div>
-                            <div className="header"><strong className="header-quantity">Quantity</strong></div>
-                            <div className="header"><strong className="header-location">Location</strong></div>
-                            <div className="header"><strong className="header-status">Status</strong></div>
-                            <div className="header"><strong className="header-notes">Notes</strong></div>
-                            <div className="header"><strong className="header-remove">Remove</strong></div>
+                            <div className="job-materials-list-table-body">
                             {searchList.length > 0 ? (
                                 searchList.map((item) => {
                                     const isSelected = selectedRows.includes(item.productID);
                                     const isSelectedStyle = {backgroundColor:isSelected ? 'var(--selected-surface)':'var(--surface-1)'}
                                     return (
-                                    <React.Fragment
-                                    key={item.productID}>
+                                    <div 
+                                    className="job-materials-list-table-body-row"
+                                    key={item.productID}
+                                    style={isSelectedStyle}>
                                     
-                                        <div className="job-materials-item-select" style={{backgroundColor:isSelected ? 'var(--selected-surface)':'var(--surface-1)'}}>
+                                    
+                                        <div className="job-materials-item-body-select">
                                             <div 
                                             onClick={() => toggleRow(item.productID)} 
                                             className="job-materials-item-select-box"
@@ -870,8 +904,9 @@ export default function JobDetailPage() {
                                         </div>
                                         
                                         <div 
-                                        className="job-materials-item-quantity" 
+                                        className="job-materials-item-quantity"
                                         style={isSelectedStyle}>
+                                            <div className="job-materials-item-quantity-buttons">
                                             <button 
                                             style={{height:'100%',flex:'1',cursor:'pointer',userSelect:'none',fontSize:'20px'}} 
                                             onClick={() => quantityMinusDropDown(item.productID,-1)}>
@@ -891,6 +926,7 @@ export default function JobDetailPage() {
                                             onClick={() => quantityAddDropDown(item.productID,1)}>
                                                 +
                                             </button>
+                                            </div>
                                         </div>
 
                                         <div 
@@ -946,23 +982,44 @@ export default function JobDetailPage() {
 
                                         <div 
                                         className="job-materials-item-notes"
-                                        style={isSelectedStyle}>
-                                            Notes
+                                        style={isSelectedStyle}
+                                        onClick={() => handlesNotesExpansion(item.productID)}>
+                                            <div style={{cursor:'pointer'}}>Notes</div>
                                         </div>
+                                         
+                                        
+                                        {searchList.length > 0 && isOpenNoteValid && (
+                                            <div 
+                                            className="jobs-materials-item-notes-overlay"
+                                            onClick={() => {setItemNotes(itemNotes.map(item_notes => item_notes.isOpen ? {...item_notes,isOpen:false}:item_notes))}}>
+                                                <div 
+                                                className="jobs-materials-item-notes-main">
+                                                    <div className="jobs-materials-item-notes-main-header">{selectedNotesItem.name}</div>
+                                                    <div className="jobs-materials-item-notes-main-body"></div>
+                                                    <div className="jobs-materials-item-notes-main-save">
+                                                        <div>Cancel</div>
+                                                        <div>Save</div>
+                                                    </div>
+                                                    
+
+                                                </div>
+                                            </div>
+                                        )}
+                                        
 
                                         <button 
                                         className="job-materials-item-remove" onClick={() => removeItem(item.productID)}
                                         style={isSelectedStyle}>
-                                            Remove
+                                            <p style={{cursor:'pointer'}}>Remove</p>
                                         </button>
-
-                                    </React.Fragment>
+                                    
+                                    </div>
                                     )
                                 })
                             ):(
                                 <p>Please Add Item</p>
                                 
-                                )}
+                                )}</div>
 
                         </div>
                         

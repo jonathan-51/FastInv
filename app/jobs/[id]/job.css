@@ -245,60 +245,40 @@
     border-left: 1px solid var(--border);
     border-right: 1px solid var(--border);
     margin-top: 50px;
-    display: grid;
-    grid-template-columns: 75px 250px 1fr 1fr 1fr 1fr 1fr;
     
-    align-items: stretch;
+    
 }
 
-.header {
-    display: flex;
+.job-materials-list-table-headers {
     background-color: var(--surface-2);
     border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 75px 250px 1fr 1fr 1fr 1fr 1fr;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+.job-materials-item-header-select {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.job-materials-list-table-body-row {
+    display: grid;
+    grid-template-columns: 75px 250px 1fr 1fr 1fr 1fr 1fr;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    justify-content: center;
+    align-items: center;
 }
 
-.job-materials-list > *:nth-child(1) {
+
+.job-materials-item-body-select {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 
-
-.header > *:nth-child(-n+7) {
-    padding: 7px;
-    
-}
-
-.job-materials-list > *:nth-child(n+8) {
-    display: flex;
-    align-items: center;
-    padding: 7px;
-    border-bottom: 1px solid var(--border);
-
-}
-
-.job-materials-list > *:nth-child(7n+10) {
-    padding:0px;
-}
-
-.job-materials-item-select {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.header-select {
-    width: 20px;
-    height: 20px;
-    border: 1px solid gray;
-    border-radius: 3px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-}
 
 .job-materials-item-select-box {
     width: 20px;
@@ -313,12 +293,16 @@
 
 }
 
-
 .job-materials-item-quantity {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
+    justify-content: stretch;
+    align-items: stretch;
+}
+
+.job-materials-item-quantity-buttons {
+    display: flex;
+    gap: 20px;
+
 }
 
 .job-materials-item-remove {
@@ -350,6 +334,46 @@
     top: 100%;
     left: -1;
     z-index: 5;
+}
+
+.jobs-materials-item-notes-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: -1;
+    left: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;  
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.jobs-materials-item-notes-main {
+    position: relative;
+    background-color: var(--background);
+    width: 100%;
+    max-width: 750px;
+    height:80vh;
+    max-height: 400px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    padding: 20px;
+}
+
+
+
+.jobs-materials-item-notes-main-body {
+    border: 1px solid var(--border);
+    height: 275px;
+    margin-top: 15px;
+}
+
+.jobs-materials-item-notes-main-save {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    
 }
 
 /* NOTES ----------------------------------------------------------------------------*/
