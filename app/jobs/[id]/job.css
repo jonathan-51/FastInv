@@ -1,10 +1,9 @@
 /* MAIN PAGE ----------------------------------------------------------------------------*/
 
 .job-page {
-    display: grid;
-    grid-template-columns: 1fr 500px;
     padding-left: 4rem;
 }
+
 
 .job-address {
     padding-top: 3rem;     /* pt-4 */
@@ -39,147 +38,6 @@
 
 
 /* PHOTOS ----------------------------------------------------------------------------*/
-
-.job-photos {
-    display: flex;
-    flex-direction: column;
-}
-
-.job-image-upload {
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    width: 550px;
-    height:550px;
-    background-color: #F5F5F5;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.job-images {
-    width: 550px;
-    height:550px;
-    padding: 10px;
-    padding-top: 0px;
-    gap: 10px;
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    align-content: start;
-    justify-content: center;
-
-    overflow-y:auto;
-    scroll-behavior: auto;
-
-    user-select: none;
-}
-
-.job-images-image {
-    position:relative;
-    left:50%;
-    transform : translate(-50%);
-    max-width: 100%;
-    max-height: 100%;
-    aspect-ratio: 1/1;
-    object-fit: contain;
-    background-color: black;
-}
-
-
-
-.job-photos-headings {
-    margin-top: 50px;
-    width: 550px;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.job-image-buttons {
-    display: flex;
-    gap: 10px;
-
-}
-
-
-.job-image-remove {
-
-    width: 30px;
-    height:30px;
-    background-color: #bb7070;
-    z-index: 40;
-    cursor: pointer;
-}
-
-.job-image-replace {
-
-    width: 30px;
-    height:30px;
-    background-color: #D1D1D1;
-    z-index: 40;
-    cursor: pointer;
-}
-
-.job-multi-image-buttons {
-    margin-top: 50px;
-    margin-left: 50px;
-    padding: 10px;
-    display: flex;
-    gap: 15px;
-    
-}
-
-.job-image-multi-select {
-    width: 25px;
-    height: 25px;
-    border: 2px solid gray;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.job-image-multi-remove {
-    user-select: none;
-}
-
-.job-images-image-selectbox {
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    border: 2px solid gray;
-    border-radius: 5px;
-    top: 6px;
-    right: 6px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.job-image-content {
-    display: flex;
-    gap: 50px;
-    margin-top: 0px;
-}
-
-.job-image-main1 {
-    top: 100px;
-    background-color: black;
-    width: 550px;
-    height: 550px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.job-image-main2 {
-    top: 100px;
-    width: 550px;
-    height: 550px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 
 /* MATERIALS ----------------------------------------------------------------------------*/
 .job-materials-search {

@@ -4,7 +4,6 @@ import './entry.css'
 // Importing useState function from react library
 // Creates a variable that can change and when it changes, automatically renders the page
 import { useState } from 'react' 
-import { useRouter } from 'next/navigation'
 
 // function that handles getting customer information
 export default function customerInfo() {

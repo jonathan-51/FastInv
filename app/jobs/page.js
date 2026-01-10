@@ -2,9 +2,20 @@
 import Link from 'next/link';
 import { useEffect,useRef,useState } from 'react';
 import './jobs.css';
-
+import { useJobs } from './components/useJobs';
+import JobSearch from './components/JobSearch';
 
 export default function customers() {
+
+    const {
+        openJobsStatusID,
+        setOpenJobsStatusID,
+        jobsStatusButton,
+        currentJobsStatus,
+        setCurrentJobsStatus,
+        statusFields,
+        setStatusFields
+    } = useJobs()
 
     // initializing useState variable to store all job entries
     const [jobs, setJobs] = useState([])
@@ -60,7 +71,9 @@ export default function customers() {
 
     return (
         <div className='contents'>
-            <h1 className='pt-4 pb-4 pl-8 text-2xl'>Jobs</h1>
+            
+            <h1 className='pt-4 pb-4 pl-8 text-2xl' style={{paddingTop:'16px',paddingBottom:'16px',paddingLeft:'32px'}}>Jobs</h1>
+            <JobSearch/>
             <div>
                 <h3 className='ticket-headings'>
                     <div className='jobs-select'
@@ -72,6 +85,7 @@ export default function customers() {
                     <div className='jobs-name'>Name</div>
                     <div className='jobs-number'>Number</div>
                     <div className='jobs-email'>Email</div>
+                    <div className='jobs-status'>Status</div>
                     <div className='jobs-date'>Date</div>
                     <div className='jobs-remove' style={{cursor:selectedJobs.length === jobs.length && selectedJobs.length > 0 ? 'pointer':'',userSelect:'none'}} onClick={removeAllSelectedJobs}>Remove</div>
                 </h3>
@@ -101,6 +115,30 @@ export default function customers() {
                                 <p>{job.firstname} {job.lastname}</p>
                                 <p>{job.number}</p>
                                 <p>{job.email}</p>
+                                <div className='jobs-status'>
+                                    <div className='jobs-status-button'
+                                    onClick={(e) => {
+                                        setOpenJobsStatusID(openJobsStatusID === job.id ? null:job.id)
+                                        e.preventDefault()
+                                        e.stopPropagation()}}
+                                    ref = {(element) => jobsStatusButton.current[job.id] = element}>
+                                        {currentJobsStatus[job.id] ? currentJobsStatus[job.id]:''}
+                                        
+                                        {openJobsStatusID === job.id && (
+                                        <div className='jobs-status-dropdown'>
+                                            {statusFields.map((status) => (
+                                            <div
+                                            key={status}
+                                            onClick={() => setCurrentJobsStatus({...currentJobsStatus,[job.id]:status})}>
+                                                {status}
+                                            </div>
+                                        ))}
+                                        </div>    
+                                        )}
+                                        
+                                    </div>
+
+                                </div>
                                 <p>{job.date}</p>
                                 <div onClick={(e) => {
                                     setJobs(jobs.filter(i => i.id !== job.id));

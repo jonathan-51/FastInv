@@ -6,6 +6,7 @@
     border-top: none;
     position: fixed;
     border-right: 1px solid var(--border-strong);
+    left: 0;
 }
 
 .side-container {
@@ -32,4 +33,5 @@
     padding-top: 0.5rem;             /* py-2 = 8px */
     padding-bottom: 0.5rem;          /* py-2 = 8px */
     border-radius: 0.25rem;          /* rounded = 4px */
+    cursor: pointer;
 }

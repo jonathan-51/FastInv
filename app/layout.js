@@ -2,10 +2,13 @@ import "./globals.css";
 import Navbar from './components/Navbar.js';
 import Sidebar from './components/Sidebar.js';
 import Settings from './components/Settings.js';
+import NewJob from './components/NewJob.js';
 import { SettingsProvider } from "./context/SettingsContext";
 import { fontSans } from "./fonts.js";
 import { LocationProvider } from "./context/LocationContext";
 import { StatusProvider } from "./context/StatusContext";
+import { NewJobProvider } from "./context/NewJobContext"
+
 
 
 export const metadata = {
@@ -19,18 +22,21 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={fontSans.variable}>
         <SettingsProvider>
+        <NewJobProvider>
           <LocationProvider>
             <StatusProvider>
             <Navbar />
             <div className="flex">
               <Sidebar/>
-              <main className="flex-1 ml-43.75 mt-12.5">
+              <main className="flex-1 ml-43.75 mt-12.5" style={{marginLeft:'175px',marginTop:'50px'}}>
               {children}
               </main>
             </div>
             <Settings />
+            <NewJob/>
             </StatusProvider>
           </LocationProvider>
+          </NewJobProvider>
         </SettingsProvider>
       </body>
     </html>

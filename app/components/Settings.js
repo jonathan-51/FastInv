@@ -29,7 +29,6 @@ export default function Settings() {
     }
 
 
-    console.log(locationFields)
 
   return (
     <div className="setting-overlay" onClick={() => setIsSettingsOpen(false)}>
@@ -37,7 +36,7 @@ export default function Settings() {
 
             <div className="setting-main" onClick={(e) => e.stopPropagation()}>
                 <div className='setting-sidebar'>
-                    <h1 className='pt-4 pb-4 pl-8'>Setting</h1>
+                    <h1 className='pt-4 pb-4 pl-8' style={{paddingTop:'16px',paddingBottom:'16px',paddingLeft:'32px'}}>Setting</h1>
                     <div className='setting-sidebar-headers'>
                         <button style={{textAlign:'left'}} onClick={() => handleSettingSection('customfields')}>Custom Fields</button>
                         <button style={{textAlign:'left'}} onClick={() => handleSettingSection('billing')}>Billing</button>
@@ -47,7 +46,7 @@ export default function Settings() {
 
                     {isHeadings.customfields && (
                         <div className='setting-customfield'>
-                            <h2 className='pt-4 pb-4'>Custom Fields</h2>
+                            <h2 className='pt-4 pb-4' style={{paddingTop:'16px',paddingBottom:'16px'}}>Custom Fields</h2>
                             <div className='setting-customfield-field'>
                                 
                                 <h3>Location</h3>

@@ -1,0 +1,33 @@
+.job-photos-headings {
+    margin-top: 50px;
+    width: 550px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.job-image-buttons {
+    display: flex;
+    gap: 10px;
+
+}
+
+
+.job-image-remove {
+
+    width: 30px;
+    height:30px;
+    background-color: #bb7070;
+    z-index: 40;
+    cursor: pointer;
+}
+
+.job-image-replace {
+
+    width: 30px;
+    height:30px;
+    background-color: #D1D1D1;
+    z-index: 40;
+    cursor: pointer;
+}
