@@ -12,16 +12,6 @@
     
 }
 
-.new-job-main {
-    background-color: var(--background);
-    width: 100%;
-    max-width: 1200px;
-    height:80vh;
-    max-height: 700px;
-    border-radius: var(--radius);
-    overflow: hidden;
-}
-
 /* ===========================================
    New Client Form Styles
    Based on Brand Style Guidelines
@@ -39,16 +29,7 @@
 /* ===========================================
    Form Container
    =========================================== */
-.form-container {
-  min-height: 100vh;
-  background: var(--background);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
-  overflow: hidden;
-}
+
 
 /* ===========================================
    Form Card
@@ -60,10 +41,11 @@
   box-shadow: 
     0 1px 3px var(--shadow),
     0 8px 24px var(--shadow);
-  width: 100%;
-  max-width: 480px;
-  overflow: hidden;
   animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  max-width: 500px;
+  z-index: 51;
+  overflow: hidden;
 }
 
 @keyframes slideUp {
@@ -89,13 +71,13 @@
    =========================================== */
 .form-group {
   margin-bottom: 24px;
-  animation: fadeIn 0.4s ease-out backwards;
+  animation: fadeIn 0.4s ease-out forwards;
 }
 
-.form-group:nth-child(1) { animation-delay: 0.1s; }
-.form-group:nth-child(2) { animation-delay: 0.15s; }
-.form-group:nth-child(3) { animation-delay: 0.2s; }
-.form-group:nth-child(4) { animation-delay: 0.25s; }
+.form-group:nth-child(1) { animation-delay: 0.05s; }
+.form-group:nth-child(2) { animation-delay: 0.1s; }
+.form-group:nth-child(3) { animation-delay: 0.15s; }
+.form-group:nth-child(4) { animation-delay: 0.2s; }
 
 @keyframes fadeIn {
   from {
@@ -156,7 +138,7 @@
 /* ===========================================
    Inputs
    =========================================== */
-.form-input {
+.new-job-overlay .form-input {
   width: 100%;
   padding: 14px 14px 14px 44px;
   font-size: 15px;
@@ -169,39 +151,39 @@
   transition: all 0.2s ease;
 }
 
-.form-input::placeholder {
+.new-job-overlay .form-input::placeholder {
   color: var(--text-muted);
   opacity: 0.7;
 }
 
-.form-input:hover {
+.new-job-overlay .form-input:hover {
   border-color: var(--border-strong);
   background: var(--hover-surface);
 }
 
-.form-input:focus {
+.new-job-overlay .form-input:focus {
   border-color: var(--primary);
   background: var(--surface-1);
   box-shadow: 0 0 0 3px rgba(59, 42, 34, 0.1);
 }
 
 /* Icon color change on focus/filled */
-.form-input:focus + .input-icon,
-.form-input:not(:placeholder-shown) + .input-icon {
+.new-job-overlay .form-input:focus + .input-icon,
+.new-job-overlay .form-input:not(:placeholder-shown) + .input-icon {
   color: var(--primary);
 }
 
 /* ===========================================
    Textarea
    =========================================== */
-.form-textarea {
+.new-job-overlay .form-textarea {
   min-height: 100px;
   resize: vertical;
   padding-top: 14px;
   line-height: 1.5;
 }
 
-.form-textarea + .input-icon {
+.new-job-overlay .form-textarea + .input-icon {
   top: 18px;
   transform: none;
 }

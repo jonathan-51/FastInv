@@ -1,3 +1,0 @@
-use object oriented programming instead of json data
-separate backend and frontend
-typescript

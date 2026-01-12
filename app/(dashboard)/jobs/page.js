@@ -4,9 +4,13 @@ import { useEffect,useRef,useState } from 'react';
 import './jobs.css';
 import { useJobs } from './components/useJobs';
 import JobSearch from './components/JobSearch';
+import UserStatus from '@/app/components/UserStatus';
 
 export default function customers() {
+    
 
+
+    
     const {
         openJobsStatusID,
         setOpenJobsStatusID,
@@ -71,7 +75,6 @@ export default function customers() {
 
     return (
         <div className='contents'>
-            
             <h1 className='pt-4 pb-4 pl-8 text-2xl' style={{paddingTop:'16px',paddingBottom:'16px',paddingLeft:'32px'}}>Jobs</h1>
             <JobSearch/>
             <div>
@@ -151,6 +154,7 @@ export default function customers() {
 
                 </div>
             </div>
+            <UserStatus/>
         </div>
     )
 } 
