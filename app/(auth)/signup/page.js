@@ -5,71 +5,72 @@ import { signUp } from './actions';
 import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    businessName: '',
-    trade: '',
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [step, setStep] = useState(1);
+    const [formData, setFormData] = useState({
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      businessName: '',
+      trade: '',
+    });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [step, setStep] = useState(1);
 
-  const router = useRouter();
+    const router = useRouter();
 
-  const trades = [
-    'Electrician',
-    'Plumber',
-    'Builder',
-    'Carpenter',
-    'Painter',
-    'Roofer',
-    'HVAC Technician',
-    'Landscaper',
-    'Tiler',
-    'Plasterer',
-    'Other',
-  ];
+    const trades = [
+      'Electrician',
+      'Plumber',
+      'Builder',
+      'Carpenter',
+      'Painter',
+      'Roofer',
+      'HVAC Technician',
+      'Landscaper',
+      'Tiler',
+      'Plasterer',
+      'Other',
+    ];
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    const handleChange = (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
-  const handleNextStep = (e) => {
-    e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-    if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters');
-      return;
-    }
-    setError('');
-    setStep(2);
-  };
+    const handleNextStep = (e) => {
+      e.preventDefault();
+      if (formData.password !== formData.confirmPassword) {
+        setError('Passwords do not match');
+        return;
+      }
+      if (formData.password.length < 8) {
+        setError('Password must be at least 8 characters');
+        return;
+      }
+      setError('');
+      setStep(2);
+    };
 
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
 
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
+      e.preventDefault();
+      setIsLoading(true);
+      setError('');
 
-    const result = await signUp(formData)
-    
-    if (result.error) {
-      alert(result.error);
-    } else {
-      router.push('./jobs')
-    }
+      const result = await signUp(formData)
+      
+      if (result.error) {
+        alert(result.error);
+        setIsLoading(false);
+      } else {
+        router.push('./organization')
+      }
 
-    setTimeout(() => {
-      setIsLoading(false);
-      // Handle auth response
-    }, 1500);
-  };
+      setTimeout(() => {
+        setIsLoading(false);
+        // Handle auth response
+      }, 1500);
+    };
 
 
   return (

@@ -1,16 +1,12 @@
 'use server'
 
-import { createClient } from "@supabase/supabase-js"
-console.log('URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
-console.log('KEY:', process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY?.slice(0, 20) + '...');
-const supabase = createClient(
+import { createServerSupabaseClient } from "@/lib/supabase";
 
-    
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
 
 export async function signUp(formData) {
+
+    const supabase = await createServerSupabaseClient()
+
     console.log(formData)
     const email = formData.email;
     const password = formData.password;
@@ -24,10 +20,9 @@ export async function signUp(formData) {
         return {error: 'Password must be at least 6 characters'}
     }
 
-    const { data:authData,error:authError} = await supabase.auth.createUser({
+    const { data:authData,error:authError} = await supabase.auth.signUp({
         email,
-        password,
-        email_confirm:true
+        password
     })
 
     if (authError) {

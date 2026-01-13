@@ -39,6 +39,7 @@ export async function middleware(request) {
     if (!isAuthPage && (request.nextUrl.pathname.startsWith('/(dashboard)') ||
         request.nextUrl.pathname.startsWith('/dashboard') ||
         request.nextUrl.pathname.startsWith('/') ||
+        request.nextUrl.pathname.startsWith('/organization') ||
         request.nextUrl.pathname.startsWith('/jobs') ||
         request.nextUrl.pathname.startsWith('/entry'))) {
 
@@ -57,6 +58,35 @@ export async function middleware(request) {
         if (session) {
         // User is logged in, redirect to dashboard
         return NextResponse.redirect(new URL('/', request.url))
+        }
+    }
+
+    const { data: {user} } = await supabase.auth.getUser()
+
+    if (user) {
+        // Check if user has membership (don't use .single() to avoid errors)
+        const { data: memberships, error } = await supabase
+            .from('memberships')
+            .select('user_id')
+            .eq('user_id', user.id)
+            .limit(1)
+
+        const hasMembership = memberships && memberships.length > 0
+
+        console.log('User ID:', user.id)
+        console.log('Has membership:', hasMembership)
+        console.log('Memberships data:', memberships)
+
+        if (!hasMembership && request.nextUrl.pathname !== '/organization') {
+            // User has no membership, redirect to organization page
+            console.log('No membership found, redirecting to /organization')
+            return NextResponse.redirect(new URL('/organization', request.url))
+        }
+
+        if (hasMembership && request.nextUrl.pathname === '/organization') {
+            // User already has membership, redirect to jobs
+            console.log('Membership found, redirecting to /jobs')
+            return NextResponse.redirect(new URL('/jobs', request.url))
         }
     }
 
