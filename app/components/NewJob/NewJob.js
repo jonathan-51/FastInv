@@ -7,6 +7,7 @@ import { NewJob } from './actions';
 export default function NewJobPopOut() {
 
     const { isNewJobOpen, setIsNewJobOpen } = useNewJob();
+    const [error,setError] = useState(null)
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -21,14 +22,19 @@ export default function NewJobPopOut() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
 
         const result = await NewJob(formData)
 
+        setError(result)
+        
         if (error) {
-            setError(result.error)
+            setIsSubmitting(false)
         } else {
             setIsNewJobOpen(false)
+            setError(null)
         }
+        setIsSubmitting(false)
 
     }
 

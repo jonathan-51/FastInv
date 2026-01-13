@@ -16,6 +16,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 ```bash
+# Always assume that the dev server is running.
 # Start development server (http://localhost:3000)
 npm run dev
 

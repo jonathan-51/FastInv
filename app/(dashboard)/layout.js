@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         <div className="flex">
             <Sidebar/>
-            <main className="flex-1 ml-43.75 mt-12.5" style={{marginLeft:'175px',marginTop:'50px'}}>
+            <main className="flex-1" style={{marginLeft:'240px',marginTop:'50px'}}>
             {children}
             </main>
         </div>

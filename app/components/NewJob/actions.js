@@ -21,12 +21,12 @@ export async function NewJob(formData) {
 
 
     if (user) {
-      await supabase.from('jobs').insert({
-        id: user.id,
-        email,
-        name,
-        phone,
-        address
+        await supabase.from('jobs').insert({
+            id: user.id,
+            email,
+            name,
+            phone,
+            address
     })  
     }
 

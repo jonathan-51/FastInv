@@ -6,13 +6,9 @@ export default function Navbar() {
         <nav className='Navbar'> 
         
             <div className='nav-container'>
-                <div className='nav-logo'>
-                    <Link 
-                    // Link to homepage by clicking on logo
-                    href="/">
-                    
-                    MyApp
-                    </Link>
+                {/* Logo Area */}
+                <div className='logo'>
+                    <h2>TradeFlow</h2>
                 </div>
 
                 <div className='nav-contents'>

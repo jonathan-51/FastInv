@@ -27,6 +27,14 @@
   --shadow:rgba(15, 23, 42, 0.08);
   --overlay:rgba(15, 23, 42, 0.45);
 
+  /* Navigation Design Tokens */
+  --nav-height: 64px;
+  --sidebar-width: 240px;
+  --nav-link-padding: 10px 12px;
+  --nav-gap: 4px;
+  --nav-icon-size: 20px;
+  --active-indicator-width: 3px;
+
 }
 
 
