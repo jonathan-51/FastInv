@@ -5,11 +5,19 @@ import './jobs.css';
 import { useJobs } from './components/useJobs';
 import JobSearch from './components/JobSearch';
 import UserStatus from '@/app/components/UserStatus';
-import { getJobs } from './actions';
+import { getJobs, updateJobStatus } from './actions';
 
 
 export default function JobsPage() {
     
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-NZ', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        })
+    }
+
     const {
         openJobsStatusID,
         setOpenJobsStatusID,
@@ -23,6 +31,9 @@ export default function JobsPage() {
     // initializing useState variable to store all job entries
     const [jobs, setJobs] = useState([])
 
+    
+
+
     // Getting information sent from new customer form, converting string back into object
     // updating jobs object with new job entry after each render
     useEffect(() => {
@@ -30,6 +41,14 @@ export default function JobsPage() {
         const gettingJobs = async () => {
             const savedJobs = await getJobs()
             setJobs(savedJobs);
+
+            setCurrentJobsStatus(savedJobs.reduce((acc,job) => {
+                acc[job.id] = job.status
+
+                return acc
+                },{})
+            )
+
             console.log(savedJobs)    
         }
         
@@ -113,8 +132,9 @@ export default function JobsPage() {
                                 <p>{job.customer.name}</p>
                                 <p>{job.customer.phone}</p>
                                 <p>{job.customer.email}</p>
-                                <div className='jobs-status'>
+                                <div className='jobs-status' style={{marginRight:"5px",marginLeft:"5px"}}>
                                     <div className='jobs-status-button'
+                                    style={{maxWidth:'150px'}}
                                     onClick={(e) => {
                                         setOpenJobsStatusID(openJobsStatusID === job.id ? null:job.id)
                                         e.preventDefault()
@@ -127,7 +147,12 @@ export default function JobsPage() {
                                             {statusFields.map((status) => (
                                             <div
                                             key={status}
-                                            onClick={() => setCurrentJobsStatus({...currentJobsStatus,[job.id]:status})}>
+                                            onClick={async () => {
+                                                const result = await updateJobStatus(job.id,status)
+                                                if (!result.error) {
+                                                    setCurrentJobsStatus({...currentJobsStatus,[job.id]:status})    
+                                                }
+                                                }}>
                                                 {status}
                                             </div>
                                         ))}
@@ -137,7 +162,7 @@ export default function JobsPage() {
                                     </div>
 
                                 </div>
-                                <p>{job.created_at}</p>
+                                <p>{formatDate(job.created_at)}</p>
                                 <div onClick={(e) => {
                                     setJobs(jobs.filter(i => i.id !== job.id));
                                     e.preventDefault();

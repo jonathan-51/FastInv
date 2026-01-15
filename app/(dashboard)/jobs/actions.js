@@ -2,6 +2,7 @@
 
 import { createServerSupabaseClient } from "@/lib/supabase"
 
+
 export async function getJobs() {
 
     const supabase = await createServerSupabaseClient()
@@ -48,5 +49,28 @@ export async function getJobs() {
         return { error: jobsError}
     }
 
+
+    
     return jobsData
+}
+
+export async function updateJobStatus(jobId,status) {
+    const supabase = await createServerSupabaseClient()
+
+    const { data: { user }, error: authError} = await supabase.auth.getUser()
+
+    if (authError || !user) {
+        return { error: "Unauthorized"}
+    }
+
+    const { data,error } = await supabase
+        .from('jobs')
+        .update({status:status})
+        .eq('id',jobId)
+
+    if (error) {
+        return {error: error.message}
+    }
+
+    return { success: true }
 }
