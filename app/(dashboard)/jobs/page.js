@@ -5,11 +5,10 @@ import './jobs.css';
 import { useJobs } from './components/useJobs';
 import JobSearch from './components/JobSearch';
 import UserStatus from '@/app/components/UserStatus';
-
-export default function customers() {
-    
+import { getJobs } from './actions';
 
 
+export default function JobsPage() {
     
     const {
         openJobsStatusID,
@@ -27,10 +26,14 @@ export default function customers() {
     // Getting information sent from new customer form, converting string back into object
     // updating jobs object with new job entry after each render
     useEffect(() => {
-        const savedJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-        setJobs(savedJobs);
 
+        const gettingJobs = async () => {
+            const savedJobs = await getJobs()
+            setJobs(savedJobs);
+            console.log(savedJobs)    
+        }
         
+        gettingJobs()
     },[])
 
     // Initializing useState variable to store all selected jobs
@@ -74,50 +77,42 @@ export default function customers() {
     },[jobs])
 
     return (
-        <div className='contents'>
-            <h1 className='pt-4 pb-4 pl-8 text-2xl' style={{paddingTop:'16px',paddingBottom:'16px',paddingLeft:'32px'}}>Jobs</h1>
+        <div className='contents' style={{padding: '32px'}}>
+            <h1 style={{fontSize: '36px', fontWeight: '600', margin: '12px', color: 'var(--text)'}}>Jobs</h1>
             <JobSearch/>
-            <div>
+            <div className='jobs-table'>
                 <h3 className='ticket-headings'>
                     <div className='jobs-select'
                     onClick={selectAllRows}
                     style={{backgroundColor:selectedJobs.length === jobs.length && selectedJobs.length > 0 ? 'var( --selected-surface)':'var(--surface-1)'}}>
                         {selectedJobs.length === jobs.length && selectedJobs.length > 0 ? '✓' : ''}
                     </div>
-                    <div className='jobs-address'>Address</div>
-                    <div className='jobs-name'>Name</div>
-                    <div className='jobs-number'>Number</div>
-                    <div className='jobs-email'>Email</div>
-                    <div className='jobs-status'>Status</div>
-                    <div className='jobs-date'>Date</div>
+                    <div>Address</div>
+                    <div>Name</div>
+                    <div>Number</div>
+                    <div>Email</div>
+                    <div>Status</div>
+                    <div>Date</div>
                     <div className='jobs-remove' style={{cursor:selectedJobs.length === jobs.length && selectedJobs.length > 0 ? 'pointer':'',userSelect:'none'}} onClick={removeAllSelectedJobs}>Remove</div>
                 </h3>
-                <div
-                // if the number of entries stored in jobs is zero, will display message
-                // else
-                // iterate through all different jobs stored in jobs variable with iterable object job
-                // creating link to dynamic segment, differentiated only by job id
-                // key={job.id} labels each job ticket with its unqiue job id, allows for easy changes to specific job tickets if required.
-
-                className='jobs-table'
-                >
+                <div>
                     {jobs.length === 0 ? (
                         <p>No Jobs yet. Add one to get started</p>
                     ) : (
                         jobs.map((job) => (
                             <Link key={job.id} href={`/jobs/${job.id}`}>
-                            <div key={job.id} className='ticket' style={{backgroundColor:selectedJobs.includes(job.id) ? 'var( --selected-surface)':'var(--surface-1)'}}>
-                                <div className='jobs-ticket-select' 
+                            <div className='ticket' style={{backgroundColor:selectedJobs.includes(job.id) ? 'var( --selected-surface)':'var(--surface-1)'}}>
+                                <div className='jobs-ticket-select'
                                 onClick={(e) => {
                                     selectedJobs.includes(job.id) ? setSelectedJobs(selectedJobs.filter(id => id !== job.id)):setSelectedJobs([...selectedJobs,job.id])
                                     e.preventDefault();
                                     e.stopPropagation()}}>
                                     {selectedJobs.includes(job.id) ? '✓' : ''}
                                 </div>
-                                <p>{job.address}</p>
-                                <p>{job.firstname} {job.lastname}</p>
-                                <p>{job.number}</p>
-                                <p>{job.email}</p>
+                                <p>{job.site_address}</p>
+                                <p>{job.customer.name}</p>
+                                <p>{job.customer.phone}</p>
+                                <p>{job.customer.email}</p>
                                 <div className='jobs-status'>
                                     <div className='jobs-status-button'
                                     onClick={(e) => {
@@ -126,7 +121,7 @@ export default function customers() {
                                         e.stopPropagation()}}
                                     ref = {(element) => jobsStatusButton.current[job.id] = element}>
                                         {currentJobsStatus[job.id] ? currentJobsStatus[job.id]:''}
-                                        
+
                                         {openJobsStatusID === job.id && (
                                         <div className='jobs-status-dropdown'>
                                             {statusFields.map((status) => (
@@ -136,13 +131,13 @@ export default function customers() {
                                                 {status}
                                             </div>
                                         ))}
-                                        </div>    
+                                        </div>
                                         )}
-                                        
+
                                     </div>
 
                                 </div>
-                                <p>{job.date}</p>
+                                <p>{job.created_at}</p>
                                 <div onClick={(e) => {
                                     setJobs(jobs.filter(i => i.id !== job.id));
                                     e.preventDefault();

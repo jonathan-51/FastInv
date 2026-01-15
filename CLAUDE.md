@@ -12,6 +12,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Supabase (PostgreSQL + Auth)
 - Tailwind CSS 4.1.18
 - Plus Jakarta Sans font
+- Typescript
+
+## Access to the Website
+- Email: admin@gmail.com
+- Password: adminadmin
 
 ## Development Commands
 

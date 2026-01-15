@@ -1,0 +1,129 @@
+/* Table Headings */
+.customer-table-headings {
+    background-color: var(--surface-2);
+    border-bottom: 2px solid var(--border);
+    width: auto;
+    height: 56px;
+    display: grid;
+    grid-template-columns: 60px 1.2fr 1fr 1fr 1.2fr 120px 100px;
+    padding: 0 24px;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Customer Row */
+.customer-row {
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 60px 1.2fr 1fr 1fr 1.2fr 120px 100px;
+    border-bottom: 1px solid var(--border);
+    height: 64px;
+    align-items: center;
+    transition: background-color 0.15s ease;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.customer-row:hover {
+    background-color: var(--hover-surface);
+}
+
+.customer-row:last-child {
+    border-bottom: none;
+}
+
+.customer-row p {
+    font-size: 14px;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.customers-table {
+    background-color: var(--surface-1);
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--shadow);
+    border: 1px solid var(--border);
+}
+
+.customers-table > p {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 15px;
+}
+
+/* Checkbox Styling */
+.customer-select {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-strong);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    transition: all 0.2s ease;
+    background-color: var(--surface-1);
+    font-size: 12px;
+    color: var(--primary);
+}
+
+.customer-select:hover {
+    border-color: var(--primary);
+    background-color: var(--surface-2);
+}
+
+.customer-row-select {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-strong);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    transition: all 0.2s ease;
+    background-color: var(--surface-1);
+    font-size: 12px;
+    color: var(--primary);
+}
+
+.customer-row-select:hover {
+    border-color: var(--primary);
+    background-color: var(--surface-2);
+}
+
+/* Remove Button */
+.customer-remove {
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    font-weight: 500;
+}
+
+.customer-remove:hover {
+    color: #DC2626;
+}
+
+.customer-row > div:last-child {
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    font-weight: 500;
+}
+
+.customer-row > div:last-child:hover {
+    color: #DC2626;
+}

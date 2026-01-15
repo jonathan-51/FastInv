@@ -8,6 +8,7 @@ import {
     Settings as SettingsIcon,
     Plus,
     User,
+    Users,
     LogOut
 } from 'lucide-react';
 
@@ -71,6 +72,17 @@ export default function Sidebar() {
                     </div>
 
                     <div className='nav-section'>
+                        <Link
+                        href='/customers'
+                        className={`nav-link ${isActive(`/customers`) ? 'active' : ''}`}>
+
+                            <Users size={20}/>
+                            <span>Customers</span>
+                        
+                        </Link>
+                    </div>
+
+                    <div className='nav-section' style={{marginTop:'16px'}}>
                         <button
                             className={`nav-link ${pathname.includes('settings') ? 'active' : ''}`}
                             onClick={() => setIsSettingsOpen(true)}

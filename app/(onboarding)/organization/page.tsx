@@ -34,7 +34,6 @@ export default function OrganizationPage() {
         setIsSubmitting(true)
         setError(null)
 
-        console.log(formData)
 
         const result = await OnboardingOrganizationPage(formData)
 

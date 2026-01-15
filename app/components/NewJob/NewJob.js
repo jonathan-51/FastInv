@@ -1,8 +1,9 @@
 'use client'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import './NewJob.css'
 import { useNewJob } from '@/app/context/NewJobContext';
 import { NewJob } from './actions';
+import { User } from 'lucide-react';
 
 export default function NewJobPopOut() {
 
@@ -12,9 +13,12 @@ export default function NewJobPopOut() {
         name: '',
         email: '',
         phone: '',
-        address: ''
+        job_address: '',
+        customer:{}
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isNewCustomer, setIsNewCustomer] = useState(true);
+    const [selectedCustomer, setSelectedCustomer] = useState('');
 
     const handleChange = (e) => {
         setFormData({...formData,[e.target.name]:e.target.value})
@@ -24,20 +28,47 @@ export default function NewJobPopOut() {
         e.preventDefault();
         setIsSubmitting(true);
 
+
+
         const result = await NewJob(formData)
 
-        setError(result)
         
-        if (error) {
+        if (result.error) {
             setIsSubmitting(false)
         } else {
+            console.log("success")
             setIsNewJobOpen(false)
-            setError(null)
+
+            setFormData({
+                name: '',
+                email: '',
+                phone: '',
+                job_address: '',
+                customer:{}
+            })
         }
         setIsSubmitting(false)
 
     }
 
+
+    useEffect(() => {
+        if (!isNewJobOpen) {
+            setFormData({
+                name: '',
+                email: '',
+                phone: '',
+                job_address: '',
+                customer:{}
+            })
+        }
+    },[isNewJobOpen])
+
+    useEffect(() => {
+        if (isNewCustomer && selectedCustomer !== "") {
+            setSelectedCustomer('')
+        }
+    },[isNewCustomer])
     
     
 
@@ -115,15 +146,16 @@ export default function NewJobPopOut() {
 
             <div className="form-group">
             <label className="form-label">
-                Address <span className="optional">(optional)</span>
+                Job Address <span className="required">*</span>
             </label>
             <div className="input-wrapper">
                 <textarea
-                name="address"
+                name="job_address"
                 className="form-input form-textarea"
                 placeholder="123 Main Street&#10;Sydney NSW 2000"
-                value={formData.address}
+                value={formData.job_address}
                 onChange={handleChange}
+                required
                 />
                 <span className="input-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -133,6 +165,49 @@ export default function NewJobPopOut() {
                 </span>
             </div>
             </div>
+
+            <div className="form-group">
+            <label className="checkbox-wrapper">
+                <input
+                type="checkbox"
+                className="custom-checkbox"
+                checked={isNewCustomer}
+                onChange={(e) => setIsNewCustomer(e.target.checked)}
+                />
+                <span className="checkbox-label">Create new customer profile</span>
+            </label>
+            </div>
+
+            {!isNewCustomer && (
+            <div className="form-group">
+                <label className="form-label">
+                Select Existing Customer 
+                </label>
+                <div className="input-wrapper">
+                <select
+                    className="form-input form-select"
+                    value={selectedCustomer}
+                    onChange={(e) => setSelectedCustomer(e.target.value)}
+                    required={!isNewCustomer}
+                >
+                    <option value="">-- Select a customer --</option>
+                    <option value="1">John Smith - 123 Main St, Sydney</option>
+                    <option value="2">Sarah Johnson - 456 Oak Ave, Melbourne</option>
+                    <option value="3">Michael Brown - 789 Pine Rd, Brisbane</option>
+                    <option value="4">Emma Wilson - 321 Elm St, Perth</option>
+                    <option value="5">David Lee - 654 Maple Dr, Adelaide</option>
+                </select>
+                <span className="input-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                </span>
+                </div>
+            </div>
+            )}
 
             <div className="form-actions">
             <button type="button" className="btn btn-secondary" onClick={() => setIsNewJobOpen(false)}>
@@ -145,7 +220,7 @@ export default function NewJobPopOut() {
                     Saving...
                 </>
                 ) : (
-                'Add Client'
+                'Create Job'
                 )}
             </button>
             </div>

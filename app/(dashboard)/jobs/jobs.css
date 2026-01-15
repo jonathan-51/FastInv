@@ -1,93 +1,232 @@
-
-.jobs-search-bar {
-    background-color: gray;
+/* Search Bar */
+.job-search {
+    margin-bottom: 5px;
 }
 
-.notes-container {
-    width: 600px;              /* w-150 (150 * 4px) */
-    border-radius: 8px;        /* rounded-lg */
-    margin-bottom: 8px;        /* mb-2 */
-    padding-left: 4px;         /* px-1 */
-    padding-right: 4px;        /* px-1 */
-    padding-top: 4px;          /* py-1 */
-    padding-bottom: 4px;       /* py-1 */
-    border: 1px solid var(--border); /* border (gray-300) */
-    word-wrap: break-word;      /* Breaks long words */
-    overflow-wrap: break-word;  /* Modern version */
+.job-search input {
+    width: 100%;
+    height: 44px;
+    padding: 0 16px;
+    background-color: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--text);
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px var(--shadow);
 }
 
+.job-search input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 42, 34, 0.1);
+}
+
+.job-search input::placeholder {
+    color: var(--text-muted);
+}
+
+
+
+/* Table Headings */
 .ticket-headings {
     background-color: var(--surface-2);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    width:auto;
-    height: 50px;
+    border-bottom: 2px solid var(--border);
+    width: auto;
+    height: 56px;
     display: grid;
-    grid-template-columns: 75px 1fr 1fr 1fr 1fr 1fr 1fr 150px;
-    padding-left: 2rem;
+    grid-template-columns: 60px 1fr 0.8fr 0.5fr 1fr 140px 180px 100px;
+    padding: 0 24px;
     align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
+/* Ticket Row */
 .ticket {
-    padding-left: 2rem;
+    padding: 0 24px;
     display: grid;
-    grid-template-columns: 75px 1fr 1fr 1fr 1fr 1fr 1fr 150px;
+    grid-template-columns: 60px 1fr 0.8fr 0.5fr 1fr 140px 180px 100px;
     border-bottom: 1px solid var(--border);
-    height: 50px;
+    height: 64px;
     align-items: center;
-    justify-content: center;
+    transition: background-color 0.15s ease;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.ticket:hover {
+    background-color: var(--hover-surface);
+}
+
+.ticket:last-child {
+    border-bottom: none;
+}
+
+.ticket p {
+    font-size: 14px;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .jobs-table {
     background-color: var(--surface-1);
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--shadow);
+    border: 1px solid var(--border);
 }
 
+.jobs-table > p {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 15px;
+}
+
+/* Checkbox Styling */
 .jobs-select {
     width: 20px;
     height: 20px;
-    border: 1px solid gray;
-    border-radius: 3px;
+    border: 2px solid var(--border-strong);
+    border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     user-select: none;
+    transition: all 0.2s ease;
+    background-color: var(--surface-1);
+    font-size: 12px;
+    color: var(--primary);
+}
+
+.jobs-select:hover {
+    border-color: var(--primary);
+    background-color: var(--surface-2);
 }
 
 .jobs-ticket-select {
     width: 20px;
     height: 20px;
-    border: 1px solid gray;
-    border-radius: 3px;
+    border: 2px solid var(--border-strong);
+    border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     user-select: none;
+    transition: all 0.2s ease;
+    background-color: var(--surface-1);
+    font-size: 12px;
+    color: var(--primary);
 }
 
+.jobs-ticket-select:hover {
+    border-color: var(--primary);
+    background-color: var(--surface-2);
+}
+
+/* Status Button */
 .jobs-status-button {
     position: relative;
     background-color: var(--surface-2);
     border: 1px solid var(--border);
-    padding: 7px;
-    width: 115px;
-    height: 30px;
+    border-radius: 6px;
+    padding: 8px 12px;
+    min-width: 120px;
+    height: 36px;
     cursor: pointer;
     user-select: none;
     display: flex;
-    justify-content: left;
+    justify-content: space-between;
     align-items: center;
+    transition: all 0.2s ease;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
 }
 
+.jobs-status-button:hover {
+    background-color: var(--hover-surface);
+    border-color: var(--border-strong);
+}
+
+.jobs-status-button::after {
+    content: '▼';
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-left: 8px;
+}
+
+/* Status Dropdown */
 .jobs-status-dropdown {
     position: absolute;
     background-color: var(--surface-1);
     border: 1px solid var(--border);
-    padding: 3px;
-    gap: 3px;
-    width: 115px;
-    top: 100%;
-    left: -1;
-    z-index: 5;
+    border-radius: 8px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 140px;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+.jobs-status-dropdown > div {
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    font-size: 13px;
+    color: var(--text);
+}
+
+.jobs-status-dropdown > div:hover {
+    background-color: var(--hover-surface);
+}
+
+/* Remove Button */
+.jobs-remove {
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    font-weight: 500;
+}
+
+.jobs-remove:hover {
+    color: #DC2626;
+}
+
+.ticket > div:last-child {
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    font-weight: 500;
+}
+
+.ticket > div:last-child:hover {
+    color: #DC2626;
+}
+
+/* Notes Container */
+.notes-container {
+    width: 600px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    padding: 4px;
+    border: 1px solid var(--border);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }

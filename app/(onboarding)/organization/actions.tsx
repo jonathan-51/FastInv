@@ -64,8 +64,6 @@ export async function OnboardingOrganizationPage(formData: {
         .single()
 
     if (orgError) {
-        console.error('Error creating organization:', orgError)
-        console.error('Error details:', JSON.stringify(orgError, null, 2))
         return { error: `Failed to create organization: ${orgError.message || 'Please try again.'}` }
     }
 
@@ -79,8 +77,6 @@ export async function OnboardingOrganizationPage(formData: {
         })
 
     if (membershipError) {
-        console.error('Error creating membership:', membershipError)
-        console.error('Error details:', JSON.stringify(membershipError, null, 2))
         return { error: `Failed to link user to organization: ${membershipError.message || 'Please try again.'}` }
     }
 
@@ -92,8 +88,6 @@ export async function OnboardingOrganizationPage(formData: {
  * Validates the invite code and creates a membership for the user
  */
 export async function JoinOrganization(inviteCode: string) {
-
-    console.log(inviteCode)
 
     // Validate invite code format
     if (!inviteCode || inviteCode.trim().length === 0) {
@@ -118,7 +112,6 @@ export async function JoinOrganization(inviteCode: string) {
         .limit(1)
 
     if (orgError) {
-        console.error('Error finding organization:', orgError)
         return { error: "Failed to validate invite code. Please try again." }
     }
 
@@ -150,7 +143,6 @@ export async function JoinOrganization(inviteCode: string) {
         })
 
     if (membershipError) {
-        console.error('Error creating membership:', membershipError)
         return { error: "Failed to join organization. Please try again." }
     }
 

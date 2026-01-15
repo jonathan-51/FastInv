@@ -25,11 +25,6 @@ export async function middleware(request) {
     // Check if user is authenticated
     const {data: { session },} = await supabase.auth.getSession()
 
-    // Debug logging
-    console.log('Middleware - Path:', request.nextUrl.pathname)
-    console.log('Middleware - Session:', session ? 'EXISTS' : 'NULL')
-    console.log('Middleware - Cookies:', request.cookies.getAll())
-
     // Protect dashboard routes
     const isAuthPage = request.nextUrl.pathname === '/(auth)/login' ||
         request.nextUrl.pathname === '/(auth)/signup' ||
@@ -40,6 +35,7 @@ export async function middleware(request) {
         request.nextUrl.pathname.startsWith('/dashboard') ||
         request.nextUrl.pathname.startsWith('/') ||
         request.nextUrl.pathname.startsWith('/organization') ||
+        request.nextUrl.pathname.startsWith('/customers') ||
         request.nextUrl.pathname.startsWith('/jobs') ||
         request.nextUrl.pathname.startsWith('/entry'))) {
 
@@ -79,13 +75,11 @@ export async function middleware(request) {
 
         if (!hasMembership && request.nextUrl.pathname !== '/organization') {
             // User has no membership, redirect to organization page
-            console.log('No membership found, redirecting to /organization')
             return NextResponse.redirect(new URL('/organization', request.url))
         }
 
         if (hasMembership && request.nextUrl.pathname === '/organization') {
             // User already has membership, redirect to jobs
-            console.log('Membership found, redirecting to /jobs')
             return NextResponse.redirect(new URL('/jobs', request.url))
         }
     }
