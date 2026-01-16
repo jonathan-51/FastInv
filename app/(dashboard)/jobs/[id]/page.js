@@ -5,7 +5,7 @@ import './job.css'
 import React from 'react'
 import { PhotosTab } from './components/PhotoTab/PhotoTab';
 import { MaterialsTab } from "./components/MaterialsTab/MaterialsTab";
-import { NotesTab } from "./components/NotesTab";
+import { NotesTab } from "./components/NotesTab/NotesTab";
 import { BillablesTab } from "./components/BillablesTab/BillablesTab";
 import { InvoiceTab } from "./components/InvoiceTab/InvoiceTab";
 // Import server action to fetch jobs from database
@@ -150,16 +150,30 @@ export default function JobDetailPage() {
         <div  className="job-page">
 
             <div className="job-main">
-                <div className="job-address">
-                    {/* Display job address - check both field names for backwards compatibility */}
-                    {job.site_address || job.site_address}
-                </div>
-                <div className="job-sections">
-                    <button onClick={() => handleSectionClick('billables')}>Billables</button>
-                    <button onClick={() => handleSectionClick('photos')}>Photos</button>
-                    <button onClick={() => handleSectionClick('notes')}>Notes</button>
-                    <button onClick={() => handleSectionClick('invoice')}>Invoice</button>
-
+                <div className="job-header">
+                    <h1 className="job-address">{job.site_address}</h1>
+                    <div className="job-sections">
+                        <button
+                            className={`job-section-btn ${isHeadings.isBillables ? 'active' : ''}`}
+                            onClick={() => handleSectionClick('billables')}>
+                            Billables
+                        </button>
+                        <button
+                            className={`job-section-btn ${isHeadings.isPhotos ? 'active' : ''}`}
+                            onClick={() => handleSectionClick('photos')}>
+                            Photos
+                        </button>
+                        <button
+                            className={`job-section-btn ${isHeadings.isNotes ? 'active' : ''}`}
+                            onClick={() => handleSectionClick('notes')}>
+                            Notes
+                        </button>
+                        <button
+                            className={`job-section-btn ${isHeadings.isInvoice ? 'active' : ''}`}
+                            onClick={() => handleSectionClick('invoice')}>
+                            Invoice
+                        </button>
+                    </div>
                 </div>
                 <div className="job-content">
 
@@ -169,7 +183,7 @@ export default function JobDetailPage() {
 
                     {/*Displays images section */}
                     {isHeadings.isPhotos && (
-                        <PhotosTab/>
+                        <PhotosTab jobID={jobID} orgID={job.org_id} />
                     )}
 
                     {isHeadings.isNotes && (

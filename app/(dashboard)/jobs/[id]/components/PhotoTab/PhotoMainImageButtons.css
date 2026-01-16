@@ -1,33 +1,78 @@
 .job-photos-headings {
-    margin-top: 50px;
-    width: 550px;
-    padding: 10px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 12px;
+}
+
+.job-upload-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.job-upload-btn:hover {
+    background-color: var(--primary-hover, #2a1d17);
+    transform: translateY(-1px);
+}
+
+.job-upload-btn svg {
+    width: 18px;
+    height: 18px;
 }
 
 .job-image-buttons {
     display: flex;
-    gap: 10px;
-
+    gap: 8px;
 }
 
-
-.job-image-remove {
-
-    width: 30px;
-    height:30px;
-    background-color: #bb7070;
-    z-index: 40;
+.job-image-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background-color: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.job-image-replace {
+.job-image-btn:hover {
+    background-color: var(--hover-surface);
+    border-color: var(--border-strong);
+}
 
-    width: 30px;
-    height:30px;
-    background-color: #D1D1D1;
-    z-index: 40;
-    cursor: pointer;
+.job-image-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.job-image-btn.remove:hover {
+    background-color: #FEE2E2;
+    border-color: #FECACA;
+    color: #DC2626;
+}
+
+.job-image-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.job-image-btn:disabled:hover {
+    background-color: var(--surface-2);
+    border-color: var(--border);
+    transform: none;
 }

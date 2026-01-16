@@ -1,12 +1,13 @@
 import React from "react";
-import { useRef, useEffect,useState, use } from "react"
 import { usePhotos } from "./usePhotos";
 import { PhotosGallery } from "./PhotosGallery";
 import { PhotoMainImageButtons } from "./PhotoMainImageButtons";
 import { PhotosGalleryButtons } from "./PhotosGalleryButtons";
+import { uploadPhoto } from "./actions";
+
 import './PhotoTab.css'
 
-export const PhotosTab = () => {
+export const PhotosTab = ({jobID,orgID}) => {
 
     const {
         images,
@@ -30,98 +31,63 @@ export const PhotosTab = () => {
         handleMouseLeave
     } = usePhotos()
 
-// Handling Images
-    
-
-    
-
-    // Handles condition of when mouse is held down in container.
-    const handleMouseDown = (e) => {
-        // Allows Dragging
-        setIsDragging(true);
-        // Gets very first initial position of mouse from top edge of container
-        setStartY(e.clientY - scrollRef.current.getBoundingClientRect().top)
-        // Gets very first initial position of scroll of container
-        setScrollTop(scrollRef.current.scrollTop)
-    }
-
-    // Handles condition of when mouse is moving
-    const handleMouseMove = (e) => {
-        // Returns if dragging is not allowed
-        if (!isDragging) return;
-
-        // Gets final position of mouse after movement from left edge of container
-        const endY = e.clientY - scrollRef.current.getBoundingClientRect().top;
-        // Getting distance  of movement, with a ratio of 1:2.7 || Drag Left = +ve, Drag Right = -ve
-        const distance = (startY - endY) * 2
-        // Storing next iteration's initial position as previous end position
-        setStartY(endY)
-
-        // Updates scroll position of container (+ve distance = container moves right || -ve distance = container moves left)
-        scrollRef.current.scrollTop = scrollTop + distance
-        // Temporarily stores updated scroll position, 
-        setScrollTop(scrollRef.current.scrollTop)
-
-        
-    }
-
     return (
         <div className="job-photos">
-            
-            <div style={{display:'flex'}}>
+            <div className="job-photos-toolbar">
                 <PhotoMainImageButtons
-                images={images}
-                setImages={setImages}
-                setCurrentImage={setCurrentImage}
-                setImageToReplace={setImageToReplace}
-                imageToReplace={imageToReplace}
-                currentImage={currentImage}/>
-
+                    jobID={jobID} 
+                    orgID={orgID}
+                    images={images}
+                    setImages={setImages}
+                    setCurrentImage={setCurrentImage}
+                    setImageToReplace={setImageToReplace}
+                    imageToReplace={imageToReplace}
+                    currentImage={currentImage}
+                />
                 <PhotosGalleryButtons
-                images={images}
-                setImages={setImages}
-                isSelectedImages={isSelectedImages}
-                setIsSelectedImages={setIsSelectedImages}
-                currentImage={currentImage}
-                setCurrentImage={setCurrentImage}/>
+                    images={images}
+                    setImages={setImages}
+                    isSelectedImages={isSelectedImages}
+                    setIsSelectedImages={setIsSelectedImages}
+                    currentImage={currentImage}
+                    setCurrentImage={setCurrentImage}
+                />
             </div>
 
             <div className="job-image-content">
-
-                {/* Ternary Function that will display the main image if there is a current image
-                If there isn't a current image, it will display a message telling user to upload an image */}
                 {currentImage ? (
-                <div className="job-image-main1">
-                    {/* Displays the main image */}
-                    <img src={currentImage} alt="Uploaded" style={{maxHeight:'100%',maxWidth:'100%',objectFit: 'contain',objectPosition: 'center'}}/>
-                </div>
-            )
-            :
-            (   
-                
-                <div className="job-image-main2"> 
-                    {/* Displays text advising user to upload an image */}
-                    <label htmlFor="fileInput" className="job-image-upload">
-                        <p style={{color:'#999'}}>Click to upload image</p>
-                    </label>
-                </div>
-            )}
+                    <div className="job-image-main1">
+                        <img src={currentImage} alt="Uploaded" />
+                    </div>
+                ) : (
+                    <div className="job-image-main2">
+                        <label htmlFor="fileInput" className="job-image-upload">
+                            <div className="job-image-upload-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                </svg>
+                            </div>
+                            <div className="job-image-upload-text">
+                                <p><span>Click to upload</span> or drag and drop</p>
+                                <p>PNG, JPG up to 10MB</p>
+                            </div>
+                        </label>
+                    </div>
+                )}
 
-            {/* Displays all the images uploaded below the main image */}
-            <PhotosGallery 
-            images={images}
-            scrollRef={scrollRef}
-            handleMouseDown={handleMouseDown}
-            handleMouseMove={handleMouseMove}
-            handleMouseUp={handleMouseUp}
-            handleMouseLeave={handleMouseLeave}
-            setIsHovering={setIsHovering}
-            isDragging={isDragging}
-            setCurrentImage={setCurrentImage}
-            isSelectedImages={isSelectedImages}
-            setIsSelectedImages={setIsSelectedImages}
-            />
+                <PhotosGallery
+                    images={images}
+                    scrollRef={scrollRef}
+ 
+                    handleMouseUp={handleMouseUp}
+                    handleMouseLeave={handleMouseLeave}
+                    setIsHovering={setIsHovering}
+                    isDragging={isDragging}
+                    setCurrentImage={setCurrentImage}
+                    isSelectedImages={isSelectedImages}
+                    setIsSelectedImages={setIsSelectedImages}
+                />
+            </div>
         </div>
-    </div>
     )
 }

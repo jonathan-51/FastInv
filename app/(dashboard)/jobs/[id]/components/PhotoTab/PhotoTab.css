@@ -1,41 +1,104 @@
 .job-photos {
     display: flex;
     flex-direction: column;
+    padding: 24px 0;
 }
 
-.job-image-upload {
-    display:flex;
-    justify-content: center;
+.job-photos-toolbar {
+    display: flex;
     align-items: center;
-    width: 550px;
-    height:550px;
-    background-color: #F5F5F5;
-    border-radius: 8px;
-    cursor: pointer;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background-color: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
 }
-
 
 .job-image-content {
     display: flex;
-    gap: 50px;
-    margin-top: 0px;
+    gap: 0;
 }
 
 .job-image-main1 {
-    top: 100px;
-    background-color: black;
-    width: 550px;
-    height: 550px;
+    background-color: #1a1a1a;
+    width: 540px;
+    min-width: 540px;
+    height: 540px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 0 0 0 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-top: none;
+    border-right: none;
+}
+
+.job-image-main1 img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
 }
 
 .job-image-main2 {
-    top: 100px;
-    width: 550px;
-    height: 550px;
+    width: 540px;
+    min-width: 540px;
+    height: 540px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 0 0 0 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-top: none;
+    border-right: none;
+}
+
+.job-image-upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    height: 100%;
+    background-color: var(--surface-1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.job-image-upload:hover {
+    background-color: var(--surface-2);
+}
+
+.job-image-upload-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--surface-2);
+    border-radius: 50%;
+    color: var(--text-muted);
+}
+
+.job-image-upload-icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+.job-image-upload-text {
+    text-align: center;
+}
+
+.job-image-upload-text p {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin: 0;
+}
+
+.job-image-upload-text span {
+    color: var(--primary);
+    font-weight: 500;
 }
