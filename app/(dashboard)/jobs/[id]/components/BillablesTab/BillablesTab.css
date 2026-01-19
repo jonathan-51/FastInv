@@ -125,3 +125,21 @@
     font-size: 12px;
     color: var(--primary);
 }
+
+.billables-summary {
+    border-top: 1px solid var(--border);
+    padding: 20px;
+}
+
+.billables-summary-type {
+    display: grid;
+    grid-template-columns: 1fr 60px;
+}
+
+.billables-summary-total {
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: 1fr 60px;
+}
+
+.billables-summary-invoice-btn {}

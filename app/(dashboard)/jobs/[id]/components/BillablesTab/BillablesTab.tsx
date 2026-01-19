@@ -18,19 +18,34 @@ const BillablesTabContent = () => {
             selectedItems,
             setSelectedItems } = useBillables()
 
-    useEffect(() => {
-        const fetchItems = async () => {
-            const items = await getBillableItems({ jobID, orgID })
-            if (Array.isArray(items)) {
-                setBillablesItems(items)
-            }
-        }
-        fetchItems()
-    }, [jobID, orgID])
+
     const uniqueTypes = [...new Set(billablesItems.map(item => item.type))]
     
-    
+    const handleSelectAll = (type: string, categoryItems: any[], categoryItemsID: string[]) => {
+        categoryItems.every(item => selectedItems[type]?.includes(item.id)) ?
+        setSelectedItems({...selectedItems,[type]:[]})
+        :
+        setSelectedItems({...selectedItems,[type]:categoryItemsID})
+    }
 
+    const calculateTypeTotal = (type:{type:string}) => {
+        const categoryItems = billablesItems.filter(item => item.type === type)
+        return categoryItems.reduce((sum,item) => sum + (parseFloat(item.quantity)*parseFloat(item.unit_price)),0)
+    }
+
+    const getCategoryItemCount = (type: string) => {
+        const categoryItems = billablesItems.filter(item => item.type === type)
+        return categoryItems.length
+    }
+
+    const calculateTotal = () => {
+        return billablesItems.reduce((sum,item) => sum + (parseFloat(item.quantity)*parseFloat(item.unit_price)),0).toFixed(2)
+    }
+    
+    const calculateLabourHours = () => {
+        const labourItems = billablesItems.filter(item => item.type === "Labour")
+        return labourItems.reduce((sum,item) => sum + (parseFloat(item.quantity)),0)
+    }
 
     return (
         <div className="billables-main">
@@ -56,10 +71,7 @@ const BillablesTabContent = () => {
                                 <div className="billables-body-headers">
                                     <div 
                                     className='billables-body-headers-select'
-                                    onClick={() => categoryItems.every(item => selectedItems[type]?.includes(item.id)) ? 
-                                        setSelectedItems({...selectedItems,[type]:[]})
-                                        :
-                                        setSelectedItems({...selectedItems,[type]:categoryItemsID})
+                                    onClick={() => handleSelectAll(type,categoryItems,categoryItemsID)
                                     }>
                                         
                                         {categoryItems.every(item => selectedItems[type]?.includes(item.id)) ? '✓' : ''}
@@ -95,16 +107,51 @@ const BillablesTabContent = () => {
 
                 </div>
                 <div className="billables-summary">
-                    <div>Summary</div>
+                    <div style={{marginBottom:'20px'}}>Summary</div>
+                    <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                    {uniqueTypes.map(type => {
+                            const total_type_price = calculateTypeTotal(type)
+                            const numberCategoryItems = getCategoryItemCount(type)
+                        return (
+                        <div key={type} className='billables-summary-type'>
+                            <span>{type} ({numberCategoryItems} items)</span>
+                            <span style={{textAlign:'right'}}>${total_type_price.toFixed(2)}</span>
+                        </div>
+                    )})}
+                    </div>
+                    <div className='billables-summary-total'>
+                        <span>Total</span>
+                        <span style={{textAlign:'right'}}>${calculateTotal()}</span>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button className='billables-summary-invoice-btn'>Generate Invoice</button>
+                        <button className='billables-summary-pdf-btn'>Export PDF</button>
+                    </div>
+
+                    <div style={{marginTop:'15px',backgroundColor:'var(--surface-3',borderRadius:'8px'}}>
+                        <span>Hourly Breakdown</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                            <span>{calculateLabourHours()}</span>
+                            <span>Total Hours Logged</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
 
-export const BillablesTab = ({ jobID, orgID }: { jobID: string; orgID: string }) => {
+export const BillablesTab = (
+    { jobID, orgID, initialBillablesItems, initialSetBillablesItems }: 
+    { jobID: string; orgID: string; initialBillablesItems?: any[]; initialSetBillablesItems?: any }) => {
     return (
-        <BillablesProvider jobID={jobID} orgID={orgID}>
+        <BillablesProvider 
+        jobID={jobID} 
+        orgID={orgID}
+        initialBillablesItems={initialBillablesItems}
+        initialSetBillablesItems={initialSetBillablesItems} >
             <BillablesTabContent />
         </BillablesProvider>
     );

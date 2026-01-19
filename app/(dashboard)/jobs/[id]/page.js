@@ -10,6 +10,7 @@ import { BillablesTab } from "./components/BillablesTab/BillablesTab";
 import { InvoiceTab } from "./components/InvoiceTab/InvoiceTab";
 // Import server action to fetch jobs from database
 import { getJobs } from '../actions';
+import { getBillableItems } from "./components/BillablesTab/components/actions";
 
 export default function JobDetailPage() {
     // Get the dynamic route parameter from the URL
@@ -28,7 +29,8 @@ export default function JobDetailPage() {
     // Initializing variable that keeps tract of dropdown state, only exists if true.
     const [showDropDown,setShowDropDown] = useState(false);
 
-
+    // state variable to store intial fetch of billable data
+    const [initialBillablesItems, setInitialBillablesItems] = useState([])
 
     const [isHeadings,setIsHeadings] = useState({
         isBillables: true,
@@ -104,6 +106,21 @@ export default function JobDetailPage() {
 
         fetchJob();
     },[jobID]); // Re-run effect if jobID changes
+    
+
+    useEffect(() => {
+        if (!job) return
+
+        const fetchBillables  = async () => {
+            const items = await getBillableItems({ jobID, orgID:job.org_id })
+            if (Array.isArray(items)) {
+                setInitialBillablesItems(items)
+            }
+        }
+        fetchBillables ()
+    }, [job,jobID,])
+
+
 
     // Show loading state while fetching job from database
     // This prevents showing blank page during fetch
@@ -177,8 +194,12 @@ export default function JobDetailPage() {
                 </div>
                 <div className="job-content">
 
-                    {isHeadings.isBillables && (
-                        <BillablesTab jobID={jobID} orgID={job.org_id}/>
+                    {isHeadings.isBillables && initialBillablesItems.length > 0 && (
+                        <BillablesTab 
+                        jobID={jobID} 
+                        orgID={job.org_id} 
+                        initialBillablesItems={initialBillablesItems} 
+                        initialSetBillablesItems={setInitialBillablesItems} />
                     )}
 
                     {/*Displays images section */}

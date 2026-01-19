@@ -10,17 +10,19 @@ interface BillablesContextType {
     setBillablesItems: (items: any[]) => void
     addedBillableItem: any
     setAddedBillableItem: (item: any) => void
-    selectedItems:any[]
-    setSelectedItems:(item: any[]) => void
+    selectedItems: Record<string, string[]>
+    setSelectedItems: (items: Record<string, string[]>) => void
 }
 
 const BillablesContext = createContext<BillablesContextType | undefined>(undefined)
 
-export const BillablesProvider = ({ children,jobID,orgID }: { children: ReactNode,jobID:string,orgID:string }) => {
+export const BillablesProvider = (
+    { children, jobID, orgID, initialBillablesItems, initialSetBillablesItems }: 
+    { children: ReactNode, jobID: string, orgID: string, initialBillablesItems?: any[], initialSetBillablesItems?: any }) => {
     const [isNewItemOpen, setIsNewItemOpen] = useState(false)
-    const [billablesItems,setBillablesItems] = useState<any[]>([])
+    const [billablesItems, setBillablesItems] = useState<any[]>(initialBillablesItems || [])
     const [addedBillableItem,setAddedBillableItem] = useState<any>({})
-    const [selectedItems,setSelectedItems] = useState<any[]>([])
+    const [selectedItems, setSelectedItems] = useState<Record<string, string[]>>({})
 
     return (
         <BillablesContext.Provider value={{ 
