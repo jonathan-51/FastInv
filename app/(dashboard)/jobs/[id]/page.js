@@ -178,7 +178,7 @@ export default function JobDetailPage() {
                 <div className="job-content">
 
                     {isHeadings.isBillables && (
-                        <BillablesTab/>
+                        <BillablesTab jobID={jobID} orgID={job.org_id}/>
                     )}
 
                     {/*Displays images section */}

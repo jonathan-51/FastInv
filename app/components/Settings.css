@@ -1,3 +1,4 @@
+/* Overlay */
 .setting-overlay {
     position: fixed;
     top: 0;
@@ -7,58 +8,200 @@
     z-index: 50;
     display: flex;
     align-items: center;
-    justify-content: center;  
+    justify-content: center;
     background-color: rgba(0, 0, 0, 0.5);
-    
+    backdrop-filter: blur(4px);
 }
 
+/* Main Container */
 .setting-main {
     display: grid;
-    grid-template-columns: 250px 1fr;
+    grid-template-columns: 280px 1fr;
     position: relative;
     background-color: var(--background);
     width: 100%;
-    max-width: 1200px;
-    height:80vh;
-    max-height: 700px;
-    border-radius: var(--radius);
+    max-width: 1100px;
+    height: 85vh;
+    max-height: 750px;
+    border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+/* Sidebar */
 .setting-sidebar {
-    background-color: var(--surface-2);
+    background-color: var(--surface-3);
     border-right: 1px solid var(--border);
-    
-}
-
-.setting-sidebar-headers {
     display: flex;
     flex-direction: column;
-
-    padding-left: 32px;
 }
 
-.setting-customfield {
-    padding-left:32px;
-    padding-right: 32px;
+.setting-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
 }
 
-.setting-customfield > *:not(:first-child):not(:last-child) {
-    margin-bottom: 15px;
+.setting-header h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0;
+}
+
+.setting-close {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.setting-close:hover {
+    background-color: var(--surface-2);
+    color: var(--text);
+}
+
+.setting-close svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Navigation */
+.setting-nav {
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.setting-nav-btn {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-align: left;
+    width: 100%;
+}
+
+.setting-nav-btn:hover {
+    background-color: var(--surface-2);
+}
+
+.setting-nav-btn.active {
+    background-color: var(--surface-2);
+    color: var(--primary);
+}
+
+/* Body */
+.setting-body {
+    overflow-y: auto;
+    background-color: var(--surface-primary);
+}
+
+.setting-section {
+    padding: 32px;
+    max-width: 700px;
+}
+
+.setting-section h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0 0 8px 0;
+}
+
+.setting-description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 32px 0;
+}
+
+.setting-placeholder {
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: 24px;
+}
+
+/* Form */
+.setting-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.setting-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.setting-form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.setting-form-group input {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background-color: var(--surface-primary);
+    transition: all 0.2s;
+}
+
+.setting-form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.setting-form-group input:disabled {
+    background-color: var(--surface-2);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Custom Fields */
+.setting-customfield-field {
+    margin-bottom: 32px;
+}
+
+.setting-customfield-field h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0 0 12px 0;
 }
 
 .setting-customfield-body {
     border: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    color: var(--text);
-    margin-top: 15px;
-}
-
-.setting-customfield-body > *:not(:last-child) {
-    border-bottom: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--surface-primary);
 }
 
 .setting-customfield-body-field {
-    padding: 5px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+}
+
+.setting-customfield-body-field:last-child {
+    border-bottom: none;
 }

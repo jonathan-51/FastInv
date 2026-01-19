@@ -1,0 +1,127 @@
+.billables-main {
+    border: solid 1px var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+
+
+.billables-header {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 50px 110px;
+    gap: 15px;
+    padding: 24px 20px;
+    background-color: var(--surface-2);
+}
+
+.billables-add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.billables-remove-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.billables-remove-btn svg {
+    width: 25px;
+    height: 25px;
+}
+
+.billables-remove-btn:hover {
+    background-color: #FEE2E2;
+    color: #DC2626;
+    border-color: #FECACA;
+}
+
+.billables-add-btn:hover {
+    transform: translateY(-1px);
+}
+
+.billables-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+}
+
+.billables-body {
+}
+
+.billables-body-headers {
+    display: grid;
+    grid-template-columns: 40px 1fr 50px;
+    background-color: var(--surface-3);
+    padding: 12px 50px 12px 20px;
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+
+}
+
+.billables-body-table {
+    background-color: var(--surface-1);
+}
+
+.billables-body-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 100px 50px;
+    background-color: var(--surface-1);
+    padding: 12px 50px 12px 20px;
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+}
+
+.billables-body-headers-select {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-strong);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    transition: all 0.2s ease;
+    background-color: var(--surface-1);
+    font-size: 12px;
+    color: var(--primary);
+}
+
+.billables-body-row-select {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-strong);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    transition: all 0.2s ease;
+    background-color: var(--surface-1);
+    font-size: 12px;
+    color: var(--primary);
+}

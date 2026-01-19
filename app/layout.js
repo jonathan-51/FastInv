@@ -8,6 +8,7 @@ import { fontSans } from "./fonts.js";
 import { LocationProvider } from "./context/LocationContext";
 import { StatusProvider } from "./context/StatusContext";
 import { NewJobProvider } from "./context/NewJobContext"
+import { BillablesCategoryProvider } from "./context/BillablesContext"
 
 
 
@@ -21,15 +22,17 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={fontSans.variable}>
-        <SettingsProvider>
-          <NewJobProvider>
-            <LocationProvider>
-              <StatusProvider>
-                {children}
-              </StatusProvider>
-            </LocationProvider>
-          </NewJobProvider>
-        </SettingsProvider>
+        <BillablesCategoryProvider>
+          <SettingsProvider>
+            <NewJobProvider>
+              <LocationProvider>
+                <StatusProvider>
+                  {children}
+                </StatusProvider>
+              </LocationProvider>
+            </NewJobProvider>
+          </SettingsProvider>
+        </BillablesCategoryProvider>
       </body>
     </html>
   );
