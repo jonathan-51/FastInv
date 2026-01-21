@@ -1,16 +1,20 @@
 'use client'
-import Link from 'next/link';
-import { useEffect,useRef,useState } from 'react';
-import './jobs.css';
-import { useJobs } from './components/useJobs';
-import JobSearch from './components/JobSearch';
-import UserStatus from '@/app/components/UserStatus';
-import { getJobs, updateJobStatus } from './actions';
+import { Job } from "./types"
+import JobSearch from "./components/JobSearch"
+import { useState } from "react"
+import Link from 'next/link'
+import { useJobs } from "./useJobs"
+import { updateJobStatus } from "./actions"
+import UserStatus from "@/app/components/UserStatus"
+import './jobs.css'
 
+interface ClientWrapperProps {
+    jobs: Job[]
+}
 
-export default function JobsPage() {
-    
-    const formatDate = (dateString) => {
+export default function ClientWrapper({ jobs }:ClientWrapperProps) {
+
+    const formatDate = (dateString:string) => {
         return new Date(dateString).toLocaleDateString('en-NZ', {
             day: 'numeric',
             month: 'short',
@@ -25,38 +29,10 @@ export default function JobsPage() {
         currentJobsStatus,
         setCurrentJobsStatus,
         statusFields,
-        setStatusFields
-    } = useJobs()
-
-    // initializing useState variable to store all job entries
-    const [jobs, setJobs] = useState([])
-
-    
-
-
-    // Getting information sent from new customer form, converting string back into object
-    // updating jobs object with new job entry after each render
-    useEffect(() => {
-
-        const gettingJobs = async () => {
-            const savedJobs = await getJobs()
-            setJobs(savedJobs);
-
-            setCurrentJobsStatus(savedJobs.reduce((acc,job) => {
-                acc[job.id] = job.status
-
-                return acc
-                },{})
-            )
-
-            console.log(savedJobs)    
-        }
-        
-        gettingJobs()
-    },[])
+        setStatusFields} = useJobs()
 
     // Initializing useState variable to store all selected jobs
-    const [selectedJobs,setSelectedJobs] = useState([]);
+    const [selectedJobs, setSelectedJobs] = useState<string[]>([])
 
     // Function that handles selecting all rows
     const selectAllRows = () => {
@@ -66,39 +42,21 @@ export default function JobsPage() {
             const unselectedJobs = jobs.map(job => job.id).filter(id => !selectedJobs.includes(id))
             setSelectedJobs([...selectedJobs,...unselectedJobs])
         }
-
     }
 
     // Function that handles removing all selected jobs
     const removeAllSelectedJobs = () => {
-
         if (selectedJobs.length === jobs.length && selectedJobs.length > 0) {
-            setJobs([])
-        } else {
-            return
+            // Note: Can't modify jobs array as it's a prop from server
+            // You'll need to implement delete functionality with server action
+            console.log('Remove all selected jobs')
         }
-
     }
-
-    // reference variable that remains constant between renders
-    const isFirstRender = useRef(true)
-    // Handles updating cached jobs when jobs are removed.
-    useEffect(() => {
-
-        // prevents code from running for the first render (prevents removing newly created job ticket)
-        if (isFirstRender.current) {
-            isFirstRender.current = false
-            return
-        }
-
-        localStorage.setItem('jobs',JSON.stringify(jobs)); 
-
-    },[jobs])
 
     return (
         <div className='contents' style={{padding: '32px'}}>
             <h1 style={{fontSize: '36px', fontWeight: '600', margin: '12px', color: 'var(--text)'}}>Jobs</h1>
-            <JobSearch/>
+            <JobSearch onSearch={() => {}} />
             <div className='jobs-table'>
                 <h3 className='ticket-headings'>
                     <div className='jobs-select'
@@ -139,18 +97,20 @@ export default function JobsPage() {
                                         setOpenJobsStatusID(openJobsStatusID === job.id ? null:job.id)
                                         e.preventDefault()
                                         e.stopPropagation()}}
-                                    ref = {(element) => jobsStatusButton.current[job.id] = element}>
+                                        ref={(element) => {if (element) {jobsStatusButton.current[job.id] = element}}
+                                    }>
+                                        
                                         {currentJobsStatus[job.id] ? currentJobsStatus[job.id]:''}
 
                                         {openJobsStatusID === job.id && (
                                         <div className='jobs-status-dropdown'>
-                                            {statusFields.map((status) => (
+                                            {statusFields.map((status: string) => (
                                             <div
                                             key={status}
                                             onClick={async () => {
-                                                const result = await updateJobStatus(job.id,status)
+                                                const result = await updateJobStatus(job.id, status)
                                                 if (!result.error) {
-                                                    setCurrentJobsStatus({...currentJobsStatus,[job.id]:status})    
+                                                    setCurrentJobsStatus({...currentJobsStatus,[job.id]:status})
                                                 }
                                                 }}>
                                                 {status}
@@ -164,8 +124,9 @@ export default function JobsPage() {
                                 </div>
                                 <p>{formatDate(job.created_at)}</p>
                                 <div onClick={(e) => {
-                                    setJobs(jobs.filter(i => i.id !== job.id));
-                                    e.preventDefault();
+                                    // TODO: Implement delete job with server action
+                                    console.log('Delete job:', job.id)
+                                    e.preventDefault()
                                     e.stopPropagation()}}>Remove</div>
                             </div>
                             </Link>
@@ -177,4 +138,4 @@ export default function JobsPage() {
             <UserStatus/>
         </div>
     )
-} 
+}

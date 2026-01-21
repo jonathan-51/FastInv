@@ -2,17 +2,23 @@
     border: solid 1px var(--border);
     border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 1px 3px var(--shadow);
 }
-
-
 
 .billables-header {
     display: grid;
     align-items: center;
     grid-template-columns: 1fr 50px 110px;
     gap: 15px;
-    padding: 24px 20px;
+    padding: 24px 28px;
     background-color: var(--surface-2);
+}
+
+.billables-header > div {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
 }
 
 .billables-add-btn {
@@ -26,9 +32,10 @@
     border: none;
     border-radius: 8px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .billables-remove-btn {
@@ -36,21 +43,21 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: 8px 12px;
+    padding: 8px;
     background-color: transparent;
     color: var(--text-muted);
     border: 1px solid transparent;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
     user-select: none;
 }
 
 .billables-remove-btn svg {
-    width: 25px;
-    height: 25px;
+    width: 22px;
+    height: 22px;
 }
 
 .billables-remove-btn:hover {
@@ -59,8 +66,19 @@
     border-color: #FECACA;
 }
 
+.billables-remove-btn:active {
+    background-color: #FECACA;
+    transform: scale(0.95);
+}
+
 .billables-add-btn:hover {
-    transform: translateY(-1px);
+    background-color: var(--primary-hover);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.billables-add-btn:active {
+    background-color: var(--primary-active);
+    transform: translateY(0);
 }
 
 .billables-content {
@@ -69,16 +87,34 @@
 }
 
 .billables-body {
+    background-color: var(--surface-1);
+}
+
+.billables-body-category {
+    display: flex;
+    flex-direction: column;
+}
+
+.billables-body-type:last-child .billables-body-row:last-child {
+    border-bottom: none;
 }
 
 .billables-body-headers {
     display: grid;
-    grid-template-columns: 40px 1fr 50px;
+    grid-template-columns: 40px 1fr 80px;
+    align-items: center;
     background-color: var(--surface-3);
-    padding: 12px 50px 12px 20px;
+    padding: 14px 50px 14px 14px;
     border-top: 1px solid var(--border);
-    border-right: 1px solid var(--border);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    gap: 16px;
+}
 
+.billables-body-headers span:last-child {
+    text-align: right;
+    font-weight: 600;
 }
 
 .billables-body-table {
@@ -87,59 +123,217 @@
 
 .billables-body-row {
     display: grid;
-    grid-template-columns: 40px 1fr 100px 50px;
+    grid-template-columns: 40px 1fr 140px 80px;
+    align-items: center;
     background-color: var(--surface-1);
-    padding: 12px 50px 12px 20px;
+    padding: 14px 50px 14px 14px;
     border-top: 1px solid var(--border);
-    border-right: 1px solid var(--border);
+    font-size: 14px;
+    gap: 16px;
+    transition: background-color 0.15s ease;
+}
+
+
+
+.billables-body-row span:nth-child(2) {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.billables-body-row span:nth-child(3) {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.billables-body-row span:last-child {
+    text-align: right;
+    font-weight: 600;
+    color: var(--text);
 }
 
 .billables-body-headers-select {
     width: 20px;
     height: 20px;
     border: 2px solid var(--border-strong);
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     user-select: none;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
     background-color: var(--surface-1);
-    font-size: 12px;
-    color: var(--primary);
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+}
+
+.billables-body-headers-select:hover {
+    border-color: var(--primary);
+    background-color: var(--surface-2);
+}
+
+.billables-body-headers-select:not(:empty) {
+    background-color: var(--primary);
+    border-color: var(--primary);
 }
 
 .billables-body-row-select {
     width: 20px;
     height: 20px;
     border: 2px solid var(--border-strong);
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     user-select: none;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
     background-color: var(--surface-1);
-    font-size: 12px;
-    color: var(--primary);
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+}
+
+.billables-body-row-select:hover {
+    border-color: var(--primary);
+    background-color: var(--surface-2);
+}
+
+.billables-body-row-select:not(:empty) {
+    background-color: var(--primary);
+    border-color: var(--primary);
 }
 
 .billables-summary {
+    border-left: 1px solid var(--border);
+    background-color: var(--surface-2);
     border-top: 1px solid var(--border);
-    padding: 20px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.billables-summary > div:first-child {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    margin-bottom: -8px;
 }
 
 .billables-summary-type {
     display: grid;
-    grid-template-columns: 1fr 60px;
+    grid-template-columns: 1fr 80px;
+    gap: 12px;
+    font-size: 14px;
+}
+
+.billables-summary-type span:first-child {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.billables-summary-type span:last-child {
+    text-align: right;
+    color: var(--text);
+    font-weight: 600;
 }
 
 .billables-summary-total {
-    margin-top: 25px;
+    padding-top: 16px;
+    border-top: 2px solid var(--border-strong);
     display: grid;
-    grid-template-columns: 1fr 60px;
+    grid-template-columns: 1fr 80px;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 700;
 }
 
-.billables-summary-invoice-btn {}
+.billables-summary-total span:last-child {
+    text-align: right;
+    color: var(--primary);
+}
+
+.billables-summary-invoice-btn {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.billables-summary-invoice-btn:hover {
+    background-color: var(--primary-hover);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.billables-summary-invoice-btn:active {
+    background-color: var(--primary-active);
+    transform: translateY(0);
+}
+
+.billables-summary-pdf-btn {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: var(--surface-1);
+    color: var(--primary);
+    border: 1.5px solid var(--border-strong);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.billables-summary-pdf-btn:hover {
+    background-color: var(--surface-3);
+    border-color: var(--primary);
+}
+
+.billables-summary-pdf-btn:active {
+    transform: scale(0.98);
+}
+
+.billables-summary-hourly {
+    background-color: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.billables-summary-hourly > span:first-child {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.billables-summary-hourly-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.billables-summary-hourly-content span:first-child {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.billables-summary-hourly-content span:last-child {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+}

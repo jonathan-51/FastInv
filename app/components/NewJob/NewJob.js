@@ -4,8 +4,12 @@ import './NewJob.css'
 import { useNewJob } from '@/app/context/NewJobContext';
 import { NewJob } from './actions';
 import { User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+
 
 export default function NewJobPopOut() {
+
+    const router = useRouter()
 
     const { isNewJobOpen, setIsNewJobOpen } = useNewJob();
     const [error,setError] = useState(null)
@@ -37,6 +41,7 @@ export default function NewJobPopOut() {
             setIsSubmitting(false)
         } else {
             console.log("success")
+            router.refresh()
             setIsNewJobOpen(false)
 
             setFormData({

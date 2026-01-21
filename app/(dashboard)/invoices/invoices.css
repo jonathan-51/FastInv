@@ -1,0 +1,111 @@
+.invoices-main {
+    border: solid 1px var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px var(--shadow);
+}
+
+.invoices-header {
+    display: grid;
+    align-items: center;
+    grid-template-columns: auto auto auto auto auto auto 1fr auto;
+    gap: 10px;
+    padding: 24px 28px;
+    background-color: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+}
+
+.invoices-filter-chips {
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.invoices-new-invoices-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.invoices-content {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+}
+
+.invoices-sidebar {
+    border-right: 1px solid var(--border);
+}
+
+
+
+
+
+.invoices-body-header {
+    display: grid;
+    grid-template-columns: auto auto auto 1fr auto;
+    gap: 8px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.invoices-body-header-new-invoices-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.invoices-body-header-buttons {
+    padding: 10px 16px;
+    background-color: var(--surface-1);
+    color: var(--primary);
+    border: 1.5px solid var(--border-strong);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.invoices-body-main {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    padding: 48px;
+
+}
+
+.invoices-body-main-invoices {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm 20mm;  /* Top/bottom: 15mm, Left/right: 20mm */
+    background: white;
+    margin: 0 auto;
+    box-sizing: border-box;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+}

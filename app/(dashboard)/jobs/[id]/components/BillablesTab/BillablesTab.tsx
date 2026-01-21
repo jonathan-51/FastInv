@@ -1,22 +1,18 @@
 'use client'
 
-import { useEffect } from 'react';
 import './BillablesTab.css';
-import { useBillables, BillablesProvider } from './useBillables';
+import { useBillables } from './useBillables';
 import NewItemPopOut from './components/NewItem';
-import { getBillableItems } from './components/actions';
+import { useJobData } from '../../context/JobDataContext';
 
-const BillablesTabContent = () => {
-    const { isNewItemOpen, 
-            setIsNewItemOpen,
-            jobID,
-            orgID,
-            billablesItems,
-            setBillablesItems,
-            addedBillableItem,
-            setAddedBillableItem,
-            selectedItems,
-            setSelectedItems } = useBillables()
+export const BillablesTab = () => {
+    const { jobData } = useJobData()
+
+    const billablesItems = jobData.billables
+
+
+    // Get UI state from custom hook
+    const { isNewItemOpen, setIsNewItemOpen, selectedItems, setSelectedItems } = useBillables()
 
 
     const uniqueTypes = [...new Set(billablesItems.map(item => item.type))]
@@ -28,9 +24,9 @@ const BillablesTabContent = () => {
         setSelectedItems({...selectedItems,[type]:categoryItemsID})
     }
 
-    const calculateTypeTotal = (type:{type:string}) => {
+    const calculateTypeTotal = (type:string) => {
         const categoryItems = billablesItems.filter(item => item.type === type)
-        return categoryItems.reduce((sum,item) => sum + (parseFloat(item.quantity)*parseFloat(item.unit_price)),0)
+        return categoryItems.reduce((sum,item) => sum + (item.quantity*item.unit_price),0)
     }
 
     const getCategoryItemCount = (type: string) => {
@@ -39,12 +35,12 @@ const BillablesTabContent = () => {
     }
 
     const calculateTotal = () => {
-        return billablesItems.reduce((sum,item) => sum + (parseFloat(item.quantity)*parseFloat(item.unit_price)),0).toFixed(2)
+        return billablesItems.reduce((sum,item) => sum + (item.quantity*item.unit_price),0).toFixed(2)
     }
     
     const calculateLabourHours = () => {
         const labourItems = billablesItems.filter(item => item.type === "Labour")
-        return labourItems.reduce((sum,item) => sum + (parseFloat(item.quantity)),0)
+        return labourItems.reduce((sum,item) => sum + (item.quantity),0)
     }
 
     return (
@@ -64,7 +60,7 @@ const BillablesTabContent = () => {
                     <div className="billables-body-category">
                         {uniqueTypes.map(type => {
                             const categoryItems = billablesItems.filter(item => item.type === type)
-                            const categoryPrice = categoryItems.reduce((sum,item) => sum + (parseFloat(item.quantity)*parseFloat(item.unit_price)),0)
+                            const categoryPrice = categoryItems.reduce((sum,item) => sum + (item.quantity*item.unit_price),0)
                             const categoryItemsID = categoryItems.map(item => item.id)
                             return (
                             <div key={type} className='billables-body-type'>
@@ -78,7 +74,7 @@ const BillablesTabContent = () => {
 
                                     </div>
                                     <span >{type}</span>
-                                    <span >${categoryPrice.toFixed(2)}</span>
+                                    <span ></span>
                                 </div>
                                     
                                     <div className="billables-body-table">
@@ -94,7 +90,7 @@ const BillablesTabContent = () => {
                                                 </div>
                                             <span>{item.description}</span>
                                             <span>@ {item.quantity} {item.unit}</span>
-                                            <span>${(parseFloat(item.quantity)*parseFloat(item.unit_price)).toFixed(2)}</span>
+                                            <span>${(item.quantity*item.unit_price).toFixed(2)}</span>
                                         </div>
                                     ))}
                                     </div>
@@ -107,32 +103,33 @@ const BillablesTabContent = () => {
 
                 </div>
                 <div className="billables-summary">
-                    <div style={{marginBottom:'20px'}}>Summary</div>
-                    <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                    <div>Summary</div>
+
+                    <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
                     {uniqueTypes.map(type => {
                             const total_type_price = calculateTypeTotal(type)
                             const numberCategoryItems = getCategoryItemCount(type)
                         return (
                         <div key={type} className='billables-summary-type'>
-                            <span>{type} ({numberCategoryItems} items)</span>
-                            <span style={{textAlign:'right'}}>${total_type_price.toFixed(2)}</span>
+                            <span>{type} ({numberCategoryItems} {numberCategoryItems === 1 ? 'item' : 'items'})</span>
+                            <span>${total_type_price.toFixed(2)}</span>
                         </div>
                     )})}
                     </div>
+
                     <div className='billables-summary-total'>
                         <span>Total</span>
-                        <span style={{textAlign:'right'}}>${calculateTotal()}</span>
+                        <span>${calculateTotal()}</span>
                     </div>
 
-                    {/* Action Buttons */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <button className='billables-summary-invoice-btn'>Generate Invoice</button>
                         <button className='billables-summary-pdf-btn'>Export PDF</button>
                     </div>
 
-                    <div style={{marginTop:'15px',backgroundColor:'var(--surface-3',borderRadius:'8px'}}>
+                    <div className='billables-summary-hourly'>
                         <span>Hourly Breakdown</span>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                        <div className='billables-summary-hourly-content'>
                             <span>{calculateLabourHours()}</span>
                             <span>Total Hours Logged</span>
                         </div>
@@ -140,19 +137,5 @@ const BillablesTabContent = () => {
                 </div>
             </div>
         </div>
-    );
-};
-
-export const BillablesTab = (
-    { jobID, orgID, initialBillablesItems, initialSetBillablesItems }: 
-    { jobID: string; orgID: string; initialBillablesItems?: any[]; initialSetBillablesItems?: any }) => {
-    return (
-        <BillablesProvider 
-        jobID={jobID} 
-        orgID={orgID}
-        initialBillablesItems={initialBillablesItems}
-        initialSetBillablesItems={initialSetBillablesItems} >
-            <BillablesTabContent />
-        </BillablesProvider>
     );
 };

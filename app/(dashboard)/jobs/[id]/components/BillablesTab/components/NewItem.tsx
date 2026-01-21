@@ -1,9 +1,10 @@
 'use client'
-import { useState,useEffect } from 'react';
+import { useState } from 'react';
 import './NewItem.css'
 import { useBillables } from '../useBillables';
 import { useBillablesCategory } from '@/app/context/BillablesContext';
-import { addItem, getBillableItems } from './actions';
+import { addItem } from './actions';
+import { useJobData } from '../../../context/JobDataContext';
 
 interface Item {
     description: string;
@@ -14,15 +15,17 @@ interface Item {
 }
 
 export default function NewItemPopOut() {
-    const { isNewItemOpen, 
-            setIsNewItemOpen,
-            jobID,
-            orgID,
-            billablesItems,
-            setBillablesItems,
-            addedBillableItem,
-            setAddedBillableItem } = useBillables()
+
+    const { jobData} = useJobData()
+
+    const jobID = jobData.id
+    const orgID = jobData.org_id
+
+    // Get UI state from custom hook
+    const { isNewItemOpen, setIsNewItemOpen } = useBillables()
+
     const {billableCategoryFields} = useBillablesCategory()
+    const { addBillable } = useJobData()
 
     const [formData, setFormData] = useState<Item>({
         description:'',
@@ -35,6 +38,35 @@ export default function NewItemPopOut() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
+        // Create the new billable object
+        const newBillable = {
+            id: crypto.randomUUID(), // Temporary ID until we get the real one from DB
+            description: formData.description,
+            type: formData.type,
+            quantity: parseFloat(formData.quantity),
+            unit: formData.unit,
+            unit_price: parseFloat(formData.unit_price),
+            amount: parseFloat(formData.quantity) * parseFloat(formData.unit_price),
+            job_id: jobID,
+            org_id: orgID
+        }
+
+        // 1. Add to context immediately (optimistic update - instant UI!)
+        addBillable(newBillable)
+
+        // 2. Reset form
+        setFormData({
+            description: '',
+            type: '',
+            quantity: '',
+            unit: '',
+            unit_price: ''
+        })
+
+        // 3. Close modal (user sees instant feedback)
+        setIsNewItemOpen(false)
+
+        // 4. Save to database in background
         const data = new FormData()
         data.append('description', formData.description)
         data.append('type', formData.type)
@@ -46,15 +78,13 @@ export default function NewItemPopOut() {
 
         const result = await addItem(data)
 
-        if (result && !result.error) {
-            console.log(result)
-            setIsNewItemOpen(false)
-            // Refetch all items from DB
-            const items = await getBillableItems({ jobID, orgID })
-            if (Array.isArray(items)) {
-                setBillablesItems(items)
-            }
+        if (result && result.error) {
+            // If there's an error, you might want to remove the optimistic update
+            // or show an error message to the user
+            console.error('Failed to save item:', result.error)
         }
+
+        // No refetch needed! Context already has the new item
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
