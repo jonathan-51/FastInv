@@ -4,9 +4,11 @@ import './BillablesTab.css';
 import { useBillables } from './useBillables';
 import NewItemPopOut from './components/NewItem';
 import { useJobData } from '../../context/JobDataContext';
+import { storeInvoice } from '../../actions';
+
 
 export const BillablesTab = () => {
-    const { jobData } = useJobData()
+    const { jobData,invoice,setInvoice } = useJobData()
 
     const billablesItems = jobData.billables
 
@@ -42,6 +44,26 @@ export const BillablesTab = () => {
         const labourItems = billablesItems.filter(item => item.type === "Labour")
         return labourItems.reduce((sum,item) => sum + (item.quantity),0)
     }
+
+    const generateInvoice = async () => {
+            const invoice_data = {
+                org_id:jobData.org_id,
+                job_id:jobData.id,
+                customer_id:jobData.customer.id,
+                invoice_number:'',
+                status:'',
+                issued_date:'',
+                due_date:'',
+                total:parseFloat(calculateTotal()),
+            }
+    
+            const result = await storeInvoice(invoice_data)
+    
+            if (result.error) {
+            } else {
+                setInvoice(result)
+            }
+        }
 
     return (
         <div className="billables-main">
@@ -123,7 +145,11 @@ export const BillablesTab = () => {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <button className='billables-summary-invoice-btn'>Generate Invoice</button>
+                        <button className='billables-summary-invoice-btn'
+                        onClick={generateInvoice}
+                        disabled={invoice !== null}>
+                            {invoice ? 'Invoice Already Exists' : 'Generate Invoice'}
+                            </button>
                         <button className='billables-summary-pdf-btn'>Export PDF</button>
                     </div>
 

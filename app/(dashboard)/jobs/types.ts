@@ -26,3 +26,16 @@ export interface Billable {
     job_id: string
     org_id: string
 }
+
+export interface Invoice {
+    id: string
+    org_id: string
+    job_id: string
+    customer_id: string
+    invoice_number: string
+    status: string
+    issued_date: string
+    due_date: string
+    total: string
+    created_at: string
+}

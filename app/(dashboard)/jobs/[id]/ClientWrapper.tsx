@@ -10,18 +10,20 @@ import { BillablesTab } from "./components/BillablesTab/BillablesTab"
 import { InvoiceTab } from "./components/InvoiceTab/InvoiceTab"
 import { JobDataProvider } from "./context/JobDataContext"
 import { BillablesProvider } from "./components/BillablesTab/useBillables"
-import { Job, Billable } from "../types"
+import { Job, Billable, Invoice } from "../types"
+
 
 interface ClientWrapperProps {
     job: Job
     billablesItems: Billable[]
+    invoiceData: Invoice | null
 }
 
 /**
  * Client-side wrapper component that handles all interactive UI logic
  * Receives job data from parent Server Component as props
  */
-export default function ClientWrapper({ job, billablesItems }: ClientWrapperProps) {
+export default function ClientWrapper({ job, billablesItems, invoiceData }: ClientWrapperProps) {
     // State for tracking which tab is active
     const [isHeadings, setIsHeadings] = useState({
         isBillables: true,
@@ -49,7 +51,7 @@ export default function ClientWrapper({ job, billablesItems }: ClientWrapperProp
 
 
     return (
-        <JobDataProvider initialJobData={initialJobData}>
+        <JobDataProvider initialJobData={initialJobData} initialInvoice={invoiceData}>
             <BillablesProvider>
             <div className="job-page">
                 <div className="job-main">

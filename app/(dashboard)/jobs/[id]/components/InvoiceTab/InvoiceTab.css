@@ -1,3 +1,9 @@
+/* ==========================================================================
+   INVOICE TAB STYLES
+   ========================================================================== */
+
+/* Container
+   ========================================================================== */
 .invoice-main {
     border: solid 1px var(--border);
     border-radius: 12px;
@@ -5,37 +11,707 @@
     box-shadow: 0 1px 3px var(--shadow);
 }
 
+/* Header Section
+   ========================================================================== */
 .invoice-header {
     display: grid;
     align-items: center;
     grid-template-columns: auto auto auto 1fr auto auto;
-    gap: 10px;
+    gap: 12px;
     padding: 24px 28px;
     background-color: var(--surface-2);
     border-bottom: 1px solid var(--border);
 }
 
-
-
-.invoice-content {
-    display: grid;
-    grid-template-columns: 240px 1fr 240px;
+.invoice-header-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
 }
 
+.invoice-header-number {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+/* Header Status Badges
+   ========================================================================== */
+.invoice-header-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background-color: #DCFCE7;
+    color: #166534;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 20px;
+}
+
+.invoice-header-status.draft {
+    background-color: var(--surface-3);
+    color: var(--text-muted);
+}
+
+.invoice-header-status.sent {
+    background-color: #DBEAFE;
+    color: #1E40AF;
+}
+
+.invoice-header-status.paid {
+    background-color: #DCFCE7;
+    color: #166534;
+}
+
+.invoice-header-status.overdue {
+    background-color: #FEE2E2;
+    color: #DC2626;
+}
+
+/* Header Buttons
+   ========================================================================== */
+.invoice-header-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.invoice-header-btn-secondary {
+    background-color: var(--surface-1);
+    color: var(--text);
+    border: 1.5px solid var(--border-strong);
+}
+
+.invoice-header-btn-secondary:hover {
+    background-color: var(--surface-3);
+    border-color: var(--primary);
+}
+
+.invoice-header-btn-primary {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.invoice-header-btn-primary:hover {
+    background-color: var(--primary-hover);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.invoice-header-btn-primary:active {
+    background-color: var(--primary-active);
+}
+
+/* Content Layout
+   ========================================================================== */
+.invoice-content {
+    display: grid;
+    grid-template-columns: 260px 1fr 260px;
+}
+
+/* Left Sidebar
+   ========================================================================== */
 .invoice-content-left-side {
-    padding: 20px;
+    padding: 24px 20px;
     background-color: var(--surface-1);
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
 }
 
-.invoice-content-right-side {
+/* Left Sidebar Cards
+   ========================================================================== */
+.invoice-content-left-side-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    background-color: var(--surface-3);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+.invoice-card-header {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.invoice-card-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.invoice-card-detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+/* Price Summary Card
+   ========================================================================== */
+.invoice-content-left-side-price-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     padding: 20px;
+    background-color: var(--primary);
+    border-radius: 10px;
+    color: white;
+}
+
+.invoice-price-summary-header {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+}
+
+.invoice-price-summary-total {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.invoice-price-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-top: 1px solid rgba(255,255,255,0.15);
+}
+
+.invoice-price-summary-row span:first-child {
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0.85;
+}
+
+.invoice-price-summary-row span:last-child {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Date Card
+   ========================================================================== */
+.invoice-date-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+}
+
+.invoice-date-row span:first-child {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.invoice-date-row span:last-child {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.invoice-due-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    margin-top: 8px;
+    background-color: #DBEAFE;
+    color: #1E40AF;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+.invoice-due-badge.overdue {
+    background-color: #FEE2E2;
+    color: #DC2626;
+}
+
+/* Middle Section - Invoice Document Container
+   ========================================================================== */
+.invoice-content-middle {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 32px 24px;
+    background-color: var(--background);
+    min-height: 100%;
+}
+
+.invoice-document {
+    width: 794px;
+    min-height: 1000px;
+    background-color: white;
+    padding: 48px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
+    border-radius: 4px;
+}
+
+/* Invoice Document - Header
+   ========================================================================== */
+.invoice-doc-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 48px;
+}
+
+.invoice-doc-company {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.invoice-doc-company-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.invoice-doc-company-detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.invoice-doc-title-section {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.invoice-doc-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.02em;
+}
+
+.invoice-doc-number {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+/* Invoice Document - Bill To Section
+   ========================================================================== */
+.invoice-doc-billing {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+}
+
+.invoice-doc-bill-to {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.invoice-doc-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.invoice-doc-customer-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.invoice-doc-customer-detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.invoice-doc-dates {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.invoice-doc-date-row {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.invoice-doc-date-row strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* Invoice Document - Line Items Table
+   ========================================================================== */
+.invoice-doc-items {
+    margin-bottom: 40px;
+}
+
+.invoice-doc-items-header {
+    display: grid;
+    grid-template-columns: 2fr 0.6fr 0.8fr 0.9fr;
+    padding: 12px 0;
+    border-bottom: 2px solid var(--text);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.invoice-doc-items-header span:nth-child(2),
+.invoice-doc-items-header span:nth-child(3) {
+    text-align: center;
+}
+
+.invoice-doc-items-header span:last-child {
+    text-align: right;
+}
+
+/* Invoice Document - Line Item Categories
+   ========================================================================== */
+.invoice-doc-category {
+    margin-top: 20px;
+}
+
+.invoice-doc-category-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 0;
+    background-color: var(--surface-3);
+    padding-left: 12px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+/* Invoice Document - Line Item Rows
+   ========================================================================== */
+.invoice-doc-item-row {
+    display: grid;
+    grid-template-columns: 2fr 0.6fr 0.8fr 0.9fr;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    align-items: center;
+}
+
+.invoice-doc-item-row span:first-child {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.invoice-doc-item-row span:nth-child(2),
+.invoice-doc-item-row span:nth-child(3) {
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.invoice-doc-item-row span:last-child {
+    text-align: right;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* Invoice Document - Bottom Section
+   ========================================================================== */
+.invoice-doc-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-top: 48px;
+}
+
+/* Invoice Document - Payment Details
+   ========================================================================== */
+.invoice-doc-payment {
+    background-color: var(--surface-3);
+    border-radius: 10px;
+    padding: 24px;
+}
+
+.invoice-doc-payment-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+}
+
+.invoice-doc-payment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.invoice-doc-payment-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.invoice-doc-payment-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.invoice-doc-payment-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* Invoice Document - Totals Section
+   ========================================================================== */
+.invoice-doc-totals {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.invoice-doc-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.invoice-doc-total-row span:first-child {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.invoice-doc-total-row span:last-child {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.invoice-doc-total-row.final {
+    border-top: 2px solid var(--text);
+    padding-top: 16px;
+    margin-top: 8px;
+}
+
+.invoice-doc-total-row.final span:first-child {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.invoice-doc-total-row.final span:last-child {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* Right Sidebar - Actions
+   ========================================================================== */
+.invoice-content-right-side {
+    padding: 24px 20px;
     background-color: var(--surface-1);
     border-left: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
+}
+
+/* Right Sidebar - Action Buttons
+   ========================================================================== */
+.invoice-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.invoice-action-btn-primary {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.invoice-action-btn-primary:hover {
+    background-color: var(--primary-hover);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.invoice-action-btn-secondary {
+    background-color: var(--surface-1);
+    color: var(--text);
+    border: 1.5px solid var(--border-strong);
+}
+
+.invoice-action-btn-secondary:hover {
+    background-color: var(--surface-3);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.invoice-action-divider {
+    height: 1px;
+    background-color: var(--border);
+    margin: 8px 0;
+}
+
+.invoice-action-section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 8px;
+}
+
+/* Right Sidebar - Date Input Fields
+   ========================================================================== */
+.invoice-date-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.invoice-date-input-wrapper span {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.invoice-date-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: var(--surface-1);
+    color: var(--text);
+    transition: border-color 0.15s ease;
+}
+
+.invoice-date-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.invoice-date-input:hover {
+    border-color: var(--border-strong);
+}
+
+/* Empty State
+   ========================================================================== */
+.invoice-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px;
+    padding: 60px 24px;
+    background-color: var(--surface-1);
+}
+
+.invoice-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    height: 96px;
+    background-color: var(--surface-3);
+    border-radius: 24px;
+    margin-bottom: 24px;
+    color: var(--text-muted);
+}
+
+.invoice-empty-icon svg {
+    width: 48px;
+    height: 48px;
+}
+
+.invoice-empty-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 12px 0;
+    letter-spacing: -0.01em;
+}
+
+.invoice-empty-description {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0 0 32px 0;
+    text-align: center;
+    max-width: 360px;
+    line-height: 1.5;
+}
+
+.invoice-empty-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: var(--primary);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.invoice-empty-btn:hover {
+    background-color: var(--primary-hover);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.invoice-empty-btn:active {
+    background-color: var(--primary-active);
+    transform: translateY(1px);
 }

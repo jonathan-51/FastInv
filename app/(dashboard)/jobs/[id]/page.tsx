@@ -3,7 +3,8 @@ import { createServerSupabaseClient } from '@/lib/supabase'
 import { getBillableItems } from './components/BillablesTab/components/actions'
 import ClientWrapper from './ClientWrapper'
 import './job.css'
-import { getJobDetailPage } from './actions'
+import { getJobDetailPage,getInvoiceByJobID } from './actions'
+
 
 /**
  * Server Component that fetches job data directly from database
@@ -12,10 +13,10 @@ import { getJobDetailPage } from './actions'
 export default async function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
 
     const { id } = await params
-    const result = await getJobDetailPage(id)
+    const [job, invoiceData] = await Promise.all([getJobDetailPage(id),getInvoiceByJobID(id)])
 
     // If job not found, show error page
-    if (!result || 'error' in result) {
+    if (!job || 'error' in job || invoiceData.error) {
         return (
             <div className="job-page job-state-container">
                 <div className="job-error">
@@ -40,8 +41,6 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
         )
     }
 
-    const job = result
-
     // Fetch billable items for this job
     const billablesItems = await getBillableItems({
         jobID: job.id,
@@ -51,6 +50,6 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
     // Handle case where getBillableItems returns an error object
     const billables = Array.isArray(billablesItems) ? billablesItems : []
 
-    // Pass data to Client Component
-    return <ClientWrapper job={job} billablesItems={billables} />
+    // Pass data to Client Component (including invoice data)
+    return <ClientWrapper job={job} billablesItems={billables} invoiceData={invoiceData.data} />
 }
