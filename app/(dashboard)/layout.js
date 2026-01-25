@@ -20,15 +20,16 @@ export default function RootLayout({ children }) {
 
   return (
     <>
-        <Navbar />
-        <div className="flex">
-            <Sidebar/>
-            <main className="flex-1" style={{marginLeft:'240px',marginTop:'50px'}}>
+        <Navbar/>
+          <Sidebar/>
+          <main style={{marginLeft:'240px',marginTop:'50px'}}>
             {children}
-            </main>
-        </div>
-        <Settings />
-        <NewJob/>
+          </main>
+
+
+
+    <Settings />
+    <NewJob/>
     </>
   );
 }

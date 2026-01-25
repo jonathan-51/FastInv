@@ -23,7 +23,7 @@
     align-items: center;
     padding: 16px;
     border-bottom: 1px solid var(--border);
-    background-color: var(--surface-3);
+    background-color: var(--surface-2);
 }
 
 .notes-sidebar-title {

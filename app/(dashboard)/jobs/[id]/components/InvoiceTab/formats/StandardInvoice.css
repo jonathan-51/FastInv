@@ -1,0 +1,260 @@
+/* ==========================================================================
+   STANDARD INVOICE FORMAT STYLES
+   ========================================================================== */
+
+/* Invoice Document Container
+   ========================================================================== */
+.invoice-document {
+    width: 794px;
+    min-height: 1123px;
+    background-color: white;
+    padding: 48px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
+    border-radius: 4px;
+    margin-bottom: 32px;
+}
+
+/* Invoice Document - Header
+   ========================================================================== */
+.invoice-doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 56px;
+}
+
+.invoice-doc-company {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.invoice-doc-company-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.invoice-doc-company-detail {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.invoice-doc-title-section {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.invoice-doc-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+}
+
+.invoice-doc-number {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+/* Invoice Document - Bill To Section
+   ========================================================================== */
+.invoice-doc-billing {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.invoice-doc-bill-to {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.invoice-doc-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+}
+
+.invoice-doc-customer-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+}
+
+.invoice-doc-customer-detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.invoice-doc-dates {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.invoice-doc-date-row {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.invoice-doc-date-row strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* Invoice Document - Line Items Table
+   ========================================================================== */
+.invoice-doc-items {
+    margin-bottom: 48px;
+}
+
+.invoice-doc-items-header {
+    display: grid;
+    grid-template-columns: 2fr 0.6fr 0.8fr 0.9fr;
+    padding: 14px 0;
+    border-bottom: 2px solid var(--text);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.invoice-doc-items-header span:last-child {
+    text-align: right;
+}
+
+/* Category Rows (simplified view without individual items)
+   ========================================================================== */
+.invoice-doc-category-row {
+    display: grid;
+    grid-template-columns: 2fr 0.6fr 0.8fr 0.9fr;
+    padding: 16px 0;
+    border-bottom: 1px solid #E5E7EB;
+    align-items: center;
+}
+
+.invoice-doc-category-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.3px;
+}
+
+.invoice-doc-category-amount {
+    text-align: right;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* Summary Section (Totals aligned to right)
+   ========================================================================== */
+.invoice-doc-summary {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 48px;
+}
+
+.invoice-doc-totals {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 280px;
+}
+
+.invoice-doc-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.invoice-doc-total-row span:first-child {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.invoice-doc-total-row span:last-child {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.invoice-doc-total-row.final {
+    border-top: 2px solid var(--text);
+    padding-top: 18px;
+    margin-top: 4px;
+}
+
+.invoice-doc-total-row.final span:first-child {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.invoice-doc-total-row.final span:last-child {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* Invoice Document - Payment Details
+   ========================================================================== */
+.invoice-doc-payment {
+    background-color: #F9F7F4;
+    border-radius: 8px;
+    padding: 28px;
+}
+
+.invoice-doc-payment-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 20px;
+}
+
+.invoice-doc-payment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 20px;
+}
+
+.invoice-doc-payment-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.invoice-doc-payment-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.invoice-doc-payment-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}

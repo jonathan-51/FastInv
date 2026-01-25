@@ -176,3 +176,45 @@
     background-color: var(--hover-surface);
     color: var(--primary);
 }
+
+
+
+
+/* Job Tabs Dropdown */
+.job-tabs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 4px;
+    padding-left: 8px;
+    border-left: 2px solid var(--border);
+    margin-left: 16px;
+}
+
+.job-tab-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+}
+
+.job-tab-item:hover {
+    background-color: var(--hover-surface);
+    color: var(--text);
+}
+
+.job-tab-item.active {
+    background-color: var(--selected-surface);
+    color: var(--primary);
+    font-weight: 600;
+}

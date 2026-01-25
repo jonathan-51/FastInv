@@ -16,7 +16,7 @@ import { useSettings } from '../context/SettingsContext';
 import { useNewJob } from '../context/NewJobContext';
 import { createClient } from '@/lib/supabase';
 import { useState, useEffect } from 'react';
-
+import { useJobTabs } from '../context/JobTabContext';
 
 export default function Sidebar() {
     const pathname = usePathname();
@@ -24,6 +24,9 @@ export default function Sidebar() {
     const { setIsNewJobOpen } = useNewJob();
     const [user, setUser] = useState(null);
     const supabase = createClient();
+    const {isHeadings,setIsHeadings} = useJobTabs()
+
+
 
     useEffect(() => {
         const getUser = async () => {
@@ -45,6 +48,16 @@ export default function Sidebar() {
         return pathname.startsWith(path);
     };
 
+    // Handle tab switching
+    const handleSectionClick = (section) => {
+        setIsHeadings({
+            isInvoice: section === 'invoice',
+            isPhotos: section === 'photos',
+            isBillables: section === 'billables',
+            isNotes: section === 'notes',
+        })
+    }
+
     return (
         <aside className='Sidebar'>
             <div className='side-container'>
@@ -64,11 +77,35 @@ export default function Sidebar() {
                     <div className='nav-section'>
                         <Link
                             href='/'
-                            className={`nav-link ${isActive('/') ? 'active' : ''}`}
+                            className={`nav-link ${pathname === '/' || pathname === '/jobs' ? 'active' : ''}`}
                         >
                             <Briefcase size={20} />
                             <span>Jobs</span>
                         </Link>
+
+                        {/* Job Tabs Dropdown - Only visible when on a job detail page */}
+                        {pathname.startsWith('/jobs/') && (
+                            <div className='job-tabs-container'>
+                                <button 
+                                onClick={() => handleSectionClick('billables')} 
+                                className={`job-tab-item ${isHeadings.isBillables ? 'active':''}`}>
+                                    <span>Billables</span>
+                                </button>
+                                <button
+                                onClick={() => handleSectionClick('photos')} 
+                                className={`job-tab-item ${isHeadings.isPhotos ? 'active':''}`}>
+                                    <span>Photos</span>
+                                </button>
+                                <button onClick={() => handleSectionClick('notes')}
+                                className={`job-tab-item ${isHeadings.isNotes ? 'active':''}`}>
+                                    <span>Notes</span>
+                                </button>
+                                <button onClick={() => handleSectionClick('invoice')}
+                                className={`job-tab-item ${isHeadings.isInvoice ? 'active':''}`}>
+                                    <span>Invoice</span>
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <div className='nav-section'>
@@ -78,7 +115,7 @@ export default function Sidebar() {
 
                             <Users size={20}/>
                             <span>Customers</span>
-                        
+
                         </Link>
                     </div>
 

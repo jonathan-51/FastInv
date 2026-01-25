@@ -9,7 +9,7 @@ import { LocationProvider } from "./context/LocationContext";
 import { StatusProvider } from "./context/StatusContext";
 import { NewJobProvider } from "./context/NewJobContext"
 import { BillablesCategoryProvider } from "./context/BillablesContext"
-
+import { JobTabProvider } from "./context/JobTabContext";
 
 
 export const metadata = {
@@ -22,17 +22,20 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={fontSans.variable}>
-        <BillablesCategoryProvider>
-          <SettingsProvider>
-            <NewJobProvider>
-              <LocationProvider>
-                <StatusProvider>
-                  {children}
-                </StatusProvider>
-              </LocationProvider>
-            </NewJobProvider>
-          </SettingsProvider>
-        </BillablesCategoryProvider>
+        <JobTabProvider>
+          <BillablesCategoryProvider>
+            <SettingsProvider>
+              <NewJobProvider>
+                <LocationProvider>
+                  <StatusProvider>
+                    
+                    {children}
+                  </StatusProvider>
+                </LocationProvider>
+              </NewJobProvider>
+            </SettingsProvider>
+          </BillablesCategoryProvider>
+        </JobTabProvider>
       </body>
     </html>
   );

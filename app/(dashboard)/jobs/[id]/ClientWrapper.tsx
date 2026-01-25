@@ -11,7 +11,7 @@ import { InvoiceTab } from "./components/InvoiceTab/InvoiceTab"
 import { JobDataProvider } from "./context/JobDataContext"
 import { BillablesProvider } from "./components/BillablesTab/useBillables"
 import { Job, Billable, Invoice } from "../types"
-
+import { useJobTabs } from "@/app/context/JobTabContext"
 
 interface ClientWrapperProps {
     job: Job
@@ -24,13 +24,9 @@ interface ClientWrapperProps {
  * Receives job data from parent Server Component as props
  */
 export default function ClientWrapper({ job, billablesItems, invoiceData }: ClientWrapperProps) {
+
     // State for tracking which tab is active
-    const [isHeadings, setIsHeadings] = useState({
-        isBillables: true,
-        isPhotos: false,
-        isNotes: false,
-        isInvoice: false,
-    })
+    const {isHeadings,setIsHeadings} = useJobTabs()
 
     // Handle tab switching
     const handleSectionClick = (section: string) => {
@@ -57,28 +53,6 @@ export default function ClientWrapper({ job, billablesItems, invoiceData }: Clie
                 <div className="job-main">
                     <div className="job-header">
                         <h1 className="job-address">{job.site_address}</h1>
-                        <div className="job-sections">
-                            <button
-                                className={`job-section-btn ${isHeadings.isBillables ? 'active' : ''}`}
-                                onClick={() => handleSectionClick('billables')}>
-                                Billables
-                            </button>
-                            <button
-                                className={`job-section-btn ${isHeadings.isPhotos ? 'active' : ''}`}
-                                onClick={() => handleSectionClick('photos')}>
-                                Photos
-                            </button>
-                            <button
-                                className={`job-section-btn ${isHeadings.isNotes ? 'active' : ''}`}
-                                onClick={() => handleSectionClick('notes')}>
-                                Notes
-                            </button>
-                            <button
-                                className={`job-section-btn ${isHeadings.isInvoice ? 'active' : ''}`}
-                                onClick={() => handleSectionClick('invoice')}>
-                                Invoice
-                            </button>
-                        </div>
                     </div>
                     <div className="job-content">
                         {isHeadings.isBillables && (
