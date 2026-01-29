@@ -4,15 +4,18 @@ import { createContext, useContext, useState, ReactNode } from "react"
 interface BillablesCategoryContextType {
     billableCategoryFields: string[]
     setBillableCategoryFields: (value: string[]) => void
+    itemMarkUp:string
+    setItemMarkUp: (value:string) => void    
 }
 
 const BillablesCategoryContext = createContext<BillablesCategoryContextType | undefined>(undefined)
 
 export const BillablesCategoryProvider = ({ children }: { children: ReactNode }) => {
     const [billableCategoryFields, setBillableCategoryFields] = useState(['Labour', 'Materials', 'Fees'])
+    const [itemMarkUp,setItemMarkUp] = useState('1.3')
 
     return (
-        <BillablesCategoryContext.Provider value={{ billableCategoryFields, setBillableCategoryFields }}>
+        <BillablesCategoryContext.Provider value={{ billableCategoryFields, setBillableCategoryFields,itemMarkUp,setItemMarkUp }}>
             {children}
         </BillablesCategoryContext.Provider>
     )

@@ -1,31 +1,23 @@
 'use client'
 
+import { useInvoice } from '../useInvoice'
+import { useJobData } from '../../../context/JobDataContext'
 import './StandardItemizedInvoice.css'
-import { Customer, Billable, Job } from '../../../../types'
 
-interface StandardItemizedInvoiceProps {
-    customer: Customer
-    jobData: Job
-    billables: Billable[]
-    uniqueTypes: string[]
-    issuedDate: string
-    dueDate: string
-    formatDate: (dateString: string) => string
-    calculateTotal: () => string
-    invoiceNumber: string
-}
+export const StandardItemizedInvoice = () => {
+    const { jobData, invoice } = useJobData()
+    const {
+        issuedDate,
+        dueDate,
+        formatDate,
+        calculateTotal
+    } = useInvoice()
 
-export const StandardItemizedInvoice = ({
-    customer,
-    jobData,
-    billables,
-    uniqueTypes,
-    issuedDate,
-    dueDate,
-    formatDate,
-    calculateTotal,
-    invoiceNumber
-}: StandardItemizedInvoiceProps) => {
+    // Derive data
+    const customer = jobData.customer
+    const billables = jobData.billables
+    const uniqueTypes = [...new Set(billables.map(item => item.type))]
+    const invoiceNumber = invoice?.invoice_number || 'INV-2024-0047'
 
     return (
     <div className='invoice-document'>
@@ -39,7 +31,7 @@ export const StandardItemizedInvoice = ({
             </div>
             <div className="invoice-doc-title-section">
                 <span className="invoice-doc-title">INVOICE</span>
-                <span className="invoice-doc-number">INV-2024-0047</span>
+                <span className="invoice-doc-number">{invoiceNumber}</span>
             </div>
         </div>
 
@@ -107,7 +99,7 @@ export const StandardItemizedInvoice = ({
                 </div>
                 <div className="invoice-doc-payment-item" style={{marginTop: '16px'}}>
                     <span className="invoice-doc-payment-label">Payment Reference</span>
-                    <span className="invoice-doc-payment-value">INV-2024-0047</span>
+                    <span className="invoice-doc-payment-value">{invoiceNumber}</span>
                 </div>
             </div>
             {/* Totals */}

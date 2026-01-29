@@ -1,4 +1,3 @@
-import { createServerSupabaseClient } from "@/lib/supabase"
 import { Job } from "./types"
 import { getJobs } from "./actions"
 import ClientWrapper from "./ClientWrapper"

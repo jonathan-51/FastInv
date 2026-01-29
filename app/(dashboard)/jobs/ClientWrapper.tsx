@@ -1,5 +1,5 @@
 'use client'
-import { Job } from "./types"
+import { Job, Organization } from "./types"
 import JobSearch from "./components/JobSearch"
 import { useState } from "react"
 import Link from 'next/link'
@@ -12,7 +12,7 @@ interface ClientWrapperProps {
     jobs: Job[]
 }
 
-export default function ClientWrapper({ jobs }:ClientWrapperProps) {
+export default function ClientWrapper({ jobs}:ClientWrapperProps) {
 
     const formatDate = (dateString:string) => {
         return new Date(dateString).toLocaleDateString('en-NZ', {
@@ -54,7 +54,7 @@ export default function ClientWrapper({ jobs }:ClientWrapperProps) {
     }
 
     return (
-        <div className='contents' style={{padding: '32px'}}>
+        <div style={{padding: '36px'}}>
             <h1 style={{fontSize: '36px', fontWeight: '600', margin: '12px', color: 'var(--text)'}}>Jobs</h1>
             <JobSearch onSearch={() => {}} />
             <div className='jobs-table'>

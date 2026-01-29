@@ -1,43 +1,43 @@
 'use client'
 
+import { useInvoice } from '../useInvoice'
+import { useJobData } from '../../../context/JobDataContext'
 import './StandardInvoice.css'
-import { Customer, Billable, Job } from '../../../../types'
+import { useOrganization } from '@/app/context/OrganizationContext'
+import { useEffect } from 'react'
 
-interface StandardInvoiceProps {
-    customer: Customer
-    jobData: Job
-    billables: Billable[]
-    uniqueTypes: string[]
-    issuedDate: string
-    dueDate: string
-    formatDate: (dateString: string) => string
-    calculateTotal: () => string
-    invoiceNumber: string
-}
 
-export const StandardInvoice = ({
-    customer,
-    jobData,
-    billables,
-    uniqueTypes,
-    issuedDate,
-    dueDate,
-    formatDate,
-    calculateTotal,
-    invoiceNumber
-}: StandardInvoiceProps) => {
 
-    const calculateCategoryTotal = (type: string) => {
-        const categoryItems = billables.filter(item => item.type === type)
-        return categoryItems.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0).toFixed(2)
+export const StandardInvoice = () => {
+    const { jobData, invoice } = useJobData()
+    const {
+        issuedDate,
+        dueDate,
+        formatDate,
+        calculateTotal,
+        calculateTypeTotal
+    } = useInvoice()
+    const {organization,setOrganization} = useOrganization()
+
+    // Derive data
+    const customer = jobData.customer
+    const billables = jobData.billables
+    const uniqueTypes = [...new Set(billables.map(item => item.type))]
+    const invoiceNumber = invoice?.invoice_number || 'INV-2024-0047'
+    useEffect(() => {
+        console.log(organization)
+    },[])
+
+    const handleInvoiceChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     }
+
 
     return (
         <div className='invoice-document'>
             {/* Invoice Header */}
             <div className="invoice-doc-header">
                 <div className="invoice-doc-company">
-                    <span className="invoice-doc-company-name">Auckland Plumbing Co.</span>
+                    <span className="invoice-doc-company-name">{organization?.name}</span>
                     <span className="invoice-doc-company-detail">123 Trade Street, Penrose</span>
                     <span className="invoice-doc-company-detail">Auckland, 1061</span>
                     <span className="invoice-doc-company-detail">info@akldplumbing.co.nz</span>
@@ -76,7 +76,7 @@ export const StandardInvoice = ({
                         <span className="invoice-doc-category-name">{type.toUpperCase()}</span>
                         <span></span>
                         <span></span>
-                        <span className="invoice-doc-category-amount">${calculateCategoryTotal(type)}</span>
+                        <span className="invoice-doc-category-amount">${calculateTypeTotal(type)}</span>
                     </div>
                 ))}
             </div>

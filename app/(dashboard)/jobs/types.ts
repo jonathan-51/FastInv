@@ -39,3 +39,17 @@ export interface Invoice {
     total: string
     created_at: string
 }
+
+export interface Organization {
+    id: string
+    name:string
+    slug:string
+    created_at: string
+    email:string
+    country:string
+    phone:string
+    address:string
+    industry:string
+    tax_number:string
+    invite_code:string
+}

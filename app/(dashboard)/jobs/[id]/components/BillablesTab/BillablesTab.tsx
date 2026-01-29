@@ -5,11 +5,13 @@ import { useBillables } from './useBillables';
 import NewItemPopOut from './components/NewItem';
 import { useJobData } from '../../context/JobDataContext';
 import { storeInvoice } from '../../actions';
+import { useBillablesCategory } from '@/app/context/BillablesContext';
 
 
 export const BillablesTab = () => {
     const { jobData,invoice,setInvoice } = useJobData()
 
+    const {itemMarkUp,setItemMarkUp} = useBillablesCategory()
     const billablesItems = jobData.billables
 
 
@@ -28,16 +30,15 @@ export const BillablesTab = () => {
 
     const calculateTypeTotal = (type:string) => {
         const categoryItems = billablesItems.filter(item => item.type === type)
-        return categoryItems.reduce((sum,item) => sum + (item.quantity*item.unit_price),0)
+        return (categoryItems.reduce((sum,item) => sum + (item.quantity*item.unit_price),0)*parseFloat(itemMarkUp)).toFixed(2)
     }
 
     const getCategoryItemCount = (type: string) => {
         const categoryItems = billablesItems.filter(item => item.type === type)
         return categoryItems.length
     }
-
     const calculateTotal = () => {
-        return billablesItems.reduce((sum,item) => sum + (item.quantity*item.unit_price),0).toFixed(2)
+        return (billablesItems.reduce((sum,item) => sum + (item.quantity*item.unit_price),0)*parseFloat(itemMarkUp)).toFixed(2)
     }
     
     const calculateLabourHours = () => {
@@ -96,26 +97,36 @@ export const BillablesTab = () => {
 
                                     </div>
                                     <span >{type}</span>
-                                    <span ></span>
+                                    <span></span>
+                                </div>
+                                <div className="billables-body-subheaders">
+                                    <span></span>
+                                    <span>Description</span>
+                                    <span>Quantity</span>
+                                    <span>Unit Cost</span>
+                                    <span>Unit Sell Price</span>
+                                    <span>Amount</span>
                                 </div>
                                     
-                                    <div className="billables-body-table">
-                                    {categoryItems.map(item => (
-                                        <div key={item.id} className="billables-body-row">
-                                            <div className='billables-body-row-select'
-                                                onClick={() => selectedItems[type]?.includes(item.id) ? 
-                                                    setSelectedItems({...selectedItems,[type]:(selectedItems[type] as string[])?.filter(i => i !== item.id)})   
-                                                    :
-                                                    setSelectedItems({...selectedItems,[type]:[...(selectedItems[type] ?? []),item.id]})
-                                                }>
-                                                    {selectedItems[type] && selectedItems[type]?.includes(item.id) ? '✓':''}
-                                                </div>
-                                            <span>{item.description}</span>
-                                            <span>@ {item.quantity} {item.unit}</span>
-                                            <span>${(item.quantity*item.unit_price).toFixed(2)}</span>
-                                        </div>
-                                    ))}
+                                <div className="billables-body-table">
+                                {categoryItems.map(item => (
+                                    <div key={item.id} className="billables-body-row">
+                                        <div className='billables-body-row-select'
+                                            onClick={() => selectedItems[type]?.includes(item.id) ? 
+                                                setSelectedItems({...selectedItems,[type]:(selectedItems[type] as string[])?.filter(i => i !== item.id)})   
+                                                :
+                                                setSelectedItems({...selectedItems,[type]:[...(selectedItems[type] ?? []),item.id]})
+                                            }>
+                                                {selectedItems[type] && selectedItems[type]?.includes(item.id) ? '✓':''}
+                                            </div>
+                                        <span>{item.description}</span>
+                                        <span>{item.quantity} {item.unit}</span>
+                                        <span>${item.unit_price.toFixed(2)}</span>
+                                        <span>${(item.unit_price*parseFloat(itemMarkUp)).toFixed(2)}</span>
+                                        <span>${(item.quantity*item.unit_price*parseFloat(itemMarkUp)).toFixed(2)}</span>
                                     </div>
+                                ))}
+                                </div>
                                 
                             </div>
                             )})}
@@ -134,7 +145,7 @@ export const BillablesTab = () => {
                         return (
                         <div key={type} className='billables-summary-type'>
                             <span>{type} ({numberCategoryItems} {numberCategoryItems === 1 ? 'item' : 'items'})</span>
-                            <span>${total_type_price.toFixed(2)}</span>
+                            <span>${total_type_price}</span>
                         </div>
                     )})}
                     </div>

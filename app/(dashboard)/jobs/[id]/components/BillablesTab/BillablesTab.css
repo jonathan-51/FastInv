@@ -7,7 +7,6 @@
 .billables-main {
     border: solid 1px var(--border);
     border-radius: 12px;
-    overflow: hidden;
     box-shadow: 0 1px 3px var(--shadow);
 }
 
@@ -133,6 +132,31 @@
     font-weight: 600;
 }
 
+/* Sub-Headers (Column Labels)
+   ========================================================================== */
+.billables-body-subheaders {
+    display: grid;
+    grid-template-columns: 40px 1fr 120px 140px 140px  100px;
+    align-items: center;
+    background-color: var(--surface-2);
+    padding: 10px 50px 10px 14px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    gap: 16px;
+}
+
+.billables-body-subheaders span:first-child {
+    padding-left: 36px;
+}
+
+.billables-body-subheaders span:last-child {
+    text-align: right;
+}
+
 /* Table Rows
    ========================================================================== */
 .billables-body-table {
@@ -141,7 +165,7 @@
 
 .billables-body-row {
     display: grid;
-    grid-template-columns: 40px 1fr 140px 80px;
+    grid-template-columns: 40px 1fr 120px 140px 140px 100px;
     align-items: center;
     background-color: var(--surface-1);
     padding: 14px 50px 14px 14px;

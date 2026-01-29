@@ -1,16 +1,15 @@
 /* MAIN PAGE ----------------------------------------------------------------------------*/
 
 .job-page {
+    position: relative;
     padding-left: 4rem;
-    overflow: hidden;
-    height: 100%;
+    overflow: auto;
     display: flex;
     flex-direction: column;
-    min-height: 0;
 }
 
 .job-header {
-    padding-top: 1rem;
+    padding-top: 65px;
     padding-bottom: 1rem;
     margin-right: 80px;
 }

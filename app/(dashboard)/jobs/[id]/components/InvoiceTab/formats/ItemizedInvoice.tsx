@@ -1,36 +1,24 @@
 'use client'
 
+import { useInvoice } from '../useInvoice'
+import { useJobData } from '../../../context/JobDataContext'
 import './ItemizedInvoice.css'
-import { Customer, Billable, Job } from '../../../../types'
 
-interface ItemizedInvoiceProps {
-    customer: Customer
-    jobData: Job
-    billables: Billable[]
-    uniqueTypes: string[]
-    issuedDate: string
-    dueDate: string
-    formatDate: (dateString: string) => string
-    calculateTotal: () => string
-    invoiceNumber: string
-}
+export const ItemizedInvoice = () => {
+    const { jobData, invoice } = useJobData()
+    const {
+        issuedDate,
+        dueDate,
+        formatDate,
+        calculateTotal,
+        calculateTypeTotal
+    } = useInvoice()
 
-export const ItemizedInvoice = ({
-    customer,
-    jobData,
-    billables,
-    uniqueTypes,
-    issuedDate,
-    dueDate,
-    formatDate,
-    calculateTotal,
-    invoiceNumber
-}: ItemizedInvoiceProps) => {
-
-    const calculateCategoryTotal = (type: string) => {
-        const categoryItems = billables.filter(item => item.type === type)
-        return categoryItems.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0).toFixed(2)
-    }
+    // Derive data
+    const customer = jobData.customer
+    const billables = jobData.billables
+    const uniqueTypes = [...new Set(billables.map(item => item.type))]
+    const invoiceNumber = invoice?.invoice_number || 'INV-2024-0047'
 
     return (
         <div>
@@ -77,7 +65,7 @@ export const ItemizedInvoice = ({
                             <span className="invoice-doc-category-name">{type.toUpperCase()}</span>
                             <span></span>
                             <span></span>
-                            <span className="invoice-doc-category-amount">${calculateCategoryTotal(type)}</span>
+                            <span className="invoice-doc-category-amount">${calculateTypeTotal(type)}</span>
                         </div>
                     ))}
                 </div>
@@ -129,7 +117,7 @@ export const ItemizedInvoice = ({
 
 
             {/* Page 2 - Detailed Line Items Breakdown */}
-            <div className='invoice-document' style={{marginTop:'48px'}}>
+            <div className='invoice-document' style={{}}>
                 {/* Invoice Header */}
                 <div className="invoice-doc-header">
                     <div className="invoice-doc-company">
@@ -177,7 +165,7 @@ export const ItemizedInvoice = ({
                                     <span>{type.toUpperCase()} SUBTOTAL</span>
                                     <span></span>
                                     <span></span>
-                                    <span>${calculateCategoryTotal(type)}</span>
+                                    <span>${calculateTypeTotal(type)}</span>
                                 </div>
                             </div>
                         )
