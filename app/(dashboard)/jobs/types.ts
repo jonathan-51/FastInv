@@ -48,8 +48,12 @@ export interface Organization {
     email:string
     country:string
     phone:string
-    address:string
     industry:string
     tax_number:string
     invite_code:string
+    street:string
+    suburb:string
+    city:string
+    state:string
+    postcode:string
 }

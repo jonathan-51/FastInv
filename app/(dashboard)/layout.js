@@ -1,7 +1,8 @@
 import "../globals.css";
+import { redirect } from "next/navigation";
 import Navbar from '../components/Navbar.js';
 import Sidebar from '../components/Sidebar.js';
-import Settings from '../components/Settings.js';
+import Settings from '../components/settings/Settings.js';
 import NewJob from '../components/NewJob/NewJob.js';
 import { SettingsProvider } from "../context/SettingsContext";
 import { LocationProvider } from "../context/LocationContext";
@@ -20,6 +21,12 @@ export const metadata = {
 export default async function DashboardLayout({ children }) {
   // Fetch organization data server-side
   const organization = await getOrganization()
+  if (!organization.data || organization.error) {
+    console.error('Failed to load organization:', organization.error)
+    redirect('/organization')  // Redirects to setup page
+    }
+
+
 
 
 

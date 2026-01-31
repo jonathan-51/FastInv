@@ -2,10 +2,11 @@
 import './Settings.css'
 import Link from 'next/link';
 import { useEffect,useState } from 'react';
-import { useSettings } from '../context/SettingsContext';
-import { useLocation } from '../context/LocationContext';
-import { useStatus } from '../context/StatusContext';
-import { useBillablesCategory } from '../context/BillablesContext';
+import { useSettings } from '../../context/SettingsContext';
+import { useLocation } from '../../context/LocationContext';
+import { useStatus } from '../../context/StatusContext';
+import { useBillablesCategory } from '../../context/BillablesContext';
+import { SettingsOrganization } from './components/SettingsOrganization';
 
 export default function Settings() {
 
@@ -82,22 +83,7 @@ export default function Settings() {
                 )}
 
                 {activeTab === 'organization' && (
-                    <div className='setting-section'>
-                        <h2>Organization Settings</h2>
-                        <p className='setting-description'>Manage your organization details and preferences</p>
-
-                        <div className='setting-form'>
-                            <div className='setting-form-group'>
-                                <label>Organization Name</label>
-                                <input type="text" placeholder="Acme Corp" disabled />
-                            </div>
-                            <div className='setting-form-group'>
-                                <label>Industry</label>
-                                <input type="text" placeholder="Construction" disabled />
-                            </div>
-                            <p className='setting-placeholder'>Coming soon...</p>
-                        </div>
-                    </div>
+                    <SettingsOrganization/>
                 )}
 
                 {activeTab === 'team' && (

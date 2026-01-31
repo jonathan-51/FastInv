@@ -1,0 +1,362 @@
+/* Overlay */
+.setting-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+/* Main Container */
+.setting-main {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    position: relative;
+    background-color: var(--background);
+    width: 100%;
+    max-width: 1100px;
+    height: 85vh;
+    max-height: 750px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Sidebar */
+.setting-sidebar {
+    background-color: var(--surface-3);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+}
+
+.setting-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+}
+
+.setting-header h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0;
+}
+
+.setting-close {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.setting-close:hover {
+    background-color: var(--surface-2);
+    color: var(--text);
+}
+
+.setting-close svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Navigation */
+.setting-nav {
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.setting-nav-btn {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-align: left;
+    width: 100%;
+}
+
+.setting-nav-btn:hover {
+    background-color: var(--surface-2);
+}
+
+.setting-nav-btn.active {
+    background-color: var(--surface-2);
+    color: var(--primary);
+}
+
+/* Body */
+.setting-body {
+    overflow-y: auto;
+    background-color: var(--surface-primary);
+}
+
+.setting-section {
+    padding: 32px 40px;
+}
+
+.setting-section h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0 0 6px 0;
+    letter-spacing: -0.3px;
+}
+
+.setting-description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 28px 0;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.setting-placeholder {
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: 24px;
+}
+
+/* Form */
+.setting-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 32px;
+}
+
+.setting-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Make certain fields span full width */
+.setting-form-group:first-child {
+    grid-column: 1 / -1;
+}
+
+.setting-form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.setting-form-group span {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background-color: var(--surface-1);
+    transition: all 0.2s;
+    width: 100%;
+    max-width: 100%;
+    height: 40px;
+    border: 1px solid transparent;
+}
+
+.setting-form-group input {
+    padding: 0 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background-color: var(--surface-1);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    width: 100%;
+    max-width: 100%;
+    height: 40px;
+}
+
+.setting-form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 42, 34, 0.1);
+}
+
+/* Select */
+.setting-select {
+    padding: 0 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background-color: var(--surface-1);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    width: 100%;
+    max-width: 100%;
+    height: 40px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+.setting-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 42, 34, 0.1);
+}
+
+.setting-select:hover:not(:disabled) {
+    border-color: var(--text-secondary);
+}
+
+/* Ensure select in form group matches other input widths (accounting for edit button space) */
+.setting-form-group > .setting-select {
+    width: calc(100% - 42px);
+    box-sizing: border-box;
+}
+
+.setting-form-group input:disabled {
+    background-color: var(--surface-2);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Custom Fields */
+.setting-customfield-field {
+    margin-bottom: 32px;
+}
+
+.setting-customfield-field h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0 0 12px 0;
+}
+
+.setting-customfield-body {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--surface-primary);
+}
+
+.setting-customfield-body-field {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+}
+
+.setting-customfield-body-field:last-child {
+    border-bottom: none;
+}
+
+/* Editable Row */
+.setting-editable-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.setting-editable-row input {
+    flex: 1;
+}
+
+.setting-value {
+    flex: 1;
+    padding: 0 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background-color: var(--surface-1);
+    border: 1px solid transparent;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    transition: all 0.15s ease;
+}
+
+.setting-editable-row:hover .setting-value {
+    background-color: var(--surface-2);
+}
+
+/* Action Buttons */
+.setting-action-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.setting-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.setting-icon-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.setting-icon-btn-edit {
+    background-color: transparent;
+    color: var(--text-secondary);
+    opacity: 0;
+    transform: translateX(-4px);
+}
+
+.setting-editable-row:hover .setting-icon-btn-edit {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.setting-icon-btn-edit:hover:not(:disabled) {
+    background-color: var(--surface-2);
+    color: var(--primary);
+}
+
+.setting-icon-btn-save {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.setting-icon-btn-save:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.setting-icon-btn-cancel {
+    background-color: var(--surface-2);
+    color: var(--text-secondary);
+}
+
+.setting-icon-btn-cancel:hover:not(:disabled) {
+    background-color: #fef2f2;
+    color: #dc2626;
+}

@@ -116,3 +116,33 @@ export async function getOrganization() {
 
     return {data:organizationData}
 }
+
+export async function updateOrganization(field,value,org_id) {
+    const supabase = await createServerSupabaseClient()
+
+    // Get the authenticated user
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+        return { error: "You must be logged in to create an organization" }
+    }
+
+    const { data,error } = await supabase
+        .from('organizations')
+        .update({[field]:value})
+        .eq('id',org_id)
+        .select()
+        .single()
+
+    if (error) {
+        console.log(error.message)
+        return {error: error.message}
+    }
+
+    if(!data) {
+        
+        return {error:'Error Saving'}
+    }
+
+    return { success: true }
+}

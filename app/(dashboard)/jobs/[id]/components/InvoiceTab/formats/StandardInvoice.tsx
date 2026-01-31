@@ -38,9 +38,9 @@ export const StandardInvoice = () => {
             <div className="invoice-doc-header">
                 <div className="invoice-doc-company">
                     <span className="invoice-doc-company-name">{organization?.name}</span>
-                    <span className="invoice-doc-company-detail">123 Trade Street, Penrose</span>
-                    <span className="invoice-doc-company-detail">Auckland, 1061</span>
-                    <span className="invoice-doc-company-detail">info@akldplumbing.co.nz</span>
+                    <span className="invoice-doc-company-detail">{organization?.street}, {organization?.suburb}</span>
+                    <span className="invoice-doc-company-detail">{organization?.city}, {organization?.postcode}</span>
+                    <span className="invoice-doc-company-detail">{organization?.email}</span>
                 </div>
                 <div className="invoice-doc-title-section">
                     <span className="invoice-doc-title">INVOICE</span>
