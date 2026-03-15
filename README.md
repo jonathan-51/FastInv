@@ -10,14 +10,13 @@ Live Demo: https://fast-inv.vercel.app
 - **Billable Tracking** — Add materials, labour, and other costs with per-category markup
 - **Invoice Generation** — Standard (summary) or Itemized (detailed breakdown) formats
 - **PDF Export** — Download professional A4 invoices as PDF
-- **Offline-First** — All data stored locally in your browser, works without internet
+- **Client-side Storage** — Client-side data persistence using localStorage
 - **Cloud Backup** (optional) — Sync business details via Supabase account
 
 ## Tech Stack
 
-- Next.js 16 (App Router) + React 19 + TypeScript
-- Tailwind CSS 4
-- html2pdf.js for PDF generation
+- Next.js + React + TypeScript
+- Tailwind + CSS 
 - Supabase (optional cloud sync)
 
 ## Getting Started
