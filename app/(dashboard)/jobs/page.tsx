@@ -21,7 +21,7 @@ export default function JobsListingPage() {
         })
     }
 
-    const statusOptions = ['quoted', 'in_progress', 'completed', 'invoiced']
+    const statusOptions = ['quoted', 'in progress', 'completed', 'invoiced']
 
     const handleStatusChange = (jobId: string, status: string) => {
         updateJob(jobId, { status })
@@ -66,7 +66,7 @@ export default function JobsListingPage() {
                                                 e.preventDefault()
                                                 e.stopPropagation()
                                             }}
-                                            onClick={(e) => e.stopPropagation()}
+                                            onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
                                             style={{ padding: '4px 8px', borderRadius: '6px', border: '1px solid #d1d5db', cursor: 'pointer' }}
                                         >
                                             {statusOptions.map(s => (

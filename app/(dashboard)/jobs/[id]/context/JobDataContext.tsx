@@ -29,6 +29,7 @@ interface JobDataContextType {
   setJobData: (data: JobData) => void
   updateBillables: (billables: Billable[]) => void
   addBillable: (billable: Billable) => void
+  removeBillable: (id: string) => void
   updateInvoice: (invoice: Invoice | null) => void
   updateInvoiceDates: (issuedDate: string, dueDate: string) => void
 }
@@ -50,6 +51,14 @@ export function JobDataProvider({children,initialJobData}: {children: ReactNode,
   // Helper function to add a single billable (optimistic update)
   const addBillable = (billable: Billable) => {
     setJobData(prev => ({...prev, billables: [...prev.billables, billable]
+    }))
+  }
+
+  // Remove a single billable by id
+  const removeBillable = (id: string) => {
+    setJobData(prev => ({
+      ...prev,
+      billables: prev.billables.filter(b => b.id !== id)
     }))
   }
 
@@ -83,6 +92,7 @@ export function JobDataProvider({children,initialJobData}: {children: ReactNode,
         setJobData,
         updateBillables,
         addBillable,
+        removeBillable,
         updateInvoice,
         updateInvoiceDates
       }}

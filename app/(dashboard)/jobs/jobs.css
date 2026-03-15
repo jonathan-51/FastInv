@@ -36,7 +36,7 @@
     width: auto;
     height: 56px;
     display: grid;
-    grid-template-columns: 60px 1fr 0.8fr 0.5fr 1fr 200px 100px 70px;
+    grid-template-columns: 2fr 1.5fr 1fr 1.5fr 1fr 1fr 0.5fr;
     padding: 0 24px;
     align-items: center;
     font-size: 13px;
@@ -50,7 +50,7 @@
 .ticket {
     padding: 0 24px;
     display: grid;
-    grid-template-columns: 60px 1fr 0.8fr 0.5fr 1fr 200px 100px 70px;
+    grid-template-columns: 2fr 1.5fr 1fr 1.5fr 1fr 1fr 0.5fr;
     border-bottom: 1px solid var(--border);
     height: 64px;
     align-items: center;

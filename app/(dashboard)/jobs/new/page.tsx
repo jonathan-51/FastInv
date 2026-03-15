@@ -36,7 +36,7 @@ export default function NewJobPage() {
 
     return (
         <div style={{ padding: '32px', maxWidth: '560px' }}>
-            <h1 style={{ fontSize: '24px', fontWeight: 600, marginBottom: '24px' }}>New Job</h1>
+            <h1 style={{ fontSize: '24px', fontWeight: 600, marginBottom: '24px' , marginTop:'48px'}}>New Job</h1>
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
                     <label style={{ display: 'block', marginBottom: '4px', fontWeight: 500 }}>

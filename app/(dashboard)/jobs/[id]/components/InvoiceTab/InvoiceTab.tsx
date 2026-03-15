@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useJobData } from '../../context/JobDataContext'
 import { updateInvoice as updateInvoiceStorage } from '@/lib/storage'
+import { exportInvoicePdf } from '@/lib/exportPdf'
 import { useInvoice } from './useInvoice'
 import { InvoiceHeader } from './components/InvoiceHeader'
 import { InvoiceLeftSideBar } from './components/InvoiceLeftSideBar'
@@ -90,7 +91,7 @@ export const InvoiceTab = () => {
                 />
 
                 <div className="invoice-content-middle">
-                    <div className="invoice-content-middle-wrapper">
+                    <div className="invoice-content-middle-wrapper" id="invoice-document">
                         {renderInvoiceTemplate()}
                     </div>
                 </div>
@@ -102,6 +103,7 @@ export const InvoiceTab = () => {
                     onIssuedDateChange={onIssuedDateChange}
                     onDueDateChange={onDueDateChange}
                     onTemplateChange={setSelectedTemplate}
+                    onExportPdf={() => exportInvoicePdf('invoice-document', jobData.invoice?.invoice_number || 'invoice')}
                 />
             </div>
         </div>

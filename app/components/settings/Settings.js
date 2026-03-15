@@ -1,10 +1,13 @@
 'use client'
 import './Settings.css'
+import { useState } from 'react';
 import { useSettings } from '../../context/SettingsContext';
 import { SettingsOrganization } from './components/SettingsOrganization';
+import { AccountSection } from './components/AccountSection';
 
 export default function Settings() {
     const { isSettingsOpen, setIsSettingsOpen } = useSettings();
+    const [activeTab, setActiveTab] = useState('business')
 
     if (!isSettingsOpen) return null
 
@@ -22,15 +25,25 @@ export default function Settings() {
                         </button>
                     </div>
                     <nav className='setting-nav'>
-                        <button className='setting-nav-btn active'>
+                        <button
+                            className={`setting-nav-btn ${activeTab === 'business' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('business')}
+                        >
                             Business Details
+                        </button>
+                        <button
+                            className={`setting-nav-btn ${activeTab === 'account' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('account')}
+                        >
+                            Account
                         </button>
                     </nav>
                 </div>
 
                 {/* Body */}
                 <div className='setting-body'>
-                    <SettingsOrganization />
+                    {activeTab === 'business' && <SettingsOrganization />}
+                    {activeTab === 'account' && <AccountSection />}
                 </div>
             </div>
         </div>

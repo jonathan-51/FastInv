@@ -5,7 +5,6 @@ import { useJobData } from '../../context/JobDataContext'
 import { createInvoice } from '@/lib/storage'
 import { StandardInvoice } from './formats/StandardInvoice'
 import { ItemizedInvoice } from './formats/ItemizedInvoice'
-import { StandardItemizedInvoice } from './formats/StandardItemizedInvoice'
 import { useBillablesCategory } from '@/app/context/BillablesContext'
 
 export const useInvoice = () => {
@@ -71,8 +70,6 @@ export const useInvoice = () => {
     const renderInvoiceTemplate = () => {
         if (selectedTemplate === 'standard') {
             return <StandardInvoice />
-        } else if (selectedTemplate === 'standard_itemized') {
-            return <StandardItemizedInvoice />
         } else {
             return <ItemizedInvoice />
         }

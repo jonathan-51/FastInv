@@ -9,6 +9,7 @@ interface Props {
     onIssuedDateChange: (e: ChangeEvent<HTMLInputElement>) => void
     onDueDateChange: (e: ChangeEvent<HTMLInputElement>) => void
     onTemplateChange: (template: string) => void
+    onExportPdf: () => void
 }
 
 export const InvoiceRightSideBar = ({
@@ -17,15 +18,14 @@ export const InvoiceRightSideBar = ({
     selectedTemplate,
     onIssuedDateChange,
     onDueDateChange,
-    onTemplateChange
+    onTemplateChange,
+    onExportPdf
 }: Props) => {
 
     return (
         <div className='invoice-content-right-side'>
             <span className="invoice-action-section-title">Actions</span>
-            <button className="invoice-action-btn invoice-action-btn-primary">Send Email</button>
-            <button className="invoice-action-btn invoice-action-btn-secondary">Preview Invoice</button>
-            <button className="invoice-action-btn invoice-action-btn-secondary">Download PDF</button>
+            <button className="invoice-action-btn invoice-action-btn-primary" onClick={onExportPdf}>Download PDF</button>
             <div className="invoice-action-divider"></div>
             <div className="invoice-date-input-wrapper">
                 <span>Issue Date</span>

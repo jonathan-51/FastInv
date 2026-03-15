@@ -15,7 +15,7 @@
   background: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: 16px;
-  box-shadow: 
+  box-shadow:
     0 1px 3px var(--shadow),
     0 8px 24px var(--shadow);
   animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -23,6 +23,7 @@
   max-width: 500px;
   z-index: 51;
   overflow: hidden;
+  padding: 24px;
 }
 
 /* ===========================================

@@ -39,13 +39,6 @@ export const InvoiceLeftSideBar = ({
                 <span className="invoice-card-detail">{customer.phone}</span>
             </div>
 
-            {/* Linked Job Card */}
-            <div className='invoice-content-left-side-card'>
-                <span className="invoice-card-header">Linked Job</span>
-                <span className="invoice-card-name">Job Description</span>
-                <span className="invoice-card-detail">Job Completion Date</span>
-            </div>
-
             {/* Price Summary */}
             <div className='invoice-content-left-side-price-summary'>
                 <span className="invoice-price-summary-header">Total Amount</span>

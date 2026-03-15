@@ -3,6 +3,7 @@
 import { useInvoice } from '../useInvoice'
 import { useJobData } from '../../../context/JobDataContext'
 import './ItemizedInvoice.css'
+import { useBusinessDetails } from '@/app/context/BusinessDetailsContext'
 
 export const ItemizedInvoice = () => {
     const { jobData } = useJobData()
@@ -14,7 +15,7 @@ export const ItemizedInvoice = () => {
 
     const issuedDate = jobData.invoice?.issued_date || ''
     const dueDate = jobData.invoice?.due_date || ''
-
+    const { businessDetails } = useBusinessDetails()
     // Derive data
     const customer = jobData.customer
     const billables = jobData.billables
@@ -27,10 +28,10 @@ export const ItemizedInvoice = () => {
                 {/* Invoice Header */}
                 <div className="invoice-doc-header">
                     <div className="invoice-doc-company">
-                        <span className="invoice-doc-company-name">Auckland Plumbing Co.</span>
-                        <span className="invoice-doc-company-detail">123 Trade Street, Penrose</span>
-                        <span className="invoice-doc-company-detail">Auckland, 1061</span>
-                        <span className="invoice-doc-company-detail">info@akldplumbing.co.nz</span>
+                        <span className="invoice-doc-company-name">{businessDetails?.name}</span>
+                        <span className="invoice-doc-company-detail">{businessDetails?.street}, {businessDetails?.suburb}</span>
+                        <span className="invoice-doc-company-detail">{businessDetails?.city}, {businessDetails?.postcode}</span>
+                        <span className="invoice-doc-company-detail">{businessDetails?.email}</span>
                     </div>
                     <div className="invoice-doc-title-section">
                         <span className="invoice-doc-title">INVOICE</span>
@@ -95,24 +96,24 @@ export const ItemizedInvoice = () => {
                     <div className="invoice-doc-payment-grid">
                         <div className="invoice-doc-payment-item">
                             <span className="invoice-doc-payment-label">BANK</span>
-                            <span className="invoice-doc-payment-value">ANZ New Zealand</span>
+                            <span className="invoice-doc-payment-value">{businessDetails?.bank_name}</span>
                         </div>
                         <div className="invoice-doc-payment-item">
                             <span className="invoice-doc-payment-label">ACCOUNT NAME</span>
-                            <span className="invoice-doc-payment-value">Auckland Plumbing Co.</span>
+                            <span className="invoice-doc-payment-value">{businessDetails?.account_name}</span>
                         </div>
                     </div>
                     <div className="invoice-doc-payment-grid">
                     <div className="invoice-doc-payment-item">
                         <span className="invoice-doc-payment-label">ACCOUNT NUMBER</span>
-                        <span className="invoice-doc-payment-value">01-0123-0456789-00</span>
+                        <span className="invoice-doc-payment-value">{businessDetails?.account_number}</span>
                     </div>
                     <div className="invoice-doc-payment-item">
                         <span className="invoice-doc-payment-label">PAYMENT REFERENCE</span>
                         <span className="invoice-doc-payment-value">{invoiceNumber}</span>
                     </div>
-                    </div>
                 </div>
+            </div>
             </div>
 
 

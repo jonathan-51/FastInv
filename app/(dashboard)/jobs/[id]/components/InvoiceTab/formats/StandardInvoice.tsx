@@ -99,17 +99,17 @@ export const StandardInvoice = () => {
                 <div className="invoice-doc-payment-grid">
                     <div className="invoice-doc-payment-item">
                         <span className="invoice-doc-payment-label">BANK</span>
-                        <span className="invoice-doc-payment-value">ANZ New Zealand</span>
+                        <span className="invoice-doc-payment-value">{businessDetails?.bank_name}</span>
                     </div>
                     <div className="invoice-doc-payment-item">
                         <span className="invoice-doc-payment-label">ACCOUNT NAME</span>
-                        <span className="invoice-doc-payment-value">Auckland Plumbing Co.</span>
+                        <span className="invoice-doc-payment-value">{businessDetails?.account_name}</span>
                     </div>
                 </div>
                 <div className="invoice-doc-payment-grid">
                 <div className="invoice-doc-payment-item">
                     <span className="invoice-doc-payment-label">ACCOUNT NUMBER</span>
-                    <span className="invoice-doc-payment-value">01-0123-0456789-00</span>
+                    <span className="invoice-doc-payment-value">{businessDetails?.account_number}</span>
                 </div>
                 <div className="invoice-doc-payment-item">
                     <span className="invoice-doc-payment-label">PAYMENT REFERENCE</span>
