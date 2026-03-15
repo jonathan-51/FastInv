@@ -1,6 +1,8 @@
 # FastInv
 
-A fast, offline-first invoicing tool built for tradespeople. Create jobs, track billables, generate invoices, and export to PDF — no account required.
+A fast, offline-first invoicing tool built for tradespeople. Create jobs, track billables, generate invoices, and export to PDF - no account required.
+
+Live Demo: https://fast-inv.vercel.app
 
 ## Features
 
