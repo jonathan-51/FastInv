@@ -4,7 +4,7 @@ import './BillablesTab.css';
 import { useBillables } from './useBillables';
 import NewItemPopOut from './components/NewItem';
 import { useJobData } from '../../context/JobDataContext';
-import { storeInvoice } from '../../actions';
+import { createInvoice } from '@/lib/storage';
 import { useBillablesCategory } from '@/app/context/BillablesContext';
 
 
@@ -50,24 +50,9 @@ export const BillablesTab = () => {
         return labourItems.reduce((sum,item) => sum + (item.quantity),0)
     }
 
-    const generateInvoice = async () => {
-            const invoice_data = {
-                org_id:jobData.org_id,
-                job_id:jobData.id,
-                customer_id:jobData.customer.id,
-                invoice_number:'',
-                status:'',
-                issued_date:'',
-                due_date:'',
-                total:parseFloat(calculateTotal()),
-            }
-    
-            const result = await storeInvoice(invoice_data)
-    
-            if (result.error) {
-            } else {
-                updateInvoice(result)
-            }
+    const generateInvoice = () => {
+            const invoice = createInvoice(jobData.id)
+            updateInvoice(invoice)
         }
 
     return (

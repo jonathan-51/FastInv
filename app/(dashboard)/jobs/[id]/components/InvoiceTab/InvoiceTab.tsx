@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useJobData } from '../../context/JobDataContext'
-import { updateInvoiceDates } from './actions'
+import { updateInvoice as updateInvoiceStorage } from '@/lib/storage'
 import { useInvoice } from './useInvoice'
 import { InvoiceHeader } from './components/InvoiceHeader'
 import { InvoiceLeftSideBar } from './components/InvoiceLeftSideBar'
@@ -51,23 +51,20 @@ export const InvoiceTab = () => {
         }
     }, [jobData.invoice, setIssuedDate, setDueDate])
 
-    // Auto-save dates to DB after user stops changing (debounced 5s)
+    // Auto-save dates to localStorage after user stops changing (debounced 1s)
     useEffect(() => {
         if (!jobData.invoice) return
 
         const currentInvoice = jobData.invoice
-        const timeoutId = setTimeout(async () => {
+        const timeoutId = setTimeout(() => {
             if (issuedDate !== currentInvoice.issued_date || dueDate !== currentInvoice.due_date) {
-                const result = await updateInvoiceDates(currentInvoice.id, issuedDate, dueDate)
-
-                if (!result.error) {
-                    updateInvoiceDatesContext(issuedDate, dueDate)
-                }
+                updateInvoiceStorage(jobData.id, { issued_date: issuedDate, due_date: dueDate })
+                updateInvoiceDatesContext(issuedDate, dueDate)
             }
-        }, 5000)
+        }, 1000)
 
         return () => clearTimeout(timeoutId)
-    }, [issuedDate, dueDate, jobData.invoice, updateInvoiceDatesContext])
+    }, [issuedDate, dueDate, jobData.invoice, jobData.id, updateInvoiceDatesContext])
 
     
 

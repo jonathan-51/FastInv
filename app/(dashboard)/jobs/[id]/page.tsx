@@ -1,55 +1,44 @@
-import { redirect } from 'next/navigation'
-import { createServerSupabaseClient } from '@/lib/supabase'
-import { getBillableItems } from './components/BillablesTab/components/actions'
+'use client'
+
+import { useParams } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { getJob, getBillables, getInvoice } from '@/lib/storage'
+import { Job, Billable, Invoice } from '../types'
 import ClientWrapper from './ClientWrapper'
 import './job.css'
-import { getJobDetailPage,getInvoiceByJobID } from './actions'
 
+export default function JobDetailPage() {
+    const params = useParams()
+    const id = params.id as string
 
-/**
- * Server Component that fetches job data directly from database
- * Runs on the server, so data is available immediately on page load
- */
-export default async function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const [job, setJob] = useState<Job | null>(null)
+    const [billables, setBillables] = useState<Billable[]>([])
+    const [invoice, setInvoice] = useState<Invoice | null>(null)
+    const [loading, setLoading] = useState(true)
 
-    const { id } = await params
-    const [job, invoiceData] = await Promise.all([getJobDetailPage(id),getInvoiceByJobID(id)])
+    useEffect(() => {
+        const foundJob = getJob(id)
+        if (foundJob) {
+            setJob(foundJob)
+            setBillables(getBillables(id))
+            setInvoice(getInvoice(id))
+        }
+        setLoading(false)
+    }, [id])
 
-    // If job not found, show error page
-    if (!job || 'error' in job || invoiceData.error) {
+    if (loading) return null
+
+    if (!job) {
         return (
             <div className="job-page job-state-container">
                 <div className="job-error">
-                    <div className="job-error-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <line x1="12" y1="8" x2="12" y2="12" />
-                            <line x1="12" y1="16" x2="12.01" y2="16" />
-                        </svg>
-                    </div>
                     <h2 className="job-error-title">Job Not Found</h2>
-                    <p className="job-error-message">The job you're looking for doesn't exist or you don't have permission to view it.</p>
-                    <a href="/jobs" className="job-error-link">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{width: '18px', height: '18px'}}>
-                            <line x1="19" y1="12" x2="5" y2="12" />
-                            <polyline points="12 19 5 12 12 5" />
-                        </svg>
-                        Back to Jobs
-                    </a>
+                    <p className="job-error-message">This job doesn't exist.</p>
+                    <a href="/jobs" className="job-error-link">Back to Jobs</a>
                 </div>
             </div>
         )
     }
 
-    // Fetch billable items for this job
-    const billablesItems = await getBillableItems({
-        jobID: job.id,
-        orgID: job.org_id
-    })
-
-    // Handle case where getBillableItems returns an error object
-    const billables = Array.isArray(billablesItems) ? billablesItems : []
-
-    // Pass data to Client Component (including invoice data)
-    return <ClientWrapper job={job} billablesItems={billables} invoiceData={invoiceData.data} />
+    return <ClientWrapper job={job} billablesItems={billables} invoiceData={invoice} />
 }

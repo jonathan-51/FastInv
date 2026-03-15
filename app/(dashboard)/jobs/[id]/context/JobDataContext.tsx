@@ -3,49 +3,33 @@
 import { createContext, useContext, useState, ReactNode } from "react"
 import { Billable,Invoice } from "../../types"
 
-// Define the structure of a photo
-interface Photo {
-  id: string
-  url: string
-  created_at: string
-  job_id: string
-}
-
 // Define the complete job data structure
 interface JobData {
   id: string
   site_address: string
   status: string
   created_at: string
-  org_id: string
   customer: {
-    id:string
+    id: string
     name: string
     email: string
     phone: string
     address: string
   }
   billables: Billable[]
-  photos: Photo[]
+  photos: never[]
   notes?: string
   invoice: Invoice | null
 }
 
 
 
-// Context value type with helper functions
 interface JobDataContextType {
   jobData: JobData
   setJobData: (data: JobData) => void
-  // Helper function to update billables
   updateBillables: (billables: Billable[]) => void
-  // Helper function to add a single billable
   addBillable: (billable: Billable) => void
-  // Helper function to update photos
-  updatePhotos: (photos: Photo[]) => void
-  // Helper function to update invoice
   updateInvoice: (invoice: Invoice | null) => void
-  // Helper function to update invoice dates
   updateInvoiceDates: (issuedDate: string, dueDate: string) => void
 }
 
@@ -66,14 +50,6 @@ export function JobDataProvider({children,initialJobData}: {children: ReactNode,
   // Helper function to add a single billable (optimistic update)
   const addBillable = (billable: Billable) => {
     setJobData(prev => ({...prev, billables: [...prev.billables, billable]
-    }))
-  }
-
-  // Helper function to update just the photos array
-  const updatePhotos = (photos: Photo[]) => {
-    setJobData(prev => ({
-      ...prev,
-      photos
     }))
   }
 
@@ -107,7 +83,6 @@ export function JobDataProvider({children,initialJobData}: {children: ReactNode,
         setJobData,
         updateBillables,
         addBillable,
-        updatePhotos,
         updateInvoice,
         updateInvoiceDates
       }}

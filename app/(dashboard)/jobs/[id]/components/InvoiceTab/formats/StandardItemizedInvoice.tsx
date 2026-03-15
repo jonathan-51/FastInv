@@ -3,7 +3,7 @@
 import { useInvoice } from '../useInvoice'
 import { useJobData } from '../../../context/JobDataContext'
 import './StandardItemizedInvoice.css'
-import { useOrganization } from '@/app/context/OrganizationContext'
+import { useBusinessDetails } from '@/app/context/BusinessDetailsContext'
 
 export const StandardItemizedInvoice = () => {
     const { jobData } = useJobData()
@@ -15,7 +15,7 @@ export const StandardItemizedInvoice = () => {
     const issuedDate = jobData.invoice?.issued_date || ''
     const dueDate = jobData.invoice?.due_date || ''
 
-    const {organization,setOrganization} = useOrganization()
+    const { businessDetails } = useBusinessDetails()
 
     // Derive data
     const customer = jobData.customer
@@ -28,10 +28,10 @@ export const StandardItemizedInvoice = () => {
         {/* Invoice Header */}
         <div className="invoice-doc-header">
             <div className="invoice-doc-company">
-                <span className="invoice-doc-company-name">{organization?.name}</span>
-                <span className="invoice-doc-company-detail">{organization?.street}, {organization?.suburb}</span>
-                <span className="invoice-doc-company-detail">{organization?.city}, {organization?.postcode}</span>
-                <span className="invoice-doc-company-detail">{organization?.email}</span>
+                <span className="invoice-doc-company-name">{businessDetails?.name}</span>
+                <span className="invoice-doc-company-detail">{businessDetails?.street}, {businessDetails?.suburb}</span>
+                <span className="invoice-doc-company-detail">{businessDetails?.city}, {businessDetails?.postcode}</span>
+                <span className="invoice-doc-company-detail">{businessDetails?.email}</span>
             </div>
             <div className="invoice-doc-title-section">
                 <span className="invoice-doc-title">INVOICE</span>
