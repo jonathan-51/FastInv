@@ -56,4 +56,7 @@ export interface Organization {
     city:string
     state:string
     postcode:string
+    bank_name:string
+    account_name:string
+    account_number:string
 }

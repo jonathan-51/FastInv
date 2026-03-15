@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef } from "react"
-import Link from 'next/link'
 import CustomerSearch from './components/CustomerSearch'
 import './customers.css'
 
@@ -10,37 +9,20 @@ interface Customer {
     firstname: string;
     lastname: string;
     email: string;
-    number: string;
+    phone: string;
     address: string;
-    date: string;
 }
 
 export default function CustomersPage() {
     const [customers, setCustomers] = useState<Customer[]>([])
-    const [selectedCustomers, setSelectedCustomers] = useState<string[]>([])
+    const [editingId, setEditingId] = useState<string | null>(null)
+    const [editForm, setEditForm] = useState<Customer | null>(null)
 
     // Load customers from localStorage
     useEffect(() => {
         const savedCustomers = JSON.parse(localStorage.getItem('customers') || '[]')
         setCustomers(savedCustomers)
     }, [])
-
-    // Function that handles selecting all rows
-    const selectAllRows = () => {
-        if (selectedCustomers.length === customers.length) {
-            setSelectedCustomers([])
-        } else {
-            const unselectedCustomers = customers.map(customer => customer.id).filter(id => !selectedCustomers.includes(id))
-            setSelectedCustomers([...selectedCustomers, ...unselectedCustomers])
-        }
-    }
-
-    // Function that handles removing all selected customers
-    const removeAllSelectedCustomers = () => {
-        if (selectedCustomers.length === customers.length && selectedCustomers.length > 0) {
-            setCustomers([])
-        }
-    }
 
     // Reference variable for first render check
     const isFirstRender = useRef(true)
@@ -54,60 +36,123 @@ export default function CustomersPage() {
         localStorage.setItem('customers', JSON.stringify(customers))
     }, [customers])
 
+    const startEditing = (customer: Customer) => {
+        setEditingId(customer.id)
+        setEditForm({ ...customer })
+    }
+
+    const cancelEditing = () => {
+        setEditingId(null)
+        setEditForm(null)
+    }
+
+    const saveEditing = () => {
+        if (!editForm) return
+        setCustomers(customers.map(c => c.id === editForm.id ? editForm : c))
+        setEditingId(null)
+        setEditForm(null)
+    }
+
+    const deleteCustomer = (id: string) => {
+        setCustomers(customers.filter(c => c.id !== id))
+    }
+
     return (
-        <div style={{padding: '32px'}}>
-            <h1 style={{fontSize: '36px', fontWeight: '600', margin: '12px', color: 'var(--text)'}}>Customers</h1>
-            <CustomerSearch/>
-            <div className='customers-table'>
-                <h3 className='customer-table-headings'>
-                    <div className='customer-select'
-                    onClick={selectAllRows}
-                    style={{backgroundColor: selectedCustomers.length === customers.length && selectedCustomers.length > 0 ? 'var(--selected-surface)' : 'var(--surface-1)'}}>
-                        {selectedCustomers.length === customers.length && selectedCustomers.length > 0 ? '✓' : ''}
-                    </div>
-                    <div>Address</div>
-                    <div>Name</div>
-                    <div>Number</div>
-                    <div>Email</div>
-                    <div>Date</div>
-                    <div className='customer-remove'
-                    style={{cursor: selectedCustomers.length === customers.length && selectedCustomers.length > 0 ? 'pointer' : '', userSelect: 'none'}}
-                    onClick={removeAllSelectedCustomers}>Remove</div>
-                </h3>
-                <div>
-                    {customers.length === 0 ? (
-                        <p>No Customers yet. Add one to get started</p>
-                    ) : (
-                        customers.map((customer) => (
-                            <Link key={customer.id} href={`/customers/${customer.id}`}>
-                                <div className='customer-row'
-                                style={{backgroundColor: selectedCustomers.includes(customer.id) ? 'var(--selected-surface)' : 'var(--surface-1)'}}>
-                                    <div className='customer-row-select'
-                                    onClick={(e) => {
-                                        selectedCustomers.includes(customer.id)
-                                            ? setSelectedCustomers(selectedCustomers.filter(id => id !== customer.id))
-                                            : setSelectedCustomers([...selectedCustomers, customer.id])
-                                        e.preventDefault()
-                                        e.stopPropagation()
-                                    }}>
-                                        {selectedCustomers.includes(customer.id) ? '✓' : ''}
-                                    </div>
-                                    <p>{customer.address}</p>
-                                    <p>{customer.firstname} {customer.lastname}</p>
-                                    <p>{customer.number}</p>
-                                    <p>{customer.email}</p>
-                                    <p>{customer.date}</p>
-                                    <div onClick={(e) => {
-                                        setCustomers(customers.filter(c => c.id !== customer.id))
-                                        e.preventDefault()
-                                        e.stopPropagation()
-                                    }}>Remove</div>
-                                </div>
-                            </Link>
-                        ))
-                    )}
+        <div className="customers-page">
+            <h1 className="customers-title">Customers</h1>
+            <CustomerSearch />
+
+            {customers.length === 0 ? (
+                <div className="customers-empty">
+                    <p>No customers yet. Add one to get started.</p>
                 </div>
-            </div>
+            ) : (
+                <div className="customers-list">
+                    {customers.map((customer) => (
+                        <div key={customer.id} className="customer-card">
+                            <div className="customer-info">
+                                {editingId === customer.id && editForm ? (
+                                    <div className="customer-name-edit">
+                                        <input
+                                            type="text"
+                                            value={editForm.firstname}
+                                            onChange={(e) => setEditForm({ ...editForm, firstname: e.target.value })}
+                                            placeholder="First name"
+                                        />
+                                        <input
+                                            type="text"
+                                            value={editForm.lastname}
+                                            onChange={(e) => setEditForm({ ...editForm, lastname: e.target.value })}
+                                            placeholder="Last name"
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="customer-name">
+                                        {customer.firstname} {customer.lastname}
+                                    </div>
+                                )}
+                                <div className="customer-details">
+                                    <div className="customer-detail">
+                                        <span className="detail-label">Address</span>
+                                        {editingId === customer.id && editForm ? (
+                                            <input
+                                                type="text"
+                                                value={editForm.address}
+                                                onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
+                                                placeholder="Address"
+                                                className="detail-input"
+                                            />
+                                        ) : (
+                                            <span className="detail-value">{customer.address || '—'}</span>
+                                        )}
+                                    </div>
+                                    <div className="customer-detail">
+                                        <span className="detail-label">Email</span>
+                                        {editingId === customer.id && editForm ? (
+                                            <input
+                                                type="email"
+                                                value={editForm.email}
+                                                onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                                                placeholder="Email"
+                                                className="detail-input"
+                                            />
+                                        ) : (
+                                            <span className="detail-value">{customer.email || '—'}</span>
+                                        )}
+                                    </div>
+                                    <div className="customer-detail">
+                                        <span className="detail-label">Phone</span>
+                                        {editingId === customer.id && editForm ? (
+                                            <input
+                                                type="tel"
+                                                value={editForm.phone}
+                                                onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                                                placeholder="Phone"
+                                                className="detail-input"
+                                            />
+                                        ) : (
+                                            <span className="detail-value">{customer.phone || '—'}</span>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="customer-actions">
+                                {editingId === customer.id ? (
+                                    <>
+                                        <button className="btn-cancel" onClick={cancelEditing}>Cancel</button>
+                                        <button className="btn-save" onClick={saveEditing}>Save</button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button className="btn-edit" onClick={() => startEditing(customer)}>Edit</button>
+                                        <button className="btn-delete" onClick={() => deleteCustomer(customer.id)}>Delete</button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     )
 }

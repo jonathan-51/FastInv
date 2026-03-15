@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import { updateOrganization } from "@/app/(dashboard)/jobs/actions"
 import { useSettings } from "../useSettings"
 import { Organization } from "@/app/(dashboard)/jobs/types"
+import { useBillablesCategory } from "@/app/context/BillablesContext"
 
 
 // Icon components
@@ -30,6 +31,7 @@ const CloseIcon = () => (
 
 export const SettingsOrganization = () => {
     const { organization, setOrganization } = useOrganization()
+    const { billableCategoryFields, typeMarkups, setTypeMarkup, getTypeMarkup } = useBillablesCategory()
 
     const {
         editingField,
@@ -40,6 +42,35 @@ export const SettingsOrganization = () => {
         setInitialValue,} = useSettings()
 
     const [isSaving, setIsSaving] = useState(false)
+    const [selectedCategory, setSelectedCategory] = useState(billableCategoryFields[0] || 'Labour')
+    const [editingMarkup, setEditingMarkup] = useState(false)
+    const [markupValue, setMarkupValue] = useState('')
+
+    const handleMarkupEdit = () => {
+        const currentMarkup = getTypeMarkup(selectedCategory)
+        setMarkupValue(((currentMarkup - 1) * 100).toFixed(0))
+        setEditingMarkup(true)
+    }
+
+    const handleMarkupSave = () => {
+        const percentValue = parseFloat(markupValue) || 0
+        const multiplier = 1 + (percentValue / 100)
+        setTypeMarkup(selectedCategory, multiplier)
+        setEditingMarkup(false)
+    }
+
+    const handleMarkupCancel = () => {
+        setEditingMarkup(false)
+        setMarkupValue('')
+    }
+
+    const handleMarkupKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleMarkupSave()
+        } else if (e.key === 'Escape') {
+            handleMarkupCancel()
+        }
+    }
 
     useEffect(() => {
         if (!organization) return
@@ -443,9 +474,224 @@ export const SettingsOrganization = () => {
                             </button>
                         </div>
                     )}
-                </div>       
+                </div>
 
-                
+                {/* Payment Details Section */}
+                <div className="setting-section-divider" style={{ gridColumn: '1 / -1' }}>
+                    <span>Payment Details</span>
+                </div>
+
+                <div className='setting-form-group'>
+                    <label>Bank Name</label>
+                    {editingField === 'bank_name' ? (
+                        <div className="setting-editable-row">
+                            <input
+                                type="text"
+                                name="bank_name"
+                                placeholder="ANZ New Zealand"
+                                value={currentValue?.bank_name || ''}
+                                onChange={handleInputChange}
+                                onKeyDown={(e) => handleKeyDown(e, 'bank_name')}
+                                autoFocus
+                            />
+                            <div className="setting-action-buttons">
+                                <button
+                                    className="setting-icon-btn setting-icon-btn-save"
+                                    onClick={() => handleSaveInput('bank_name')}
+                                    disabled={isSaving}
+                                    title="Save"
+                                >
+                                    <CheckIcon />
+                                </button>
+                                <button
+                                    className="setting-icon-btn setting-icon-btn-cancel"
+                                    onClick={handleCancelInput}
+                                    disabled={isSaving}
+                                    title="Cancel"
+                                >
+                                    <CloseIcon />
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="setting-editable-row">
+                            <span className="setting-value">{currentValue?.bank_name || <span className="setting-empty">Not set</span>}</span>
+                            <button
+                                className="setting-icon-btn setting-icon-btn-edit"
+                                onClick={() => setEditingField('bank_name')}
+                                disabled={editingField !== null}
+                                title="Edit"
+                            >
+                                <EditIcon />
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                <div className='setting-form-group'>
+                    <label>Account Name</label>
+                    {editingField === 'account_name' ? (
+                        <div className="setting-editable-row">
+                            <input
+                                type="text"
+                                name="account_name"
+                                placeholder="Your Business Name"
+                                value={currentValue?.account_name || ''}
+                                onChange={handleInputChange}
+                                onKeyDown={(e) => handleKeyDown(e, 'account_name')}
+                                autoFocus
+                            />
+                            <div className="setting-action-buttons">
+                                <button
+                                    className="setting-icon-btn setting-icon-btn-save"
+                                    onClick={() => handleSaveInput('account_name')}
+                                    disabled={isSaving}
+                                    title="Save"
+                                >
+                                    <CheckIcon />
+                                </button>
+                                <button
+                                    className="setting-icon-btn setting-icon-btn-cancel"
+                                    onClick={handleCancelInput}
+                                    disabled={isSaving}
+                                    title="Cancel"
+                                >
+                                    <CloseIcon />
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="setting-editable-row">
+                            <span className="setting-value">{currentValue?.account_name || <span className="setting-empty">Not set</span>}</span>
+                            <button
+                                className="setting-icon-btn setting-icon-btn-edit"
+                                onClick={() => setEditingField('account_name')}
+                                disabled={editingField !== null}
+                                title="Edit"
+                            >
+                                <EditIcon />
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                <div className='setting-form-group' style={{ gridColumn: '1 / -1' }}>
+                    <label>Account Number</label>
+                    {editingField === 'account_number' ? (
+                        <div className="setting-editable-row">
+                            <input
+                                type="text"
+                                name="account_number"
+                                placeholder="01-0123-0456789-00"
+                                value={currentValue?.account_number || ''}
+                                onChange={handleInputChange}
+                                onKeyDown={(e) => handleKeyDown(e, 'account_number')}
+                                autoFocus
+                            />
+                            <div className="setting-action-buttons">
+                                <button
+                                    className="setting-icon-btn setting-icon-btn-save"
+                                    onClick={() => handleSaveInput('account_number')}
+                                    disabled={isSaving}
+                                    title="Save"
+                                >
+                                    <CheckIcon />
+                                </button>
+                                <button
+                                    className="setting-icon-btn setting-icon-btn-cancel"
+                                    onClick={handleCancelInput}
+                                    disabled={isSaving}
+                                    title="Cancel"
+                                >
+                                    <CloseIcon />
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="setting-editable-row">
+                            <span className="setting-value">{currentValue?.account_number || <span className="setting-empty">Not set</span>}</span>
+                            <button
+                                className="setting-icon-btn setting-icon-btn-edit"
+                                onClick={() => setEditingField('account_number')}
+                                disabled={editingField !== null}
+                                title="Edit"
+                            >
+                                <EditIcon />
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {/* Markup Settings */}
+                <div className="setting-section-divider" style={{ gridColumn: '1 / -1' }}>
+                    <span>Pricing</span>
+                </div>
+
+                <div className='setting-form-group' style={{ gridColumn: '1 / -1' }}>
+                    <label>Billable Item Markup</label>
+                    <div className="setting-markup-row">
+                        <select
+                            className="setting-select setting-markup-select"
+                            value={selectedCategory}
+                            onChange={(e) => {
+                                setSelectedCategory(e.target.value)
+                                setEditingMarkup(false)
+                            }}
+                            disabled={editingMarkup}
+                        >
+                            {billableCategoryFields.map(category => (
+                                <option key={category} value={category}>{category}</option>
+                            ))}
+                        </select>
+                        {editingMarkup ? (
+                            <div className="setting-editable-row">
+                                <div className="setting-markup-input-wrapper">
+                                    <input
+                                        type="number"
+                                        value={markupValue}
+                                        onChange={(e) => setMarkupValue(e.target.value)}
+                                        onKeyDown={handleMarkupKeyDown}
+                                        autoFocus
+                                        min="0"
+                                        step="1"
+                                    />
+                                    <span className="setting-markup-suffix">%</span>
+                                </div>
+                                <div className="setting-action-buttons">
+                                    <button
+                                        className="setting-icon-btn setting-icon-btn-save"
+                                        onClick={handleMarkupSave}
+                                        title="Save"
+                                    >
+                                        <CheckIcon />
+                                    </button>
+                                    <button
+                                        className="setting-icon-btn setting-icon-btn-cancel"
+                                        onClick={handleMarkupCancel}
+                                        title="Cancel"
+                                    >
+                                        <CloseIcon />
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="setting-editable-row">
+                                <span className="setting-value setting-markup-value">
+                                    {((getTypeMarkup(selectedCategory) - 1) * 100).toFixed(0)}%
+                                </span>
+                                <button
+                                    className="setting-icon-btn setting-icon-btn-edit"
+                                    onClick={handleMarkupEdit}
+                                    disabled={editingField !== null}
+                                    title="Edit"
+                                >
+                                    <EditIcon />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
             </div>
         </div>
     )
