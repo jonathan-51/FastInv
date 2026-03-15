@@ -6,6 +6,7 @@ import { storeInvoice } from '../../actions'
 import { StandardInvoice } from './formats/StandardInvoice'
 import { ItemizedInvoice } from './formats/ItemizedInvoice'
 import { StandardItemizedInvoice } from './formats/StandardItemizedInvoice'
+import { useBillablesCategory } from '@/app/context/BillablesContext'
 
 export const useInvoice = () => {
     // State
@@ -14,7 +15,8 @@ export const useInvoice = () => {
     const [selectedTemplate, setSelectedTemplate] = useState<string>('standard')
 
     // Context
-    const { jobData, setInvoice } = useJobData()
+    const { jobData, updateInvoice } = useJobData()
+    const { getTypeMarkup } = useBillablesCategory()
     const billables = jobData.billables
 
     // Event Handlers
@@ -48,12 +50,16 @@ export const useInvoice = () => {
 
     // Calculation Functions
     const calculateTotal = () => {
-        return billables.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0).toFixed(2)
+        return billables.reduce((sum, item) => {
+            const markup = getTypeMarkup(item.type)
+            return sum + (item.quantity * item.unit_price * markup)
+        }, 0).toFixed(2)
     }
 
     const calculateTypeTotal = (type: string) => {
         const categoryItems = billables.filter(item => item.type === type)
-        return categoryItems.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0).toFixed(2)
+        const markup = getTypeMarkup(type)
+        return (categoryItems.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0) * markup).toFixed(2)
     }
 
     // Actions
@@ -72,7 +78,7 @@ export const useInvoice = () => {
         const result = await storeInvoice(invoice_data)
 
         if (!result.error) {
-            setInvoice(result)
+            updateInvoice(result)
         }
     }
 

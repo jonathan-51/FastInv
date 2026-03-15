@@ -9,9 +9,9 @@ import { useBillablesCategory } from '@/app/context/BillablesContext';
 
 
 export const BillablesTab = () => {
-    const { jobData,invoice,setInvoice } = useJobData()
+    const { jobData, updateInvoice } = useJobData()
 
-    const {itemMarkUp,setItemMarkUp} = useBillablesCategory()
+    const { getTypeMarkup } = useBillablesCategory()
     const billablesItems = jobData.billables
 
 
@@ -20,7 +20,7 @@ export const BillablesTab = () => {
 
 
     const uniqueTypes = [...new Set(billablesItems.map(item => item.type))]
-    
+
     const handleSelectAll = (type: string, categoryItems: any[], categoryItemsID: string[]) => {
         categoryItems.every(item => selectedItems[type]?.includes(item.id)) ?
         setSelectedItems({...selectedItems,[type]:[]})
@@ -30,7 +30,8 @@ export const BillablesTab = () => {
 
     const calculateTypeTotal = (type:string) => {
         const categoryItems = billablesItems.filter(item => item.type === type)
-        return (categoryItems.reduce((sum,item) => sum + (item.quantity*item.unit_price),0)*parseFloat(itemMarkUp)).toFixed(2)
+        const markup = getTypeMarkup(type)
+        return (categoryItems.reduce((sum,item) => sum + (item.quantity*item.unit_price),0) * markup).toFixed(2)
     }
 
     const getCategoryItemCount = (type: string) => {
@@ -38,7 +39,10 @@ export const BillablesTab = () => {
         return categoryItems.length
     }
     const calculateTotal = () => {
-        return (billablesItems.reduce((sum,item) => sum + (item.quantity*item.unit_price),0)*parseFloat(itemMarkUp)).toFixed(2)
+        return billablesItems.reduce((sum, item) => {
+            const markup = getTypeMarkup(item.type)
+            return sum + (item.quantity * item.unit_price * markup)
+        }, 0).toFixed(2)
     }
     
     const calculateLabourHours = () => {
@@ -62,7 +66,7 @@ export const BillablesTab = () => {
     
             if (result.error) {
             } else {
-                setInvoice(result)
+                updateInvoice(result)
             }
         }
 
@@ -109,11 +113,13 @@ export const BillablesTab = () => {
                                 </div>
                                     
                                 <div className="billables-body-table">
-                                {categoryItems.map(item => (
+                                {categoryItems.map(item => {
+                                    const markup = getTypeMarkup(item.type)
+                                    return (
                                     <div key={item.id} className="billables-body-row">
                                         <div className='billables-body-row-select'
-                                            onClick={() => selectedItems[type]?.includes(item.id) ? 
-                                                setSelectedItems({...selectedItems,[type]:(selectedItems[type] as string[])?.filter(i => i !== item.id)})   
+                                            onClick={() => selectedItems[type]?.includes(item.id) ?
+                                                setSelectedItems({...selectedItems,[type]:(selectedItems[type] as string[])?.filter(i => i !== item.id)})
                                                 :
                                                 setSelectedItems({...selectedItems,[type]:[...(selectedItems[type] ?? []),item.id]})
                                             }>
@@ -122,10 +128,10 @@ export const BillablesTab = () => {
                                         <span>{item.description}</span>
                                         <span>{item.quantity} {item.unit}</span>
                                         <span>${item.unit_price.toFixed(2)}</span>
-                                        <span>${(item.unit_price*parseFloat(itemMarkUp)).toFixed(2)}</span>
-                                        <span>${(item.quantity*item.unit_price*parseFloat(itemMarkUp)).toFixed(2)}</span>
+                                        <span>${(item.unit_price * markup).toFixed(2)}</span>
+                                        <span>${(item.quantity * item.unit_price * markup).toFixed(2)}</span>
                                     </div>
-                                ))}
+                                )})}
                                 </div>
                                 
                             </div>
@@ -158,8 +164,8 @@ export const BillablesTab = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <button className='billables-summary-invoice-btn'
                         onClick={generateInvoice}
-                        disabled={invoice !== null}>
-                            {invoice ? 'Invoice Already Exists' : 'Generate Invoice'}
+                        disabled={jobData.invoice !== null}>
+                            {jobData.invoice ? 'Invoice Already Exists' : 'Generate Invoice'}
                             </button>
                         <button className='billables-summary-pdf-btn'>Export PDF</button>
                     </div>
