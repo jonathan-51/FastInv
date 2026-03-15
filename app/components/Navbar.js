@@ -8,7 +8,7 @@ export default function Navbar() {
             <div className='nav-container'>
                 {/* Logo Area */}
                 <div className='logo'>
-                    <h2>TradeFlow</h2>
+                    <h2>FastInv</h2>
                 </div>
 
                 <div className='nav-contents'>
