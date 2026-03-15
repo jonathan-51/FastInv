@@ -28,14 +28,13 @@ interface JobData {
   billables: Billable[]
   photos: Photo[]
   notes?: string
+  invoice: Invoice | null
 }
 
 
 
 // Context value type with helper functions
 interface JobDataContextType {
-  invoice: Invoice | null
-  setInvoice: (invoice: Invoice | null) => void
   jobData: JobData
   setJobData: (data: JobData) => void
   // Helper function to update billables
@@ -44,18 +43,17 @@ interface JobDataContextType {
   addBillable: (billable: Billable) => void
   // Helper function to update photos
   updatePhotos: (photos: Photo[]) => void
+  // Helper function to update invoice
+  updateInvoice: (invoice: Invoice | null) => void
   // Helper function to update invoice dates
   updateInvoiceDates: (issuedDate: string, dueDate: string) => void
 }
 
 const JobDataContext = createContext<JobDataContextType | undefined>(undefined)
 
-export function JobDataProvider({children,initialJobData,initialInvoice}: {children: ReactNode,initialJobData: JobData,initialInvoice?: Invoice | null}) {
+export function JobDataProvider({children,initialJobData}: {children: ReactNode,initialJobData: JobData}) {
   // Stores everything currently known about the current job
   const [jobData, setJobData] = useState<JobData>(initialJobData)
-
-  // Stores the invoice data for the current job (null if no invoice exists)
-  const [invoice, setInvoice] = useState<Invoice | null>(initialInvoice || null)
 
   // Helper function to update just the billables array
   const updateBillables = (billables: Billable[]) => {
@@ -79,31 +77,38 @@ export function JobDataProvider({children,initialJobData,initialInvoice}: {child
     }))
   }
 
+  // Helper function to update the invoice
+  const updateInvoice = (invoice: Invoice | null) => {
+    setJobData(prev => ({
+      ...prev,
+      invoice
+    }))
+  }
+
   // Helper function to update invoice dates
   const updateInvoiceDates = (issuedDate: string, dueDate: string) => {
-    setInvoice(prev => {
-      if (!prev) return prev
+    setJobData(prev => {
+      if (!prev.invoice) return prev
       return {
         ...prev,
-        issued_date: issuedDate,
-        due_date: dueDate
+        invoice: {
+          ...prev.invoice,
+          issued_date: issuedDate,
+          due_date: dueDate
+        }
       }
     })
   }
 
-
-  
-
   return (
     <JobDataContext.Provider
       value={{
-        invoice,
-        setInvoice,
         jobData,
         setJobData,
         updateBillables,
         addBillable,
         updatePhotos,
+        updateInvoice,
         updateInvoiceDates
       }}
     >

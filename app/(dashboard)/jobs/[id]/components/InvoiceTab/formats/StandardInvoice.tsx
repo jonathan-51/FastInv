@@ -9,21 +9,22 @@ import { useEffect } from 'react'
 
 
 export const StandardInvoice = () => {
-    const { jobData, invoice } = useJobData()
+    const { jobData } = useJobData()
     const {
-        issuedDate,
-        dueDate,
         formatDate,
         calculateTotal,
         calculateTypeTotal
     } = useInvoice()
+
+    const issuedDate = jobData.invoice?.issued_date || ''
+    const dueDate = jobData.invoice?.due_date || ''
     const {organization,setOrganization} = useOrganization()
 
     // Derive data
     const customer = jobData.customer
     const billables = jobData.billables
     const uniqueTypes = [...new Set(billables.map(item => item.type))]
-    const invoiceNumber = invoice?.invoice_number || 'INV-2024-0047'
+    const invoiceNumber = jobData.invoice?.invoice_number || 'INV-2024-0047'
     useEffect(() => {
         console.log(organization)
     },[])

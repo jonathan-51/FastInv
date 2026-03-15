@@ -42,12 +42,13 @@ export default function ClientWrapper({ job, billablesItems, invoiceData }: Clie
         ...job,
         billables:billablesItems,
         photos:[],
-        notes:''
+        notes:'',
+        invoice: invoiceData || null
     }
 
 
     return (
-        <JobDataProvider initialJobData={initialJobData} initialInvoice={invoiceData}>
+        <JobDataProvider initialJobData={initialJobData}>
             <BillablesProvider>
             <div className="job-page">
                 <div className="job-main">

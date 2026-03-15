@@ -11,7 +11,7 @@ import { InvoiceEmptyState } from './components/InvoiceEmptyState'
 import './InvoiceTab.css'
 
 export const InvoiceTab = () => {
-    const { jobData, invoice, updateInvoiceDates: updateInvoiceDatesContext } = useJobData()
+    const { jobData, updateInvoiceDates: updateInvoiceDatesContext } = useJobData()
     const customer = jobData.customer
     const billables = jobData.billables
 
@@ -45,19 +45,20 @@ export const InvoiceTab = () => {
 
     // Initialize dates from invoice when it loads
     useEffect(() => {
-        if (invoice) {
-            setIssuedDate(invoice.issued_date || new Date().toISOString().split('T')[0])
-            setDueDate(invoice.due_date || new Date().toISOString().split('T')[0])
+        if (jobData.invoice) {
+            setIssuedDate(jobData.invoice.issued_date || new Date().toISOString().split('T')[0])
+            setDueDate(jobData.invoice.due_date || new Date().toISOString().split('T')[0])
         }
-    }, [invoice, setIssuedDate, setDueDate])
+    }, [jobData.invoice, setIssuedDate, setDueDate])
 
     // Auto-save dates to DB after user stops changing (debounced 5s)
     useEffect(() => {
-        if (!invoice) return
+        if (!jobData.invoice) return
 
+        const currentInvoice = jobData.invoice
         const timeoutId = setTimeout(async () => {
-            if (issuedDate !== invoice.issued_date || dueDate !== invoice.due_date) {
-                const result = await updateInvoiceDates(invoice.id, issuedDate, dueDate)
+            if (issuedDate !== currentInvoice.issued_date || dueDate !== currentInvoice.due_date) {
+                const result = await updateInvoiceDates(currentInvoice.id, issuedDate, dueDate)
 
                 if (!result.error) {
                     updateInvoiceDatesContext(issuedDate, dueDate)
@@ -66,11 +67,11 @@ export const InvoiceTab = () => {
         }, 5000)
 
         return () => clearTimeout(timeoutId)
-    }, [issuedDate, dueDate, invoice, updateInvoiceDatesContext])
+    }, [issuedDate, dueDate, jobData.invoice, updateInvoiceDatesContext])
 
     
 
-    if (!invoice) {
+    if (!jobData.invoice) {
         return <InvoiceEmptyState onGenerate={generateInvoice} />
     }
 
